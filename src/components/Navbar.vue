@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
+  <header class="fixed top-0 left-0 right-0 z-40 w-full backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <!-- Brand Logo & Title -->
       <div class="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
@@ -231,6 +231,8 @@
       </div>
     </div>
   </header>
+  <!-- Fixed Navbar Placeholder to keep natural document flow -->
+  <div class="h-16 w-full shrink-0 pointer-events-none" aria-hidden="true"></div>
 </template>
 
 <script setup lang="ts">
