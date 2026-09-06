@@ -80,6 +80,37 @@
           </button>
         </div>
 
+        <!-- Bing Map Layer Switcher (Road vs Satellite Hybrid) -->
+        <div v-if="provider === 'bing'" class="inline-flex items-center p-0.5 bg-slate-200/90 dark:bg-slate-800 rounded-lg text-xs font-medium border border-slate-300/60 dark:border-slate-700 shadow-2xs">
+          <button
+            type="button"
+            @click="bingMapStyle = 'r'"
+            :class="[
+              'px-2 py-0.5 rounded-md transition-all cursor-pointer text-[11px]',
+              bingMapStyle === 'r'
+                ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-300 shadow-xs font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            ]"
+            :title="t('card.bingRoad')"
+          >
+            🗺️ {{ t('card.bingRoad') }}
+          </button>
+          <button
+            type="button"
+            @click="bingMapStyle = 'h'"
+            :class="[
+              'px-2 py-0.5 rounded-md transition-all cursor-pointer text-[11px] flex items-center gap-1',
+              bingMapStyle === 'h'
+                ? 'bg-indigo-600 text-white shadow-xs font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            ]"
+            :title="t('card.bingSatelliteBtn')"
+          >
+            <span>🛰️</span>
+            <span>{{ t('card.bingSatelliteBtn') }}</span>
+          </button>
+        </div>
+
       <!-- Action Links -->
       <div class="flex items-center gap-1.5 flex-wrap">
         <!-- Direct open link (Protected) -->
@@ -172,7 +203,7 @@
       <!-- 1. Active Iframe View for OSM or Bing -->
       <div v-if="provider !== 'google'" class="h-72 sm:h-80 w-full relative">
         <iframe
-          :key="`${provider}-${address.lat}-${address.lng}`"
+          :key="`${provider}-${bingMapStyle}-${address.lat}-${address.lng}`"
           :src="embedUrl"
           class="w-full h-full border-0"
           loading="lazy"
@@ -600,6 +631,9 @@ const provider = ref<MapProvider>(
     : 'osm'
 );
 
+// Bing Maps layer style: 'r' = Road view, 'h' = Aerial satellite hybrid
+const bingMapStyle = ref<'r' | 'h'>('r');
+
 // Safety state: Google Maps requires manual user confirmation before loading / network connection
 const isGoogleConfirmed = ref(false);
 
@@ -748,7 +782,11 @@ const providerTitle = computed(() => {
 // Watermark badge text localized
 const currentBadgeText = computed(() => {
   if (provider.value === 'osm') return t('card.osmBadge');
-  if (provider.value === 'bing') return t('card.bingBadge');
+  if (provider.value === 'bing') {
+    return bingMapStyle.value === 'h'
+      ? t('card.bingSatelliteBadge')
+      : t('card.bingBadge');
+  }
   if (provider.value === 'google') {
     return isGoogleConfirmed.value ? t('card.googleBadgeActive') : t('card.googleBadge');
   }
@@ -758,7 +796,11 @@ const currentBadgeText = computed(() => {
 // Bottom banner tip text localized
 const currentBannerTip = computed(() => {
   if (provider.value === 'osm') return t('card.osmSafeBanner');
-  if (provider.value === 'bing') return t('card.bingSafeBanner');
+  if (provider.value === 'bing') {
+    return bingMapStyle.value === 'h'
+      ? t('card.bingSatelliteBanner')
+      : t('card.bingSafeBanner');
+  }
   if (provider.value === 'google') {
     return isGoogleConfirmed.value ? t('card.googleLoadedBanner') : t('card.mapAntiLeakTip');
   }
@@ -786,7 +828,8 @@ const embedUrl = computed(() => {
   }
 
   if (provider.value === 'bing') {
-    return `https://www.bing.com/maps/embed?h=280&w=600&cp=${lat}~${lng}&lvl=16&typ=d&sty=r`;
+    const zoom = bingMapStyle.value === 'h' ? 17 : 16;
+    return `https://www.bing.com/maps/embed?h=280&w=600&cp=${lat}~${lng}&lvl=${zoom}&typ=d&sty=${bingMapStyle.value}&pp=${lat}~${lng}`;
   }
 
   // Google Maps (only when user confirmed)
@@ -817,7 +860,8 @@ const currentDirectUrl = computed(() => {
   }
 
   if (provider.value === 'bing') {
-    return `https://www.bing.com/maps?q=${encodeURIComponent(fullAddressQuery.value)}`;
+    const label = encodeURIComponent(props.address.street || 'Address');
+    return `https://www.bing.com/maps?cp=${lat}~${lng}&lvl=16&sty=${bingMapStyle.value}&pp=${lat}~${lng}&sp=point.${lat}_${lng}_${label}`;
   }
 
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddressQuery.value)}`;
@@ -827,7 +871,8 @@ const currentDirectUrl = computed(() => {
 const satelliteUrl = computed(() => {
   if (provider.value === 'bing' || provider.value === 'osm') {
     // Safe Bing Satellite (100% accessible, zero Google IP geo-shift risk)
-    return `https://www.bing.com/maps?cp=${props.address.lat}~${props.address.lng}&lvl=17&sty=h`;
+    const label = encodeURIComponent(props.address.street || 'Target Address');
+    return `https://www.bing.com/maps?cp=${props.address.lat}~${props.address.lng}&lvl=17&sty=h&pp=${props.address.lat}~${props.address.lng}&sp=point.${props.address.lat}_${props.address.lng}_${label}`;
   }
   // Google Satellite View (Proxy required)
   return `https://www.google.com/maps/@${props.address.lat},${props.address.lng},17z/data=!3m1!1e3`;

@@ -194,7 +194,7 @@ export const STREET_DERIVATION_RULES: StreetDerivationRule[] = [
     country: 'United States',
     countryCode: 'US',
     startCoord: { lat: 39.6920, lng: -75.7250 },
-    endCoord: { lat: 39.7180, lng: -75.6880 },
+    endCoord: { lat: 39.7106, lng: -75.6779 },
     isTaxFree: true,
     taxRate: '0.00% (No Sales Tax)',
     timezone: 'America/New_York (EST/EDT)',
