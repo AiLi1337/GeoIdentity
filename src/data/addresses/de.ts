@@ -2,69 +2,69 @@ import type { RealAddress } from '../../types/identity';
 
 export const DE_ADDRESSES: RealAddress[] = [
   {
-    street: 'Potsdamer Platz 1',
+    street: 'Chausseestraße 37, Whg 14',
     city: 'Berlin',
     state: 'BE',
     stateFull: 'Berlin',
-    postcode: '10785',
+    postcode: '10115',
     country: 'Germany',
     countryCode: 'DE',
-    lat: 52.5096,
-    lng: 13.3759
+    lat: 52.5345,
+    lng: 13.3810
   },
   {
-    street: 'Friedrichstraße 68',
+    street: 'Winsstraße 42, Whg 8',
     city: 'Berlin',
     state: 'BE',
     stateFull: 'Berlin',
-    postcode: '10117',
+    postcode: '10405',
     country: 'Germany',
     countryCode: 'DE',
-    lat: 52.5135,
-    lng: 13.3888
+    lat: 52.5365,
+    lng: 13.4245
   },
   {
-    street: 'Maximilianstraße 35',
+    street: 'Leopoldstraße 158, Whg 22',
     city: 'München',
     state: 'BY',
     stateFull: 'Bavaria',
-    postcode: '80539',
+    postcode: '80804',
     country: 'Germany',
     countryCode: 'DE',
-    lat: 48.1392,
-    lng: 11.5833
+    lat: 48.1685,
+    lng: 11.5875
   },
   {
-    street: 'Taunusanlage 8',
+    street: 'Liebigstraße 24, Whg 6',
     city: 'Frankfurt am Main',
     state: 'HE',
     stateFull: 'Hesse',
-    postcode: '60329',
+    postcode: '60323',
     country: 'Germany',
     countryCode: 'DE',
-    lat: 50.1118,
-    lng: 8.6698
+    lat: 50.1205,
+    lng: 8.6675
   },
   {
-    street: 'Königsallee 60',
+    street: 'Belsenplatz 18, Whg 12',
     city: 'Düsseldorf',
     state: 'NW',
     stateFull: 'North Rhine-Westphalia',
-    postcode: '40212',
+    postcode: '40545',
     country: 'Germany',
     countryCode: 'DE',
-    lat: 51.2223,
-    lng: 6.7794
+    lat: 51.2295,
+    lng: 6.7490
   },
   {
-    street: 'Jungfernstieg 16',
+    street: 'Platz der Deutschen Einheit 1, Whg 18B',
     city: 'Hamburg',
     state: 'HH',
     stateFull: 'Hamburg',
-    postcode: '20354',
+    postcode: '20457',
     country: 'Germany',
     countryCode: 'DE',
-    lat: 53.5532,
-    lng: 9.9926
+    lat: 53.5415,
+    lng: 9.9840
   }
 ];

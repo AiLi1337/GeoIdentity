@@ -2,69 +2,69 @@ import type { RealAddress } from '../../types/identity';
 
 export const FR_ADDRESSES: RealAddress[] = [
   {
-    street: '55 Rue du Faubourg Saint-Honoré',
+    street: '58 Avenue Paul Doumer, Apt 4B',
+    city: 'Paris',
+    state: 'IDF',
+    stateFull: 'Île-de-France',
+    postcode: '75016',
+    country: 'France',
+    countryCode: 'FR',
+    lat: 48.8590,
+    lng: 2.2785
+  },
+  {
+    street: '24 Rue de Courcelles, Apt 12',
     city: 'Paris',
     state: 'IDF',
     stateFull: 'Île-de-France',
     postcode: '75008',
     country: 'France',
     countryCode: 'FR',
-    lat: 48.8704,
-    lng: 2.3168
+    lat: 48.8745,
+    lng: 2.3085
   },
   {
-    street: '101 Avenue des Champs-Élysées',
+    street: '45 Rue de Tocqueville, Apt 18',
     city: 'Paris',
     state: 'IDF',
     stateFull: 'Île-de-France',
-    postcode: '75008',
+    postcode: '75017',
     country: 'France',
     countryCode: 'FR',
-    lat: 48.8719,
-    lng: 2.3013
+    lat: 48.8850,
+    lng: 2.3090
   },
   {
-    street: '8 Rue de Londres',
-    city: 'Paris',
-    state: 'IDF',
-    stateFull: 'Île-de-France',
-    postcode: '75009',
-    country: 'France',
-    countryCode: 'FR',
-    lat: 48.8778,
-    lng: 2.3308
-  },
-  {
-    street: '2 Place Bellecour',
+    street: '32 Boulevard des Belges, Apt 6',
     city: 'Lyon',
     state: 'ARA',
     stateFull: 'Auvergne-Rhône-Alpes',
-    postcode: '69002',
+    postcode: '69006',
     country: 'France',
     countryCode: 'FR',
-    lat: 45.7578,
-    lng: 4.8320
+    lat: 45.7720,
+    lng: 4.8510
   },
   {
-    street: '1 Quai de la Fraternité',
+    street: '156 Rue du Commandant Rolland, Apt 14',
     city: 'Marseille',
     state: 'PAC',
     stateFull: "Provence-Alpes-Côte d'Azur",
-    postcode: '13001',
+    postcode: '13008',
     country: 'France',
     countryCode: 'FR',
-    lat: 43.2952,
-    lng: 5.3744
+    lat: 43.2680,
+    lng: 5.3850
   },
   {
-    street: '15 Promenade des Anglais',
+    street: '48 Boulevard de Cimiez, Apt 8',
     city: 'Nice',
     state: 'PAC',
     stateFull: "Provence-Alpes-Côte d'Azur",
     postcode: '06000',
     country: 'France',
     countryCode: 'FR',
-    lat: 43.6953,
-    lng: 7.2625
+    lat: 43.7170,
+    lng: 7.2740
   }
 ];

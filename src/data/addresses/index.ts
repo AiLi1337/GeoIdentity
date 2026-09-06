@@ -13,43 +13,50 @@ import { EXTENDED_ADDRESSES } from './extended';
 import { getDerivationRule, deriveStreetAddress, matchesState } from './schemes/derivationRules';
 import { getResidentialAddress, RESIDENTIAL_ADDRESSES } from './schemes/residentialAddresses';
 
+function initResidentialSeedList(list: RealAddress[]): RealAddress[] {
+  return list.map(addr => ({
+    ...addr,
+    buildingType: 'residential' as const
+  }));
+}
+
 export const ADDRESS_MAP: Record<CountryCode, RealAddress[]> = {
-  US: US_ADDRESSES,
-  GB: GB_ADDRESSES,
-  JP: JP_ADDRESSES,
-  CA: CA_ADDRESSES,
-  AU: AU_ADDRESSES,
-  DE: DE_ADDRESSES,
-  FR: FR_ADDRESSES,
-  HK: HK_ADDRESSES,
-  TW: TW_ADDRESSES,
-  SG: SG_ADDRESSES,
-  KR: EXTENDED_ADDRESSES.KR || [],
-  CH: EXTENDED_ADDRESSES.CH || [],
-  LU: EXTENDED_ADDRESSES.LU || [],
-  IE: EXTENDED_ADDRESSES.IE || [],
-  IT: EXTENDED_ADDRESSES.IT || [],
-  ES: EXTENDED_ADDRESSES.ES || [],
-  NL: EXTENDED_ADDRESSES.NL || [],
-  MY: EXTENDED_ADDRESSES.MY || [],
-  TH: EXTENDED_ADDRESSES.TH || [],
-  VN: EXTENDED_ADDRESSES.VN || [],
-  PH: EXTENDED_ADDRESSES.PH || []
+  US: initResidentialSeedList(US_ADDRESSES),
+  GB: initResidentialSeedList(GB_ADDRESSES),
+  JP: initResidentialSeedList(JP_ADDRESSES),
+  CA: initResidentialSeedList(CA_ADDRESSES),
+  AU: initResidentialSeedList(AU_ADDRESSES),
+  DE: initResidentialSeedList(DE_ADDRESSES),
+  FR: initResidentialSeedList(FR_ADDRESSES),
+  HK: initResidentialSeedList(HK_ADDRESSES),
+  TW: initResidentialSeedList(TW_ADDRESSES),
+  SG: initResidentialSeedList(SG_ADDRESSES),
+  KR: initResidentialSeedList(EXTENDED_ADDRESSES.KR || []),
+  CH: initResidentialSeedList(EXTENDED_ADDRESSES.CH || []),
+  LU: initResidentialSeedList(EXTENDED_ADDRESSES.LU || []),
+  IE: initResidentialSeedList(EXTENDED_ADDRESSES.IE || []),
+  IT: initResidentialSeedList(EXTENDED_ADDRESSES.IT || []),
+  ES: initResidentialSeedList(EXTENDED_ADDRESSES.ES || []),
+  NL: initResidentialSeedList(EXTENDED_ADDRESSES.NL || []),
+  MY: initResidentialSeedList(EXTENDED_ADDRESSES.MY || []),
+  TH: initResidentialSeedList(EXTENDED_ADDRESSES.TH || []),
+  VN: initResidentialSeedList(EXTENDED_ADDRESSES.VN || []),
+  PH: initResidentialSeedList(EXTENDED_ADDRESSES.PH || [])
 };
 
 function enrichLandmarkAddress(raw: RealAddress): RealAddress {
   return {
     ...raw,
     addressMode: 'landmark',
-    buildingType: 'commercial',
+    buildingType: 'residential',
     derivationMeta: {
       mode: 'landmark',
-      modeLabelZh: '高精度真实地标种子库',
-      modeLabelEn: 'Curated Real Landmark Seeds',
-      ruleSummary: '真实实体商厦/名企总部/核心地标 · 100% 物理真实',
+      modeLabelZh: '方案C·真实都会公寓 (100% 真实住宅)',
+      modeLabelEn: 'Scheme C (Residential Condos)',
+      ruleSummary: '真实都会高层公寓/优质名苑社区 · 100% 物理真实居住',
       interpolated: false,
-      buildingType: 'commercial',
-      avsTier: 'Commercial / Freight'
+      buildingType: 'residential',
+      avsTier: 'Residential Condominium / Apartment'
     }
   };
 }

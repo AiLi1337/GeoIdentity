@@ -347,8 +347,8 @@ Perfil 100% sintético generado por algoritmo para pruebas de software y validac
   const isZh = lang === 'zh';
   if (isZh) {
     const avsTierZh = identity.address.addressMode === 'residential'
-      ? '住宅 AVS 认证 (买家自用)'
-      : (identity.address.addressMode === 'derivation' ? '市政合法门牌 · 独一无二' : '真实商厦 · 商业转运');
+      ? '住宅 AVS 认证 (独栋洋房)'
+      : (identity.address.addressMode === 'derivation' ? '市政合法门牌 · 独一无二' : '都会名苑公寓 · 100% 真实住宅');
 
     const taxRateZh = (identity.address.isTaxFree || (identity.address.taxRate && identity.address.taxRate.includes('No Sales Tax')))
       ? '0.00% (免消费税)'
@@ -367,13 +367,13 @@ Perfil 100% sintético generado por algoritmo para pruebas de software y validac
 星座：${identity.basic.zodiacSign}
 
 === 真实地址信息 (Google Maps 真实可查) ===
-地址方案模式：${identity.address.derivationMeta?.modeLabelZh || (identity.address.addressMode === 'residential' ? '方案B·真实居民住宅/独栋' : identity.address.addressMode === 'derivation' ? '方案A·真实街道门牌衍生' : '高精度真实地标种子库')}
+地址方案模式：${identity.address.derivationMeta?.modeLabelZh || (identity.address.addressMode === 'residential' ? '方案B·真实居民住宅/独栋' : identity.address.addressMode === 'derivation' ? '方案A·真实居住街区门牌衍生' : '方案C·真实都会公寓/名苑社区库')}
 AVS 风控评级：${avsTierZh}
 国家/地区：${identity.address.country} (${identity.address.countryCode})
 州/省：${identity.address.stateFull || identity.address.state}
 城市：${identity.address.city}
 街道地址 (Line 1)：${identity.address.addressLine1 || identity.address.street}
-单元/仓位 (Line 2)：${identity.address.addressLine2 || 'N/A'}
+单元/公寓号 (Line 2)：${identity.address.addressLine2 || 'N/A'}
 邮政编码：${identity.address.postcode}
 消费税率：${taxRateZh}
 当地时区：${identity.address.timezone || 'UTC'}
@@ -413,7 +413,7 @@ ${identity.document.typeNameZh}：${identity.document.docNumber}
   // 3. 英文模式 (English Format)
   const avsTierEn = identity.address.addressMode === 'residential'
     ? 'Residential AVS Pass'
-    : (identity.address.addressMode === 'derivation' ? 'Unique Synthetic AVS' : 'Commercial / Freight');
+    : (identity.address.addressMode === 'derivation' ? 'Residential Street (GIS Validated)' : 'Residential Condominium / Apartment');
 
   const taxRateEn = (identity.address.isTaxFree || (identity.address.taxRate && identity.address.taxRate.includes('免税')))
     ? '0.00% (No Sales Tax)'
@@ -432,7 +432,7 @@ Blood Type: ${identity.basic.bloodType}
 Zodiac: ${identity.basic.zodiacSign}
 
 === Authentic Address (Google Maps Verifiable) ===
-Address Scheme Mode: ${identity.address.derivationMeta?.modeLabelEn || (identity.address.addressMode === 'residential' ? 'Scheme B: Real Residential Address' : identity.address.addressMode === 'derivation' ? 'Scheme A: Street Derivation' : 'Curated Landmark Seed')}
+Address Scheme Mode: ${identity.address.derivationMeta?.modeLabelEn || (identity.address.addressMode === 'residential' ? 'Scheme B: Real Residential Address' : identity.address.addressMode === 'derivation' ? 'Scheme A: Residential Street Derivation' : 'Scheme C: Real Residential Condos & Apartments')}
 AVS Verification Tier: ${avsTierEn}
 Country: ${localCountryName} (${identity.address.countryCode})
 State/Province: ${identity.address.stateFull || identity.address.state}
@@ -511,8 +511,8 @@ export function buildCSVContent(identities: GeneratedIdentity[]): string {
 
   const rows = identities.map(id => [
     id.address.country,
-    id.address.derivationMeta?.modeLabelEn || id.address.addressMode || 'landmark',
-    id.address.derivationMeta?.avsTier || (id.address.addressMode === 'residential' ? 'Residential Single Family' : 'Commercial'),
+    id.address.derivationMeta?.modeLabelEn || id.address.addressMode || 'Scheme C: Condos',
+    id.address.derivationMeta?.avsTier || (id.address.addressMode === 'residential' ? 'Residential Single Family' : 'Residential Condominium / Apartment'),
     id.basic.fullName,
     id.basic.localFullName || '',
     id.basic.gender,

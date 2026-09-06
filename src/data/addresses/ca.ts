@@ -2,69 +2,69 @@ import type { RealAddress } from '../../types/identity';
 
 export const CA_ADDRESSES: RealAddress[] = [
   {
-    street: '100 King St W, Suite 5600',
+    street: '1 Bloor St E, Apt 3205',
     city: 'Toronto',
     state: 'ON',
     stateFull: 'Ontario',
-    postcode: 'M5X 1C9',
+    postcode: 'M4W 1A9',
     country: 'Canada',
     countryCode: 'CA',
-    lat: 43.6487,
-    lng: -79.3817
+    lat: 43.6702,
+    lng: -79.3855
   },
   {
-    street: '250 Yonge St, Suite 2201',
+    street: '10 York St, Apt 2806',
     city: 'Toronto',
     state: 'ON',
     stateFull: 'Ontario',
-    postcode: 'M5B 2L7',
+    postcode: 'M5J 0R1',
     country: 'Canada',
     countryCode: 'CA',
-    lat: 43.6544,
-    lng: -79.3807
+    lat: 43.6425,
+    lng: -79.3815
   },
   {
-    street: '200 Granville St, Suite 2100',
+    street: '1281 W Cordova St, Apt 1501',
     city: 'Vancouver',
     state: 'BC',
     stateFull: 'British Columbia',
-    postcode: 'V6C 1S4',
+    postcode: 'V6C 3R5',
     country: 'Canada',
     countryCode: 'CA',
-    lat: 49.2863,
-    lng: -123.1141
+    lat: 49.2895,
+    lng: -123.1235
   },
   {
-    street: '1055 W Georgia St',
+    street: '1560 Homer Mews, Apt 801',
     city: 'Vancouver',
     state: 'BC',
     stateFull: 'British Columbia',
-    postcode: 'V6E 3P3',
+    postcode: 'V6Z 0A5',
     country: 'Canada',
     countryCode: 'CA',
-    lat: 49.2851,
-    lng: -123.1207
+    lat: 49.2730,
+    lng: -123.1265
   },
   {
-    street: '1000 Rue de la Gauchetiere O',
+    street: '1288 Rue Saint-Antoine O, Apt 2504',
     city: 'Montreal',
     state: 'QC',
     stateFull: 'Quebec',
-    postcode: 'H3B 4W5',
+    postcode: 'H3C 0X5',
     country: 'Canada',
     countryCode: 'CA',
-    lat: 45.4988,
-    lng: -73.5673
+    lat: 45.4965,
+    lng: -73.5700
   },
   {
-    street: '525 8 Ave SW, Suite 4300',
+    street: '1188 11 Ave SE, Apt 1608',
     city: 'Calgary',
     state: 'AB',
     stateFull: 'Alberta',
-    postcode: 'T2P 1G1',
+    postcode: 'T2G 0B8',
     country: 'Canada',
     countryCode: 'CA',
-    lat: 51.0461,
-    lng: -114.0725
+    lat: 51.0425,
+    lng: -114.0375
   }
 ];

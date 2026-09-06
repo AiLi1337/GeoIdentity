@@ -2,91 +2,91 @@ import type { RealAddress } from '../../types/identity';
 
 export const GB_ADDRESSES: RealAddress[] = [
   {
-    street: '10 Downing Street',
+    street: '31 John Islip St, Apt 42',
     city: 'London',
     state: 'ENG-LDN',
     stateFull: 'Greater London',
-    postcode: 'SW1A 2AA',
+    postcode: 'SW1P 4FE',
     country: 'United Kingdom',
     countryCode: 'GB',
-    lat: 51.5034,
-    lng: -0.1276
+    lat: 51.4935,
+    lng: -0.1285
   },
   {
-    street: '1 St Katharine\'s Way',
+    street: '10 Thomas More St, Apt 104',
     city: 'London',
     state: 'ENG-LDN',
     stateFull: 'Greater London',
-    postcode: 'E1W 1UN',
+    postcode: 'E1W 1YW',
     country: 'United Kingdom',
     countryCode: 'GB',
-    lat: 51.5065,
-    lng: -0.0718
+    lat: 51.5068,
+    lng: -0.0685
   },
   {
-    street: '30 St Mary Axe',
+    street: '5 Moor Lane, Apt 1502',
     city: 'London',
     state: 'ENG-LDN',
     stateFull: 'Greater London',
-    postcode: 'EC3A 8EP',
+    postcode: 'EC2Y 9AP',
     country: 'United Kingdom',
     countryCode: 'GB',
-    lat: 51.5145,
-    lng: -0.0803
+    lat: 51.5190,
+    lng: -0.0905
   },
   {
-    street: '100 Barbirolli Square',
+    street: '9 Owen St, Apt 2104',
     city: 'Manchester',
     state: 'ENG-MAN',
     stateFull: 'Greater Manchester',
-    postcode: 'M2 3BD',
+    postcode: 'M15 4TQ',
     country: 'United Kingdom',
     countryCode: 'GB',
-    lat: 53.4764,
-    lng: -2.2443
+    lat: 53.4735,
+    lng: -2.2530
   },
   {
-    street: '1 Hardman Square, Spinningfields',
+    street: '3 Left Bank, Apt 305',
     city: 'Manchester',
     state: 'ENG-MAN',
     stateFull: 'Greater Manchester',
-    postcode: 'M3 3EB',
+    postcode: 'M3 3AN',
     country: 'United Kingdom',
     countryCode: 'GB',
-    lat: 53.4802,
-    lng: -2.2514
+    lat: 53.4815,
+    lng: -2.2545
   },
   {
-    street: '1 Colmore Square',
+    street: '19 Wharfside St, Apt 1204',
     city: 'Birmingham',
     state: 'ENG-BIR',
     stateFull: 'West Midlands',
-    postcode: 'B4 6AJ',
+    postcode: 'B1 1RN',
     country: 'United Kingdom',
     countryCode: 'GB',
-    lat: 52.4842,
-    lng: -1.8953
+    lat: 52.4755,
+    lng: -1.9055
   },
   {
-    street: 'Castle Terrace',
+    street: '18 Simpson Loan, Apt 402',
     city: 'Edinburgh',
     state: 'SCT-EDI',
     stateFull: 'Scotland',
-    postcode: 'EH1 2EL',
+    postcode: 'EH3 9GF',
     country: 'United Kingdom',
     countryCode: 'GB',
-    lat: 55.9486,
-    lng: -3.2045
+    lat: 55.9440,
+    lng: -3.1930
   },
   {
-    street: 'Broad Street',
+    street: '80 Walton St, Apt 12',
     city: 'Oxford',
     state: 'ENG-OXF',
     stateFull: 'Oxfordshire',
-    postcode: 'OX1 3AZ',
+    postcode: 'OX2 6EA',
     country: 'United Kingdom',
     countryCode: 'GB',
-    lat: 51.7547,
-    lng: -1.2562
+    lat: 51.7595,
+    lng: -1.2660
   }
 ];

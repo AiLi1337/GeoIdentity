@@ -765,15 +765,15 @@ const localizedAvsTier = computed(() => {
   const mode = props.identity.address.addressMode;
   const rawTier = props.identity.address.derivationMeta?.avsTier;
   if (locale.value === 'zh') {
-    if (rawTier === 'Residential AVS Pass' || mode === 'residential') return '住宅 AVS 认证 (买家自用)';
-    if (rawTier === 'Commercial / Freight' || mode === 'landmark') return '真实商厦 · 商业转运';
-    if (rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return '市政合法门牌 · 独一无二';
-    return rawTier || '100% 真实实体建筑';
+    if (rawTier === 'Residential AVS Pass' || mode === 'residential') return '住宅 AVS 认证 (独栋洋房)';
+    if (rawTier === 'Residential Condominium / Apartment' || mode === 'landmark') return '真实都会名苑 · 优质公寓';
+    if (rawTier === 'Residential Street (GIS Validated)' || rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return '市政合法门牌 · 独一无二';
+    return rawTier || '100% 真实住宅建筑';
   } else {
     if (rawTier === 'Residential AVS Pass' || mode === 'residential') return 'Residential AVS Pass';
-    if (rawTier === 'Commercial / Freight' || mode === 'landmark') return 'Commercial / Freight';
-    if (rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return 'Unique Synthetic AVS';
-    return rawTier || '100% Real Physical';
+    if (rawTier === 'Residential Condominium / Apartment' || mode === 'landmark') return 'Residential Condominium / Apartment';
+    if (rawTier === 'Residential Street (GIS Validated)' || rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return 'Residential Street (GIS Validated)';
+    return rawTier || '100% Real Residential';
   }
 });
 
@@ -781,12 +781,12 @@ const localizedRuleSummary = computed(() => {
   const meta = props.identity.address.derivationMeta;
   const mode = props.identity.address.addressMode;
   if (locale.value === 'zh') {
-    return meta?.ruleSummary || (mode === 'residential' ? '真实居民独栋/住宅 · 纯天然居民房' : (mode === 'derivation' ? '真实街道门牌合法区间衍生 · GIS插值' : '真实商厦物理地标 · 100% 实体'));
+    return meta?.ruleSummary || (mode === 'residential' ? '真实居民独栋/住宅 · 纯天然居民房' : (mode === 'derivation' ? '真实居住街区门牌衍生 · GIS插值' : '真实都会高层公寓/优质名苑社区 · 100% 物理真实居住'));
   } else {
     if (meta?.ruleSummaryEn) return meta.ruleSummaryEn;
     if (mode === 'residential') return 'Single Family Home / Residence · Authentic Residential';
-    if (mode === 'derivation') return 'Valid Street House Range · Linear GIS Interpolation';
-    return 'Physical Commercial Landmark · 100% Real';
+    if (mode === 'derivation') return 'Valid Residential Street · Linear GIS Interpolation';
+    return 'Metropolitan Residential Condominium · 100% Real Living';
   }
 });
 

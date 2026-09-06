@@ -387,7 +387,7 @@ export const RESIDENTIAL_ADDRESSES: RealAddress[] = [
   res('56 Burke Rd', 'Camberwell', 'VIC', 'Victoria', '3124', 'Australia', 'AU', -37.8445, 145.0545, false, '10.00% (GST)', 'Australia/Melbourne (AEST/AEDT)', 'AEST', '墨尔本坎伯韦尔传统中产工匠独立住宅'),
   res('24 Merthyr Rd', 'New Farm', 'QLD', 'Queensland', '4005', 'Australia', 'AU', -27.4685, 153.0485, false, '10.00% (GST)', 'Australia/Brisbane (AEST)', 'AEST', '布里斯班新农场标志性昆士兰人高脚木屋住宅'),
   res('36 Latrobe Terrace', 'Paddington', 'QLD', 'Queensland', '4064', 'Australia', 'AU', -27.4585, 152.9985, false, '10.00% (GST)', 'Australia/Brisbane (AEST)', 'AEST', '布里斯班帕丁顿山坡斜顶传统阳台洋房'),
-  res('18 Station Rd', 'Indooroopilly', 'QLD', 'Queensland', '4068', 'Australia', 'AU', -27.4985, 152.9745, false, '10.00% (GST)', 'Australia/Brisbane (AEST)', 'AEST', '布里斯班因杜鲁皮利昆士兰大学周边家庭住宅'),
+  res('18 Clarence Rd', 'Indooroopilly', 'QLD', 'Queensland', '4068', 'Australia', 'AU', -27.4985, 152.9745, false, '10.00% (GST)', 'Australia/Brisbane (AEST)', 'AEST', '布里斯班因杜鲁皮利昆士兰大学周边家庭住宅'),
   res('14 Marine Parade', 'Cottesloe', 'WA', 'Western Australia', '6011', 'Australia', 'AU', -31.9945, 115.7512, false, '10.00% (GST)', 'Australia/Perth (AWST)', 'AWST', '珀斯科茨洛印度洋绝美日落独立海景别墅'),
   res('42 Rokeby Rd', 'Subiaco', 'WA', 'Western Australia', '6008', 'Australia', 'AU', -31.9485, 115.8245, false, '10.00% (GST)', 'Australia/Perth (AWST)', 'AWST', '珀斯苏比亚科典雅红砖家庭独立住宅'),
   res('68 South Terrace', 'Fremantle', 'WA', 'Western Australia', '6160', 'Australia', 'AU', -32.0585, 115.7485, false, '10.00% (GST)', 'Australia/Perth (AWST)', 'AWST', '弗里曼特尔海港历史石灰岩独立民居'),

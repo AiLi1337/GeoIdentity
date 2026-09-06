@@ -250,36 +250,22 @@ export function generateIdentity(countryCode: CountryCode, options?: FilterOptio
     options?.addressMode
   );
 
-  let addressLine2 = '';
-  if (rawAddress.addressMode === 'residential' || rawAddress.buildingType === 'residential') {
-    addressLine2 = generateResidentialAddressLine2(countryCode);
-  } else if (rawAddress.addressMode === 'derivation') {
-    // Scheme A: 60% with suite/unit, 40% clean street
-    if (Math.random() < 0.6) {
-      const suiteTypes = [
-        `Ste ${Math.floor(100 + Math.random() * 899)}`,
-        `Suite ${Math.floor(100 + Math.random() * 899)}`,
-        `Unit ${['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)]}-${Math.floor(10 + Math.random() * 90)}`,
-        `Apt ${Math.floor(1 + Math.random() * 40)}${['A', 'B', 'C'][Math.floor(Math.random() * 3)]}`,
-        `Box #${Math.floor(1000 + Math.random() * 9000)}`
-      ];
-      addressLine2 = suiteTypes[Math.floor(Math.random() * suiteTypes.length)];
-    }
-  } else {
-    const suiteTypes = [
-      `Ste ${Math.floor(100 + Math.random() * 899)}`,
-      `Suite ${Math.floor(100 + Math.random() * 899)}`,
-      `Unit ${['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)]}-${Math.floor(10 + Math.random() * 90)}`,
-      `Apt ${Math.floor(1 + Math.random() * 40)}${['A', 'B', 'C'][Math.floor(Math.random() * 3)]}`,
-      `Box #${Math.floor(1000 + Math.random() * 9000)}`
-    ];
-    addressLine2 = suiteTypes[Math.floor(Math.random() * suiteTypes.length)];
+  let addressLine2 = rawAddress.addressLine2 || '';
+  if (/\b(Ste|Suite|Box\s*#)\b/i.test(addressLine2)) {
+    addressLine2 = '';
   }
+  if (!addressLine2) {
+    addressLine2 = generateResidentialAddressLine2(countryCode);
+  }
+
+  const cleanStreet = (rawAddress.street || '').replace(/,\s*(?:Ste|Suite|Box\s*#)\s*[\w#-]+/gi, '').trim();
 
   const address: typeof rawAddress = {
     ...rawAddress,
-    addressLine1: rawAddress.street,
+    street: cleanStreet,
+    addressLine1: cleanStreet,
     addressLine2: addressLine2 || undefined,
+    buildingType: 'residential',
     taxRate: rawAddress.taxRate || (rawAddress.isTaxFree ? '0.00% (No Sales Tax)' : 'Standard Tax'),
     isTaxFree: Boolean(rawAddress.isTaxFree || country.isTaxFreeZone),
     timezone: rawAddress.timezone || 'UTC+0',
@@ -389,32 +375,24 @@ export function generateIdentityFromAddress(
   const phoneObj = generateRandomPhone(countryCode);
 
   let addressLine2 = customAddress.addressLine2 || '';
-  const isResidential = customAddress.addressMode === 'residential'
-    || customAddress.buildingType === 'residential'
-    || customAddress.buildingType === 'derived';
-
-  // Residential addresses must NEVER contain commercial Ste or Suite
-  if (isResidential && /\b(Ste|Suite)\b/i.test(addressLine2)) {
+  // Purge any pre-existing commercial Ste, Suite or Box #
+  if (/\b(Ste|Suite|Box\s*#)\b/i.test(addressLine2)) {
     addressLine2 = '';
   }
 
   if (!addressLine2) {
-    if (isResidential) {
-      addressLine2 = generateResidentialAddressLine2(countryCode);
-    } else if (Math.random() < 0.4) {
-      const suiteTypes = [
-        `Ste ${Math.floor(100 + Math.random() * 899)}`,
-        `Suite ${Math.floor(100 + Math.random() * 899)}`,
-        `Unit ${['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)]}-${Math.floor(10 + Math.random() * 90)}`
-      ];
-      addressLine2 = suiteTypes[Math.floor(Math.random() * suiteTypes.length)];
-    }
+    addressLine2 = generateResidentialAddressLine2(countryCode);
   }
+
+  const rawStreet = customAddress.addressLine1 || customAddress.street || '';
+  const cleanStreet = rawStreet.replace(/,\s*(?:Ste|Suite|Box\s*#)\s*[\w#-]+/gi, '').trim();
 
   const address: RealAddress = {
     ...customAddress,
-    addressLine1: customAddress.addressLine1 || customAddress.street,
+    street: cleanStreet,
+    addressLine1: cleanStreet,
     addressLine2: addressLine2 || undefined,
+    buildingType: 'residential',
     taxRate: customAddress.taxRate || (customAddress.isTaxFree ? '0.00% (No Sales Tax)' : 'Standard Tax'),
     isTaxFree: Boolean(customAddress.isTaxFree || country.isTaxFreeZone),
     timezone: customAddress.timezone || 'UTC+0',

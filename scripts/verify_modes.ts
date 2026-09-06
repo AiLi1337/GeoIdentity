@@ -1,5 +1,5 @@
 import { generateIdentity, generateIdentityFromAddress } from '../src/services/identityGenerator';
-import { getRandomAddress } from '../src/data/addresses';
+import { getRandomAddress, ADDRESS_MAP } from '../src/data/addresses';
 import { STREET_DERIVATION_RULES, deriveStreetAddress, getDerivationRule, matchesState } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES, getResidentialAddress } from '../src/data/addresses/schemes/residentialAddresses';
 import { formatFullIdentityText, buildCSVContent } from '../src/services/exportService';
@@ -23,15 +23,15 @@ console.log('🚀 Starting Comprehensive Rigorous Address Mode Verification Suit
 console.log('================================================================');
 
 // -----------------------------------------------------------------------------
-// 1. Mode 1: Landmark Seeds Verification
+// 1. Mode 1: Scheme C (Residential Condominiums & Apartments) Verification
 // -----------------------------------------------------------------------------
-console.log('\n--- 1. Testing Mode 1: Landmark Seeds ---');
+console.log('\n--- 1. Testing Mode 1: Scheme C (Residential Condominiums & Apartments) ---');
 const landmarkUS = generateIdentity('US', { gender: 'random', ageRange: 'random', addressMode: 'landmark' });
-assert(landmarkUS.address.addressMode === 'landmark', 'Landmark address mode is set');
-assert(landmarkUS.address.buildingType === 'commercial', 'Landmark building type is commercial');
+assert(landmarkUS.address.addressMode === 'landmark', 'Landmark (Scheme C) address mode is set');
+assert(landmarkUS.address.buildingType === 'residential', 'Landmark (Scheme C) building type is strictly residential');
 assert(!!landmarkUS.address.street, 'Landmark address has street');
 assert(!!landmarkUS.address.lat && !!landmarkUS.address.lng, 'Landmark address has lat/lng');
-assert(landmarkUS.address.derivationMeta?.avsTier === 'Commercial / Freight', 'Landmark AVS tier is Commercial');
+assert(landmarkUS.address.derivationMeta?.avsTier === 'Residential Condominium / Apartment', 'Landmark AVS tier is Residential Condominium / Apartment');
 
 // -----------------------------------------------------------------------------
 // 2. Mode 2: Scheme A (Street Derivation) Verification
@@ -290,10 +290,10 @@ const csvOutput = buildCSVContent(mixedIdentities);
 assert(csvOutput.startsWith('\uFEFF'), 'CSV output starts with UTF-8 BOM');
 assert(csvOutput.includes('"Address Mode"'), 'CSV header includes Address Mode');
 assert(csvOutput.includes('"AVS / Building Tier"'), 'CSV header includes AVS / Building Tier');
-assert(csvOutput.includes('Curated Real Landmark Seeds') || csvOutput.includes('Curated Landmark Seed'), 'CSV row includes Landmark mode label');
-assert(csvOutput.includes('Scheme A: Street Range Derivation') || csvOutput.includes('Scheme A: Street Derivation'), 'CSV row includes Derivation mode label');
+assert(csvOutput.includes('Scheme C') || csvOutput.includes('Curated Real Landmark Seeds') || csvOutput.includes('Curated Landmark Seed'), 'CSV row includes Scheme C / Landmark mode label');
+assert(csvOutput.includes('Residential Street') || csvOutput.includes('Scheme A: Street Range Derivation') || csvOutput.includes('Scheme A: Street Derivation'), 'CSV row includes Derivation mode label');
 assert(csvOutput.includes('Scheme B: Real Residential Address'), 'CSV row includes Residential mode label');
-assert(csvOutput.includes('Residential Single Family') || csvOutput.includes('Residential Detached House'), 'CSV row includes Residential AVS Tier');
+assert(csvOutput.includes('Residential Single Family') || csvOutput.includes('Residential Condominium'), 'CSV row includes Residential AVS Tier');
 
 // -----------------------------------------------------------------------------
 // 10. Normal Setback Algorithm Off-Road Verification (True Metric Projection)
@@ -576,6 +576,55 @@ const pollutedResidential: any = {
 };
 const cleanedId = generateIdentityFromAddress(pollutedResidential);
 assert(!/\bSuite\b/i.test(cleanedId.address.addressLine2 || ''), 'generateIdentityFromAddress cleans pre-existing Suite 400 from residential address');
+
+// -----------------------------------------------------------------------------
+// 14. Universal 100% Livability & Zero-Commercial Global Audit
+// -----------------------------------------------------------------------------
+console.log('\n--- 14. Universal 100% Livability & Anti-Unlivable Ground Truth Audit ---');
+
+// 14.1 Every seed address across all countries in ADDRESS_MAP must be strictly residential
+const unlivableKeywords = [
+  'station', 'shinkansen', 'terminal', 'airport', 'cenotaph', 'memorial', 'cathedral', 'duomo',
+  'palace', '10 Downing', 'Elysée', 'Champs-Élysées', '1 Infinite Loop', '1355 Market',
+  '350 5th Ave', '111 8th Ave', '400 9th Ave', '233 S Wacker', 'Taipei 101', 'Marina Bay Sands',
+  'Petronas', 'Bitexco', 'IFC', 'ICC'
+];
+
+let totalSeedAddresses = 0;
+for (const [countryKey, list] of Object.entries(ADDRESS_MAP)) {
+  for (const addr of list) {
+    totalSeedAddresses++;
+    assert(addr.buildingType === 'residential', `[${countryKey}] Seed address "${addr.street}" buildingType is strictly residential`);
+    for (const kw of unlivableKeywords) {
+      assert(!addr.street.toLowerCase().includes(kw.toLowerCase()), `[${countryKey}] Seed address "${addr.street}" does not contain unlivable keyword "${kw}"`);
+    }
+  }
+}
+console.log(`   Audited all ${totalSeedAddresses} seed addresses in ADDRESS_MAP across 21 countries: 100% verified residential condos/apartments!`);
+
+// 14.2 High-volume multi-mode stress test: 150 random identities across all modes & countries
+const modesToTest: AddressMode[] = ['landmark', 'derivation', 'residential'];
+const countriesToTest: CountryCode[] = ['US', 'GB', 'CA', 'AU', 'DE', 'FR', 'JP', 'HK', 'TW', 'SG', 'KR', 'CH', 'LU', 'IE', 'IT', 'ES', 'NL', 'MY', 'TH', 'VN', 'PH'];
+
+for (let i = 0; i < 150; i++) {
+  const chosenCountry = countriesToTest[i % countriesToTest.length];
+  const chosenMode = modesToTest[i % modesToTest.length];
+  const identity = generateIdentity(chosenCountry, { addressMode: chosenMode });
+
+  // Absolute requirement: 100% residential buildingType
+  assert(identity.address.buildingType === 'residential', `Identity trial #${i} (${chosenCountry}, mode: ${chosenMode}) buildingType is strictly residential`);
+
+  // Absolute requirement: zero commercial suite pollution
+  const l1 = identity.address.addressLine1 || identity.address.street;
+  const l2 = identity.address.addressLine2 || '';
+  assert(!/\b(Ste|Suite|Box\s*#)\b/i.test(l2), `Trial #${i} addressLine2 "${l2}" does not contain Ste/Suite/Box #`);
+  assert(!/\b(Ste|Suite|Box\s*#)\b/i.test(l1), `Trial #${i} addressLine1 "${l1}" does not contain Ste/Suite/Box #`);
+
+  // Coordinates must be valid numbers
+  assert(typeof identity.address.lat === 'number' && !isNaN(identity.address.lat), `Trial #${i} has valid lat: ${identity.address.lat}`);
+  assert(typeof identity.address.lng === 'number' && !isNaN(identity.address.lng), `Trial #${i} has valid lng: ${identity.address.lng}`);
+}
+console.log('   Stress-tested 150 identities across all 3 modes and 21 countries: 100% residential, 0% Ste/Suite pollution!');
 
 console.log('\n================================================================');
 console.log(`🎉 SUCCESS: All ${assertionCount} assertions passed cleanly!`);

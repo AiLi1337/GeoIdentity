@@ -2,69 +2,69 @@ import type { RealAddress } from '../../types/identity';
 
 export const TW_ADDRESSES: RealAddress[] = [
   {
-    street: '信义路五段7号 台北101大楼 (No. 7, Sec. 5, Xinyi Rd)',
+    street: '信义区松德路200巷18号 (No. 18, Ln. 200, Songde Rd)',
     city: '信义区 (Xinyi District)',
     state: 'TPE',
     stateFull: '台北市 (Taipei City)',
     postcode: '110',
     country: 'Taiwan',
     countryCode: 'TW',
-    lat: 25.0339,
-    lng: 121.5645
+    lat: 25.0345,
+    lng: 121.5720
   },
   {
-    street: '敦化南路二段207号 远企中心办公大楼 (No. 207, Sec. 2, Dunhua S. Rd)',
+    street: '大安区和平东路一段199号 (No. 199, Sec. 1, Heping E. Rd)',
     city: '大安区 (Da\'an District)',
     state: 'TPE',
     stateFull: '台北市 (Taipei City)',
     postcode: '106',
     country: 'Taiwan',
     countryCode: 'TW',
-    lat: 25.0275,
-    lng: 121.5489
+    lat: 25.0268,
+    lng: 121.5340
   },
   {
-    street: '新站路28号 板桥大远百百扬大楼 (Mega Tower, No. 28, Xinzhan Rd)',
+    street: '板桥区汉生东路166号 (No. 166, Hansheng E. Rd)',
     city: '板桥区 (Banqiao District)',
     state: 'NTP',
     stateFull: '新北市 (New Taipei City)',
     postcode: '220',
     country: 'Taiwan',
     countryCode: 'TW',
-    lat: 25.0135,
-    lng: 121.4658
+    lat: 25.0118,
+    lng: 121.4685
   },
   {
-    street: '台湾大道三段99号 (No. 99, Sec. 3, Taiwan Blvd)',
+    street: '西屯区市政北五路18号 (No. 18, Shizheng N. 5th Rd)',
     city: '西屯区 (Xitun District)',
     state: 'TXG',
     stateFull: '台中市 (Taichung City)',
     postcode: '407',
     country: 'Taiwan',
     countryCode: 'TW',
-    lat: 24.1627,
-    lng: 120.6471
+    lat: 24.1610,
+    lng: 120.6425
   },
   {
-    street: '四维三路2号 (No. 2, Siwei 3rd Rd)',
+    street: '苓雅区海边路31号 (No. 31, Haibian Rd)',
     city: '苓雅区 (Lingya District)',
     state: 'KHH',
     stateFull: '高雄市 (Kaohsiung City)',
     postcode: '802',
     country: 'Taiwan',
     countryCode: 'TW',
-    lat: 22.6208,
-    lng: 120.3121
+    lat: 22.6175,
+    lng: 120.2925
   },
   {
-    street: '新竹科学园区新安路8号 (No. 8, Xin\'an Rd, Hsinchu Science Park)',
+    street: '东区关新路19巷8号 (No. 8, Ln. 19, Guanxin Rd)',
     city: '东区 (East District)',
     state: 'HSZ',
     stateFull: '新竹市 (Hsinchu City)',
     postcode: '300',
     country: 'Taiwan',
     countryCode: 'TW',
-    lat: 24.7792,
-    lng: 121.0028
+    lat: 24.7875,
+    lng: 121.0185
   }
 ];
