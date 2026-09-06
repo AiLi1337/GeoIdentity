@@ -180,6 +180,32 @@ function generateRandomPhone(countryCode: CountryCode): { phone: string; formatt
   }
 }
 
+function generateResidentialAddressLine2(countryCode: CountryCode): string {
+  // 75% standalone single-family homes without line 2, 25% residential apt/unit
+  if (Math.random() >= 0.25) {
+    return '';
+  }
+
+  if (countryCode === 'HK') {
+    const hkFloors = [3, 5, 8, 12, 16, 21, 28, 32];
+    const floor = hkFloors[Math.floor(Math.random() * hkFloors.length)];
+    const flatLetter = ['A', 'B', 'C', 'D', 'E', 'F'][Math.floor(Math.random() * 6)];
+    const hkUnits = [
+      `Flat ${flatLetter}, ${floor}/F`,
+      `Rm ${floor}0${Math.floor(1 + Math.random() * 8)}`
+    ];
+    return hkUnits[Math.floor(Math.random() * hkUnits.length)];
+  }
+
+  // US, CA, and other countries: Apt XXX or Unit X
+  const resUnits = [
+    `Apt ${Math.floor(1 + Math.random() * 20)}${['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)]}`,
+    `Unit ${Math.floor(1 + Math.random() * 12)}`,
+    `Apt ${Math.floor(101 + Math.random() * 300)}`
+  ];
+  return resUnits[Math.floor(Math.random() * resUnits.length)];
+}
+
 export function generateIdentity(countryCode: CountryCode, options?: FilterOptions): GeneratedIdentity {
   const country = COUNTRIES.find(c => c.code === countryCode) || COUNTRIES[0];
 
@@ -225,16 +251,8 @@ export function generateIdentity(countryCode: CountryCode, options?: FilterOptio
   );
 
   let addressLine2 = '';
-  if (rawAddress.addressMode === 'residential') {
-    // 75% standalone single-family homes without line 2, 25% residential apt/unit
-    if (Math.random() < 0.25) {
-      const resUnits = [
-        `Apt ${Math.floor(1 + Math.random() * 20)}${['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)]}`,
-        `Unit ${Math.floor(1 + Math.random() * 12)}`,
-        `Apt ${Math.floor(101 + Math.random() * 300)}`
-      ];
-      addressLine2 = resUnits[Math.floor(Math.random() * resUnits.length)];
-    }
+  if (rawAddress.addressMode === 'residential' || rawAddress.buildingType === 'residential') {
+    addressLine2 = generateResidentialAddressLine2(countryCode);
   } else if (rawAddress.addressMode === 'derivation') {
     // Scheme A: 60% with suite/unit, 40% clean street
     if (Math.random() < 0.6) {
@@ -371,13 +389,26 @@ export function generateIdentityFromAddress(
   const phoneObj = generateRandomPhone(countryCode);
 
   let addressLine2 = customAddress.addressLine2 || '';
-  if (!addressLine2 && Math.random() < 0.4) {
-    const suiteTypes = [
-      `Ste ${Math.floor(100 + Math.random() * 899)}`,
-      `Suite ${Math.floor(100 + Math.random() * 899)}`,
-      `Unit ${['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)]}-${Math.floor(10 + Math.random() * 90)}`
-    ];
-    addressLine2 = suiteTypes[Math.floor(Math.random() * suiteTypes.length)];
+  const isResidential = customAddress.addressMode === 'residential'
+    || customAddress.buildingType === 'residential'
+    || customAddress.buildingType === 'derived';
+
+  // Residential addresses must NEVER contain commercial Ste or Suite
+  if (isResidential && /\b(Ste|Suite)\b/i.test(addressLine2)) {
+    addressLine2 = '';
+  }
+
+  if (!addressLine2) {
+    if (isResidential) {
+      addressLine2 = generateResidentialAddressLine2(countryCode);
+    } else if (Math.random() < 0.4) {
+      const suiteTypes = [
+        `Ste ${Math.floor(100 + Math.random() * 899)}`,
+        `Suite ${Math.floor(100 + Math.random() * 899)}`,
+        `Unit ${['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)]}-${Math.floor(10 + Math.random() * 90)}`
+      ];
+      addressLine2 = suiteTypes[Math.floor(Math.random() * suiteTypes.length)];
+    }
   }
 
   const address: RealAddress = {

@@ -1,4 +1,4 @@
-import { generateIdentity } from '../src/services/identityGenerator';
+import { generateIdentity, generateIdentityFromAddress } from '../src/services/identityGenerator';
 import { getRandomAddress } from '../src/data/addresses';
 import { STREET_DERIVATION_RULES, deriveStreetAddress, getDerivationRule, matchesState } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES, getResidentialAddress } from '../src/data/addresses/schemes/residentialAddresses';
@@ -403,6 +403,179 @@ assert(defaultGen.address.addressMode === 'residential', 'Default address mode i
 assert(defaultGen.address.buildingType === 'residential', 'Default building type is residential');
 assert(!defaultGen.address.street.includes('Suite 100'), 'Default address has no commercial Suite 100');
 console.log(`   [Default US Identity]: ${defaultGen.basic.fullName} living at ${defaultGen.address.street}, ${defaultGen.address.city} (${defaultGen.address.derivationMeta?.modeLabelZh})`);
+
+// -----------------------------------------------------------------------------
+// 13. High-Precision Residential Reality & Anti-Pollution Regression Suite
+// -----------------------------------------------------------------------------
+console.log('\n--- 13. Testing High-Precision Residential Reality & Anti-Pollution Regression ---');
+
+// 13.1 Hong Kong Seaview Crescent & Waterloo Rd district
+const hkSeaview = RESIDENTIAL_ADDRESSES.find(a => a.street === '8 Tung Chung Waterfront Rd');
+assert(!!hkSeaview, 'Found 8 Tung Chung Waterfront Rd in residential addresses');
+assert(hkSeaview!.lat === 22.2926 && hkSeaview!.lng === 113.9434, 'HK Seaview Crescent coords land squarely on residential towers (22.2926, 113.9434), NOT in park lawn');
+
+const hkWaterloo = RESIDENTIAL_ADDRESSES.find(a => a.street === '42 Waterloo Rd');
+assert(!!hkWaterloo && hkWaterloo.state === 'YTM', '42 Waterloo Rd district code is correctly YTM (Yau Tsim Mong)');
+
+// 13.2 Rail track, station, and casino corridor bounds
+const njWashRule = STREET_DERIVATION_RULES.find(r => r.id === 'us-nj-washington')!;
+assert(njWashRule.endCoord.lat <= 40.7300, `us-nj-washington endCoord lat ${njWashRule.endCoord.lat} <= 40.7300 (NOT on Hoboken Terminal rail yard)`);
+assert(njWashRule.maxNumber <= 480, `us-nj-washington maxNumber ${njWashRule.maxNumber} <= 480 (terminates south of 18th St)`);
+
+const chZurichRule = STREET_DERIVATION_RULES.find(r => r.id === 'ch-zurich-bahnhofstrasse')!;
+assert(chZurichRule.maxNumber <= 80 && chZurichRule.endCoord.lat <= 47.3740, 'ch-zurich-bahnhofstrasse stays clear of Zürich HB railway terminal');
+
+const luLiberteRule = STREET_DERIVATION_RULES.find(r => r.id === 'lu-luxembourg-liberte')!;
+assert(luLiberteRule.minNumber >= 40 && luLiberteRule.startCoord.lat >= 49.6035, 'lu-luxembourg-liberte stays clear of Place de la Gare central station square');
+
+const nvVegasRule = STREET_DERIVATION_RULES.find(r => r.id === 'us-nv-lasvegas')!;
+assert(nvVegasRule.streetName === 'S Maryland Pkwy', 'us-nv-lasvegas replaced with livable residential street S Maryland Pkwy (never casino resort)');
+
+// 13.3 generateIdentityFromAddress NEVER produces Ste or Suite for residential addresses
+for (let i = 0; i < 100; i++) {
+  const sampleAddr = RESIDENTIAL_ADDRESSES[i % RESIDENTIAL_ADDRESSES.length];
+  const idFromAddr = generateIdentityFromAddress(sampleAddr);
+  const l2 = idFromAddr.address.addressLine2 || '';
+  assert(!/\bSte\b/i.test(l2) && !/\bSuite\b/i.test(l2), `generateIdentityFromAddress for residential addressLine2 "${l2}" NEVER produces Ste or Suite (sample ${sampleAddr.street})`);
+}
+
+// 13.4 getRandomAddress with residential mode NEVER returns commercial buildingType
+const allSupportedCountries: CountryCode[] = ['US', 'GB', 'CA', 'AU', 'DE', 'FR', 'JP', 'HK', 'TW', 'SG', 'KR', 'MY', 'TH', 'VN', 'PH'];
+for (const cc of allSupportedCountries) {
+  for (let t = 0; t < 5; t++) {
+    const resAddr = getRandomAddress(cc, undefined, false, 'residential');
+    assert(resAddr.buildingType === 'residential', `getRandomAddress(${cc}, residential) buildingType is strictly residential`);
+    assert(resAddr.addressMode === 'residential', `getRandomAddress(${cc}, residential) addressMode is residential`);
+  }
+  // Test with invalid state to ensure fallback strictly preserves residential
+  const fallbackRes = getRandomAddress(cc, 'BOGUS_STATE_CODE_XYZ', false, 'residential');
+  assert(fallbackRes.buildingType === 'residential', `getRandomAddress(${cc}, bogus state, residential) fallback strictly preserves residential (never commercial)`);
+
+  // Test derivation mode with invalid state to ensure fallback never returns commercial landmarks
+  const derivFallback = getRandomAddress(cc, 'BOGUS_STATE_CODE_XYZ', false, 'derivation');
+  assert(derivFallback.buildingType !== 'commercial', `getRandomAddress(${cc}, bogus state, derivation) never falls back to commercial landmark`);
+}
+
+// 13.5 IP Resolution Reality & Residential Livability Guarantee
+const sampleIpConsensuses: IpConsensusResult[] = [
+  {
+    targetIp: '202.64.12.1',
+    winnerCountryCode: 'HK',
+    winnerCountry: 'Hong Kong',
+    winnerRegion: 'Islands',
+    winnerCity: 'Hong Kong',
+    confidenceRate: 100,
+    topCityVoteCount: 4,
+    successQueries: 4,
+    details: []
+  },
+  {
+    targetIp: '69.143.12.1',
+    winnerCountryCode: 'US',
+    winnerCountry: 'United States',
+    winnerRegion: 'NJ',
+    winnerCity: 'Jersey City',
+    confidenceRate: 100,
+    topCityVoteCount: 4,
+    successQueries: 4,
+    details: []
+  },
+  {
+    targetIp: '178.197.224.1',
+    winnerCountryCode: 'CH',
+    winnerCountry: 'Switzerland',
+    winnerRegion: 'ZH',
+    winnerCity: 'Zürich',
+    confidenceRate: 100,
+    topCityVoteCount: 4,
+    successQueries: 4,
+    details: []
+  },
+  {
+    targetIp: '158.64.1.1',
+    winnerCountryCode: 'LU',
+    winnerCountry: 'Luxembourg',
+    winnerRegion: 'LU',
+    winnerCity: 'Luxembourg',
+    confidenceRate: 100,
+    topCityVoteCount: 4,
+    successQueries: 4,
+    details: []
+  },
+  {
+    targetIp: '70.168.1.1',
+    winnerCountryCode: 'US',
+    winnerCountry: 'United States',
+    winnerRegion: 'NV',
+    winnerCity: 'Las Vegas',
+    confidenceRate: 100,
+    topCityVoteCount: 4,
+    successQueries: 4,
+    details: []
+  },
+  {
+    targetIp: '99.99.99.99',
+    winnerCountryCode: 'US',
+    winnerCountry: 'United States',
+    winnerRegion: 'UnknownState',
+    winnerCity: 'UnknownTown',
+    confidenceRate: 50,
+    topCityVoteCount: 2,
+    successQueries: 4,
+    details: []
+  },
+  {
+    targetIp: '1.2.3.4',
+    winnerCountryCode: 'ZZ' as any,
+    winnerCountry: 'Nowhere',
+    winnerRegion: 'Nowhere',
+    winnerCity: 'Nowhere',
+    confidenceRate: 25,
+    topCityVoteCount: 1,
+    successQueries: 4,
+    details: []
+  }
+];
+
+for (const consensus of sampleIpConsensuses) {
+  for (let i = 0; i < 20; i++) {
+    const resolved = resolveAddressFromIp(consensus);
+    assert(resolved.buildingType === 'residential', `resolveAddressFromIp(${consensus.winnerCity || consensus.winnerCountryCode}) buildingType is strictly residential`);
+    assert(resolved.addressMode === 'residential', `resolveAddressFromIp(${consensus.winnerCity || consensus.winnerCountryCode}) addressMode is residential`);
+
+    // Verify coordinates do not land in known unlivable zones
+    if (resolved.street.includes('Tung Chung Waterfront')) {
+      assert(resolved.lat === 22.2926 && resolved.lng === 113.9434, 'HK Seaview Crescent lands on residential towers, NOT in park');
+    }
+    if (resolved.street.includes('Washington Blvd')) {
+      assert(resolved.lat <= 40.7300, 'Jersey City Washington Blvd does not enter rail tracks');
+    }
+    if (resolved.street.includes('Bahnhofstrasse')) {
+      assert(resolved.lat <= 47.3740, 'Zurich Bahnhofstrasse does not enter HB terminal');
+    }
+    if (resolved.street.includes('Avenue de la Liberté')) {
+      assert(resolved.lat >= 49.6035, 'Luxembourg Liberte does not enter station square');
+    }
+    if (resolved.city === 'Las Vegas') {
+      assert(!resolved.street.includes('Las Vegas Blvd'), 'Las Vegas never generates casino strip corridor');
+    }
+
+    // Full identity generation from resolved IP address
+    const identity = generateIdentityFromAddress(resolved);
+    const l2 = identity.address.addressLine2 || '';
+    assert(!/\bSte\b/i.test(l2) && !/\bSuite\b/i.test(l2), `Identity from IP resolved addressLine2 "${l2}" NEVER contains Ste or Suite`);
+    assert(!/\bSte\b/i.test(identity.address.addressLine1 || '') && !/\bSuite\b/i.test(identity.address.addressLine1 || ''), 'Identity from IP resolved addressLine1 NEVER contains Ste or Suite');
+    assert(identity.address.buildingType === 'residential', 'Identity from IP resolved buildingType is residential');
+  }
+}
+
+// 13.6 Sanitization of pre-existing Ste/Suite on residential inputs
+const pollutedResidential: any = {
+  ...RESIDENTIAL_ADDRESSES[0],
+  addressLine2: 'Suite 400'
+};
+const cleanedId = generateIdentityFromAddress(pollutedResidential);
+assert(!/\bSuite\b/i.test(cleanedId.address.addressLine2 || ''), 'generateIdentityFromAddress cleans pre-existing Suite 400 from residential address');
 
 console.log('\n================================================================');
 console.log(`🎉 SUCCESS: All ${assertionCount} assertions passed cleanly!`);

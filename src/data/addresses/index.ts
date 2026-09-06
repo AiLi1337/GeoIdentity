@@ -11,7 +11,7 @@ import { TW_ADDRESSES } from './tw';
 import { SG_ADDRESSES } from './sg';
 import { EXTENDED_ADDRESSES } from './extended';
 import { getDerivationRule, deriveStreetAddress, matchesState } from './schemes/derivationRules';
-import { getResidentialAddress } from './schemes/residentialAddresses';
+import { getResidentialAddress, RESIDENTIAL_ADDRESSES } from './schemes/residentialAddresses';
 
 export const ADDRESS_MAP: Record<CountryCode, RealAddress[]> = {
   US: US_ADDRESSES,
@@ -77,23 +77,6 @@ export function getRandomAddress(
       if (stateRes) {
         return stateRes;
       }
-      const stateLandmarks = countryLandmarkList.filter(
-        a => matchesState(a.state, a.stateFull, stateCode) && (!isTaxFreeOnly || a.isTaxFree)
-      );
-      if (stateLandmarks.length > 0) {
-        const idx = Math.floor(Math.random() * stateLandmarks.length);
-        const fallbackAddr = enrichLandmarkAddress(stateLandmarks[idx]);
-        fallbackAddr.derivationMeta = {
-          mode: 'landmark',
-          modeLabelZh: '方案A·街道衍生 (优雅降级为该州实体地标)',
-          modeLabelEn: 'Scheme A (Fallback to State Landmark)',
-          ruleSummary: `${fallbackAddr.stateFull || fallbackAddr.state} 该区域暂未收录独立走廊，已优雅降级为该州实体地标`,
-          interpolated: false,
-          buildingType: 'commercial',
-          avsTier: 'Commercial Landmark'
-        };
-        return fallbackAddr;
-      }
     }
     // If stateCode was not specified or no state match exists, try a country-level derivation corridor
     const countryFallbackRule = getDerivationRule(countryCode, undefined, isTaxFreeOnly);
@@ -104,6 +87,8 @@ export function getRandomAddress(
     if (countryRes) {
       return countryRes;
     }
+    const globalRes = getResidentialAddress('US', undefined, false) || RESIDENTIAL_ADDRESSES[0];
+    return globalRes;
   }
 
   // Mode 3: 方案B (全球真实住宅/居民独栋地址库)
@@ -112,37 +97,16 @@ export function getRandomAddress(
     if (resAddr) {
       return resAddr;
     }
-    // If state-specific address was requested but not found in Scheme B:
-    if (stateCode) {
-      // First check if Scheme A has a corridor in that specific state!
-      const stateRule = getDerivationRule(countryCode, stateCode, isTaxFreeOnly);
-      if (stateRule) {
-        return deriveStreetAddress(stateRule);
-      }
-      // If neither has that state, check if that state has a landmark
-      const stateLandmarks = countryLandmarkList.filter(
-        a => matchesState(a.state, a.stateFull, stateCode) && (!isTaxFreeOnly || a.isTaxFree)
-      );
-      if (stateLandmarks.length > 0) {
-        const idx = Math.floor(Math.random() * stateLandmarks.length);
-        const fallbackAddr = enrichLandmarkAddress(stateLandmarks[idx]);
-        fallbackAddr.derivationMeta = {
-          mode: 'landmark',
-          modeLabelZh: '方案B·居民住宅 (优雅降级为该州实体地标)',
-          modeLabelEn: 'Scheme B (Fallback to State Landmark)',
-          ruleSummary: `${fallbackAddr.stateFull || fallbackAddr.state} 该区域暂未收录居民独栋，已优雅降级为该州实体地标`,
-          interpolated: false,
-          buildingType: 'commercial',
-          avsTier: 'Commercial Landmark'
-        };
-        return fallbackAddr;
-      }
-    }
-    // If stateCode was not specified or state exists nowhere, try country-level residential address
-    const countryFallbackRes = getResidentialAddress(countryCode, undefined, isTaxFreeOnly);
+    // Fallback within country: strictly prioritize other residential addresses in that country
+    const countryFallbackRes = getResidentialAddress(countryCode, undefined, isTaxFreeOnly)
+      || (isTaxFreeOnly ? getResidentialAddress(countryCode, undefined, false) : null);
     if (countryFallbackRes) {
       return countryFallbackRes;
     }
+    // Global residential fallback to guarantee residential property, never commercial
+    const globalFallbackRes = getResidentialAddress('US', undefined, false)
+      || RESIDENTIAL_ADDRESSES[0];
+    return globalFallbackRes;
   }
 
   // Mode 1: 高精度真实地标种子库 (or graceful fallback)

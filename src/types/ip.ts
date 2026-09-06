@@ -45,6 +45,7 @@ export interface IpConsensusResult {
     | 'state_derivation_fallback'
     | 'state_fallback_landmark'
     | 'national_residential_fallback'
+    | 'global_residential_fallback'
     | 'general_fallback';
   strategySummaryZh?: string;
   strategySummaryEn?: string;

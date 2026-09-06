@@ -1,6 +1,5 @@
 import type { CountryCode, RealAddress } from '../types/identity';
 import type { IpConsensusResult } from '../types/ip';
-import { ADDRESS_MAP } from '../data/addresses';
 import { matchesState, STREET_DERIVATION_RULES, deriveStreetAddress } from '../data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES } from '../data/addresses/schemes/residentialAddresses';
 
@@ -59,7 +58,6 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
 
   const countryResidential = RESIDENTIAL_ADDRESSES.filter(a => a.countryCode === countryCode);
   const countryCorridors = STREET_DERIVATION_RULES.filter(r => r.countryCode === countryCode);
-  const landmarkList = ADDRESS_MAP[countryCode] || ADDRESS_MAP.US;
 
   // =========================================================================
   // Track 1: Prioritize Genuine Residential Home in Same City (Scheme B)
@@ -103,12 +101,15 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
       consensus.strategySummaryEn = `Same-City Corridor Derivation: Parcel setback along ${rule.streetName}, ${rule.city}`;
       return {
         ...derived,
+        addressMode: 'residential',
+        buildingType: 'residential',
         derivationMeta: {
           ...derived.derivationMeta,
-          mode: 'derivation',
+          mode: 'residential',
           modeLabelZh: '方案A·IP同城真实街道衍生',
           modeLabelEn: 'Scheme A · Same-City IP Derivation',
           ruleSummary: `基于 IP 归属地 ${targetCity} 沿 ${rule.streetName} 合法门牌走廊生成真实建筑点位`,
+          buildingType: 'residential',
           avsTier: 'GIS Derived Street (Parcel Setback)'
         }
       };
@@ -158,7 +159,20 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
       consensus.matchedStrategy = 'state_derivation_fallback';
       consensus.strategySummaryZh = `同州走廊衍生：${targetCity || '该区域'} 暂无直达住宅，已匹配 ${targetRegion} 核心街道合法门牌`;
       consensus.strategySummaryEn = `State Corridor Derivation: Valid parcel along ${rule.streetName}, ${targetRegion}`;
-      return derived;
+      return {
+        ...derived,
+        addressMode: 'residential',
+        buildingType: 'residential',
+        derivationMeta: {
+          ...derived.derivationMeta,
+          mode: 'residential',
+          modeLabelZh: '同州走廊衍生 (平滑保底)',
+          modeLabelEn: 'State Corridor Derivation (Fallback)',
+          ruleSummary: `已安全匹配至 ${targetRegion} 核心街道合法门牌`,
+          buildingType: 'residential',
+          avsTier: 'GIS Derived Street'
+        }
+      };
     }
   }
 
@@ -171,67 +185,25 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
     consensus.matchedStrategy = 'national_residential_fallback';
     consensus.strategySummaryZh = `全域真实住宅保底：已为您匹配 ${fallbackRes.city} 真实居民住宅 (AVS住宅白名单)`;
     consensus.strategySummaryEn = `National Residential Fallback: Genuine residence in ${fallbackRes.city}`;
-    return fallbackRes;
+    return {
+      ...fallbackRes,
+      addressMode: 'residential',
+      buildingType: 'residential'
+    };
   }
 
   // =========================================================================
-  // Track 6: Exact Same-City Commercial Landmark (Only if country has no residential seeds)
+  // Track 6: Global Safe Residential Fallback
+  // Under NO circumstances does IP resolution EVER return a commercial skyscraper or unlivable landmark!
   // =========================================================================
-  if (targetCity && landmarkList.length > 0) {
-    const cityLandmarks = landmarkList.filter(a => cityMatches(a.city, targetCity));
-    if (cityLandmarks.length > 0) {
-      const match = getRandomItem(cityLandmarks);
-      consensus.matchedStrategy = 'exact_city_landmark';
-      consensus.strategySummaryZh = `完全同城商业地标：精准命中 ${targetCity} 已收录实体商务大厦 (适合企业/商户开户)`;
-      consensus.strategySummaryEn = `Exact City Landmark: Physical commercial building in ${targetCity}`;
-      return {
-        ...match,
-        addressMode: 'landmark',
-        buildingType: 'commercial',
-        derivationMeta: {
-          mode: 'landmark',
-          modeLabelZh: 'IP同城实体地标 (100% 真实)',
-          modeLabelEn: 'IP Exact City Landmark',
-          ruleSummary: `根据 IP 归属地精准匹配到 ${targetCity} 真实商务实体建筑`,
-          buildingType: 'commercial',
-          avsTier: 'Commercial Landmark'
-        }
-      };
-    }
-  }
-
-  // =========================================================================
-  // Track 7: Same-State Commercial Landmark Fallback
-  // =========================================================================
-  if (targetRegion && landmarkList.length > 0) {
-    const stateLandmarks = landmarkList.filter(
-      a => matchesState(a.state, a.stateFull, targetRegion)
-    );
-    if (stateLandmarks.length > 0) {
-      const match = getRandomItem(stateLandmarks);
-      consensus.matchedStrategy = 'state_fallback_landmark';
-      consensus.strategySummaryZh = `同州商业地标保底：已匹配 ${targetRegion} 核心商务实体地标`;
-      consensus.strategySummaryEn = `State Landmark Fallback: Core commercial landmark in ${targetRegion}`;
-      return {
-        ...match,
-        addressMode: 'landmark',
-        buildingType: 'commercial',
-        derivationMeta: {
-          mode: 'landmark',
-          modeLabelZh: '同州核心地标 (平滑保底)',
-          modeLabelEn: 'State Core Landmark (Fallback)',
-          ruleSummary: `已安全匹配至 ${targetRegion} 州级核心实体地标`,
-          buildingType: 'commercial',
-          avsTier: 'Commercial Landmark'
-        }
-      };
-    }
-  }
-
-  // General fallback
-  const fallback = getRandomItem(landmarkList);
-  consensus.matchedStrategy = 'general_fallback';
-  consensus.strategySummaryZh = `通用保底：已为您分发 ${fallback.city} 核心商业实体地标`;
-  consensus.strategySummaryEn = `General Fallback: Assigned core physical landmark in ${fallback.city}`;
-  return fallback;
+  const globalRes = RESIDENTIAL_ADDRESSES.filter(a => a.countryCode === 'US');
+  const fallback = globalRes.length > 0 ? getRandomItem(globalRes) : RESIDENTIAL_ADDRESSES[0];
+  consensus.matchedStrategy = 'global_residential_fallback';
+  consensus.strategySummaryZh = `全域住宅保底：已为您分发真实居民住宅 (AVS住宅白名单，坚决不分配商业办公楼)`;
+  consensus.strategySummaryEn = `Global Residential Fallback: Assigned authentic residential home`;
+  return {
+    ...fallback,
+    addressMode: 'residential',
+    buildingType: 'residential'
+  };
 }
