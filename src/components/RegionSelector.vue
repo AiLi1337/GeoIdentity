@@ -37,7 +37,7 @@
           v-model="searchQuery"
           type="text"
           :placeholder="t('regions.searchPlaceholder')"
-          class="w-full text-xs pl-8 pr-3 py-1.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+          class="w-full text-base sm:text-xs pl-8 pr-7 py-2 sm:py-1.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all"
         />
         <button
           v-if="searchQuery"

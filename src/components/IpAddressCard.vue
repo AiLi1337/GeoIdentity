@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
@@ -30,7 +30,7 @@
           v-model="ipInput"
           :placeholder="t('ipGen.inputPlaceholder')"
           @keydown.enter="handleSearch"
-          class="w-full pl-10 pr-28 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 text-slate-900 dark:text-white placeholder-slate-400 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all"
+          class="w-full pl-10 pr-28 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 text-slate-900 dark:text-white placeholder-slate-400 text-base sm:text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all"
         />
         <!-- Quick fetch client IP button inside input -->
         <button
