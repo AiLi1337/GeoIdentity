@@ -13,7 +13,14 @@ export const en = {
     langEn: 'English',
     history: 'History & Saved',
     batch: 'Batch Generate',
-    disclaimer: 'Disclaimer'
+    disclaimer: 'Disclaimer',
+    installPwa: 'Install App',
+    installPwaTip: 'Install as desktop or mobile standalone app with full offline support',
+    pwaInstalled: 'GeoIdentity installed successfully as standalone app!',
+    iosInstallGuideTitle: 'Add to Home Screen (iOS Safari)',
+    iosInstallGuideStep1: 'Tap the Share icon (square with arrow) at the bottom of Safari',
+    iosInstallGuideStep2: 'Scroll down and tap "Add to Home Screen"',
+    iosInstallGuideStep3: 'Tap "Add" in the top right to use GeoIdentity as a full-screen app!'
   },
   continents: {
     all: 'All Countries',

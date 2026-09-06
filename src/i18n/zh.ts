@@ -13,7 +13,14 @@ export const zh = {
     langEn: 'English',
     history: '历史与收藏',
     batch: '批量生成',
-    disclaimer: '免责声明'
+    disclaimer: '免责声明',
+    installPwa: '安装应用',
+    installPwaTip: '安装为桌面或手机独立应用，支持纯前端离线秒开',
+    pwaInstalled: 'GeoIdentity 已成功安装为独立应用！',
+    iosInstallGuideTitle: '添加到主屏幕 (iOS Safari)',
+    iosInstallGuideStep1: '点击 Safari 浏览器底部的【分享】按钮（向上箭头图标）',
+    iosInstallGuideStep2: '在弹出面板中向下滑动，找到并点击【添加到主屏幕】',
+    iosInstallGuideStep3: '点击右上角【添加】，即可像原生 App 一样全屏离线使用！'
   },
   continents: {
     all: '全部国家',

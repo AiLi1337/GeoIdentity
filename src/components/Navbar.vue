@@ -86,6 +86,18 @@
           <span class="hidden xl:inline">{{ t('nav.disclaimer') }}</span>
         </button>
 
+        <!-- PWA Install Button (When installable or iOS) -->
+        <button
+          v-if="canInstall || (isIos && !isInstalled)"
+          type="button"
+          @click="promptInstall"
+          class="inline-flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-sm shadow-teal-500/20 transition-all cursor-pointer whitespace-nowrap shrink-0"
+          :title="t('nav.installPwaTip')"
+        >
+          <Smartphone class="w-4 h-4" />
+          <span class="hidden xl:inline">{{ t('nav.installPwa') }}</span>
+        </button>
+
         <!-- Language Switcher -->
         <button
           type="button"
@@ -213,9 +225,20 @@
               <span>{{ t('nav.disclaimer') }}</span>
             </button>
 
+            <!-- 4. PWA 安装应用 -->
+            <button
+              v-if="canInstall || (isIos && !isInstalled)"
+              type="button"
+              @click="handleMobilePwaInstall"
+              class="w-full px-3.5 py-2 text-left text-xs font-semibold text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950/40 flex items-center gap-2.5 transition-colors cursor-pointer"
+            >
+              <Smartphone class="w-4 h-4 text-teal-600 dark:text-teal-400" />
+              <span>{{ t('nav.installPwa') }}</span>
+            </button>
+
             <div class="my-1 border-t border-slate-100 dark:border-slate-800"></div>
 
-            <!-- 4. GitHub 开源链接 -->
+            <!-- 5. GitHub 开源链接 -->
             <a
               href="https://github.com/AiLi1337/GeoIdentity"
               target="_blank"
@@ -233,6 +256,50 @@
   </header>
   <!-- Fixed Navbar Placeholder to keep natural document flow -->
   <div class="h-16 w-full shrink-0 pointer-events-none" aria-hidden="true"></div>
+
+  <!-- iOS Safari PWA Install Guidance Modal -->
+  <Teleport to="body">
+    <div
+      v-if="showIosGuide"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200"
+      @click.self="showIosGuide = false"
+    >
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative text-left">
+        <button
+          type="button"
+          @click="showIosGuide = false"
+          class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+        >
+          ✕
+        </button>
+        <div class="flex items-center gap-2 mb-3 text-teal-600 dark:text-teal-400 font-bold text-base">
+          <Smartphone class="w-5 h-5" />
+          <span>{{ t('nav.iosInstallGuideTitle') }}</span>
+        </div>
+        <div class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold text-[11px] shrink-0">1</span>
+            <p>{{ t('nav.iosInstallGuideStep1') }}</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold text-[11px] shrink-0">2</span>
+            <p>{{ t('nav.iosInstallGuideStep2') }}</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold text-[11px] shrink-0">3</span>
+            <p>{{ t('nav.iosInstallGuideStep3') }}</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          @click="showIosGuide = false"
+          class="w-full mt-4 py-2 text-xs font-semibold rounded-xl bg-teal-600 text-white hover:bg-teal-700 transition-colors cursor-pointer"
+        >
+          {{ locale === 'zh' ? '我知道了' : 'Got it' }}
+        </button>
+      </div>
+    </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -247,9 +314,11 @@ import {
   ShieldAlert,
   Globe,
   Github,
-  MoreVertical
+  MoreVertical,
+  Smartphone
 } from 'lucide-vue-next';
 import { useI18n } from '../i18n';
+import { usePwaInstall } from '../composables/usePwaInstall';
 
 defineProps<{
   favoriteCount: number;
@@ -268,6 +337,13 @@ const { locale, setLocale, t } = useI18n();
 const isDark = ref(false);
 const isMobileMenuOpen = ref(false);
 const mobileMenuRef = ref<HTMLElement | null>(null);
+
+const { canInstall, isInstalled, isIos, showIosGuide, promptInstall } = usePwaInstall();
+
+async function handleMobilePwaInstall() {
+  isMobileMenuOpen.value = false;
+  await promptInstall();
+}
 
 function toggleLang() {
   setLocale(locale.value === 'zh' ? 'en' : 'zh');
