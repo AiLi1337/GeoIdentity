@@ -115,7 +115,7 @@
         </div>
         <div class="mt-2 flex items-baseline gap-2">
           <span class="text-2xl sm:text-3xl font-extrabold text-cyan-600 dark:text-cyan-400 font-mono">{{ metadata.stats.totalSchemeACapacity.toLocaleString() }}+</span>
-          <span class="text-xs text-slate-500">47条合法街道走廊</span>
+          <span class="text-xs text-slate-500">{{ metadata.stats.totalSchemeACorridors }}条合法街道走廊</span>
         </div>
       </div>
     </div>
