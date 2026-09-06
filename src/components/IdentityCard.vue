@@ -509,33 +509,75 @@
             </div>
           </div>
 
-          <!-- Bottom Row: Expiry, CVV, Bank -->
-          <div class="grid grid-cols-3 gap-2 sm:gap-3 items-stretch">
+          <!-- Expiry & CVV Row (2-Column Grid) -->
+          <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+            <!-- Expiry Date (MM/YY) -->
             <div
               @click="copyField(`${identity.finance.expMonth}/${identity.finance.expYear}`, 'exp')"
-              class="group p-2 sm:p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer flex flex-col justify-between"
+              class="group p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer transition-colors"
             >
-              <div class="text-[10px] sm:text-[11px] text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">{{ labels.expDate }}</div>
-              <div class="text-xs sm:text-sm font-mono font-bold text-slate-200 whitespace-nowrap">
-                {{ identity.finance.expMonth }} / {{ identity.finance.expYear }}
+              <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                <div class="flex items-center gap-1.5">
+                  <span>{{ labels.expDate }}</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-slate-300 font-mono">MM/YY</span>
+                </div>
+                <Check v-if="copiedKey === 'exp'" class="w-3.5 h-3.5 text-emerald-400" />
+                <Copy v-else class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-300 transition-opacity" />
+              </div>
+              <div class="text-base sm:text-lg font-mono font-bold text-slate-100 whitespace-nowrap flex items-baseline gap-1.5">
+                <span>{{ identity.finance.expMonth }} / {{ identity.finance.expYear.slice(-2) }}</span>
+                <span class="text-xs font-normal text-slate-400">({{ identity.finance.expYear }})</span>
               </div>
             </div>
 
+            <!-- Security Code (CVV / CID) with dynamic 3-digit vs 4-digit AmEx indicator -->
             <div
               @click="copyField(identity.finance.cvv, 'cvv')"
-              class="group p-2 sm:p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer flex flex-col justify-between"
+              class="group p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer transition-colors"
             >
-              <div class="text-[10px] sm:text-[11px] text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">{{ labels.cvv }}</div>
-              <div class="text-xs sm:text-sm font-mono font-bold text-slate-200 whitespace-nowrap">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="truncate">{{ labels.cvv.replace(/\s*\(CVV\)/i, '') }}</span>
+                  <span
+                    class="text-[9px] px-1.5 py-0.2 rounded font-mono font-medium shrink-0 whitespace-nowrap"
+                    :class="identity.finance.cardType === 'American Express' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-white/10 text-slate-300'"
+                  >
+                    {{ identity.finance.cardType === 'American Express' ? (cardLang === 'zh' ? '运通 4位 CID' : 'AmEx 4位 CID') : '3位 CVV' }}
+                  </span>
+                </div>
+                <Check v-if="copiedKey === 'cvv'" class="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <Copy v-else class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-300 transition-opacity shrink-0" />
+              </div>
+              <div class="text-base sm:text-lg font-mono font-bold text-slate-100 whitespace-nowrap">
                 {{ identity.finance.cvv }}
               </div>
             </div>
+          </div>
 
-            <div class="p-2 sm:p-2.5 rounded-lg bg-white/5 border border-white/10 flex flex-col justify-between">
-              <div class="text-[10px] sm:text-[11px] text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">{{ labels.bank }}</div>
-              <div class="text-xs sm:text-sm font-medium text-slate-200 truncate" :title="identity.finance.bankName">
-                {{ identity.finance.bankName }}
+          <!-- Issuing Bank Row (新起独立完整行，杜绝截断省略号) -->
+          <div
+            @click="copyField(identity.finance.bankName, 'bank')"
+            class="group p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer transition-colors flex items-center justify-between gap-3"
+          >
+            <div class="flex items-center gap-2.5 min-w-0 flex-1">
+              <div class="p-2 rounded-lg bg-white/10 text-slate-300 shrink-0">
+                <Building2 class="w-4 h-4 text-teal-400" />
               </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[10px] sm:text-[11px] text-slate-400 flex items-center gap-1.5 mb-0.5">
+                  <span>{{ labels.bank }}</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-slate-300">
+                    {{ cardLang === 'zh' ? '结算发卡机构' : 'Card Issuer' }}
+                  </span>
+                </div>
+                <div class="text-xs sm:text-sm font-semibold text-slate-100 break-words leading-tight">
+                  {{ identity.finance.bankName }}
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 text-slate-400 shrink-0">
+              <Check v-if="copiedKey === 'bank'" class="w-4 h-4 text-emerald-400" />
+              <Copy v-else class="w-4 h-4 opacity-0 group-hover:opacity-100 text-slate-300 transition-opacity" />
             </div>
           </div>
 
