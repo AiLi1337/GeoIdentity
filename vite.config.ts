@@ -23,7 +23,7 @@ export default defineConfig({
         name: 'GeoIdentity - 全球真实地址与本土化测试身份生成器',
         short_name: 'GeoIdentity',
         description: '专业级全球真实物理地址检索、美国免税州真实门牌与本土化虚拟测试身份生成系统。100%纯前端离线运行，安全防送中。',
-        theme_color: '#0d9488',
+        theme_color: '#f8fafc',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait-primary',

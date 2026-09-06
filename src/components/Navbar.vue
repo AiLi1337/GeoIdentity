@@ -393,6 +393,14 @@ function toggleLang() {
   setLocale(locale.value === 'zh' ? 'en' : 'zh');
 }
 
+function updateMetaThemeColor(dark: boolean) {
+  const metaThemeColors = document.querySelectorAll('meta[name="theme-color"]');
+  const targetColor = dark ? '#020617' : '#f8fafc';
+  metaThemeColors.forEach(el => {
+    el.setAttribute('content', targetColor);
+  });
+}
+
 function toggleTheme() {
   isDark.value = !isDark.value;
   if (isDark.value) {
@@ -402,6 +410,7 @@ function toggleTheme() {
     document.documentElement.classList.remove('dark');
     localStorage.setItem('theme', 'light');
   }
+  updateMetaThemeColor(isDark.value);
 }
 
 function handleMobileAction(action: 'batch' | 'lang' | 'disclaimer') {
@@ -432,6 +441,7 @@ onMounted(() => {
     isDark.value = false;
     document.documentElement.classList.remove('dark');
   }
+  updateMetaThemeColor(isDark.value);
 });
 
 onUnmounted(() => {
