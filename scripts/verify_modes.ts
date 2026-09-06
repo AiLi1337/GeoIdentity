@@ -3,7 +3,9 @@ import { getRandomAddress } from '../src/data/addresses';
 import { STREET_DERIVATION_RULES, deriveStreetAddress, getDerivationRule, matchesState } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES, getResidentialAddress } from '../src/data/addresses/schemes/residentialAddresses';
 import { formatFullIdentityText, buildCSVContent } from '../src/services/exportService';
+import { resolveAddressFromIp } from '../src/services/ipAddressResolver';
 import type { CountryCode, AddressMode } from '../src/types/identity';
+import type { IpConsensusResult } from '../src/types/ip';
 
 let assertionCount = 0;
 
@@ -225,6 +227,72 @@ assert(csvOutput.includes('Scheme A: Street Range Derivation') || csvOutput.incl
 assert(csvOutput.includes('Scheme B: Real Residential Address'), 'CSV row includes Residential mode label');
 assert(csvOutput.includes('Residential Single Family') || csvOutput.includes('Residential Detached House'), 'CSV row includes Residential AVS Tier');
 
+// -----------------------------------------------------------------------------
+// 10. Normal Setback Algorithm Off-Road Verification
+// -----------------------------------------------------------------------------
+console.log('\n--- 10. Testing Normal Setback Algorithm (Zero Pins in the Middle of Roadways) ---');
+for (const rule of STREET_DERIVATION_RULES.slice(0, 10)) {
+  const addr = deriveStreetAddress(rule);
+  const dLat = rule.endCoord.lat - rule.startCoord.lat;
+  const dLng = rule.endCoord.lng - rule.startCoord.lng;
+  const len = Math.hypot(dLat, dLng) || 0.0001;
+  const uNormalLat = -dLng / len;
+  const uNormalLng = dLat / len;
+
+  // Calculate perpendicular distance from line segment
+  const vLat = addr.lat - rule.startCoord.lat;
+  const vLng = addr.lng - rule.startCoord.lng;
+  const perpDistDeg = Math.abs(vLat * uNormalLat + vLng * uNormalLng);
+  // 1 meter ≈ 0.000009 degrees, so 14 meters ≈ 0.000126 degrees
+  assert(perpDistDeg >= 0.00010, `Address along ${rule.streetName} has perpendicular setback of ${(perpDistDeg / 0.000009).toFixed(1)}m from centerline (off-road on parcel)`);
+}
+
+// -----------------------------------------------------------------------------
+// 11. IP Address Resolution Verification (No Cenotaph / Memorial Park Drops)
+// -----------------------------------------------------------------------------
+console.log('\n--- 11. Testing IP Address Resolution (No Monuments / Public Squares) ---');
+// Test Hong Kong IP
+const hkConsensus: IpConsensusResult = {
+  targetIp: '203.0.113.1',
+  winnerCountry: 'Hong Kong',
+  winnerCountryCode: 'HK',
+  winnerCity: 'Hong Kong',
+  winnerRegion: 'Central and Western',
+  winnerPostal: '999077',
+  winnerLat: 22.2818, // Cenotaph / Statue Square GeoIP center datum
+  winnerLng: 114.1588,
+  confidenceRate: 98,
+  topCityVoteCount: 5,
+  successQueries: 5,
+  isp: 'HKBN'
+};
+const resolvedHk = resolveAddressFromIp(hkConsensus);
+assert(resolvedHk.countryCode === 'HK', 'HK IP resolved to HK country code');
+assert(resolvedHk.buildingType === 'residential' || resolvedHk.buildingType === 'derived', 'HK IP resolved to residential or derived street');
+assert(resolvedHk.lat !== 22.2818 || resolvedHk.lng !== 114.1588, 'HK IP did NOT place pin at Cenotaph datum coordinate');
+assert(!resolvedHk.street.includes('Main Street'), 'HK IP did NOT fabricate fake US Main Street');
+console.log(`   [HK Resolved Address]: ${resolvedHk.street}, ${resolvedHk.city} (${resolvedHk.lat}, ${resolvedHk.lng}) - Strategy: ${hkConsensus.matchedStrategy}`);
+
+// Test Taiwan IP
+const twConsensus: IpConsensusResult = {
+  targetIp: '203.0.113.2',
+  winnerCountry: 'Taiwan',
+  winnerCountryCode: 'TW',
+  winnerCity: 'Taipei',
+  winnerRegion: 'Taipei City',
+  winnerPostal: '100',
+  winnerLat: 25.042, // 228 Peace Memorial Park datum
+  winnerLng: 121.514,
+  confidenceRate: 95,
+  topCityVoteCount: 4,
+  successQueries: 4,
+  isp: 'Chunghwa Telecom'
+};
+const resolvedTw = resolveAddressFromIp(twConsensus);
+assert(resolvedTw.countryCode === 'TW', 'TW IP resolved to TW country code');
+assert(resolvedTw.buildingType === 'residential' || resolvedTw.buildingType === 'derived', 'TW IP resolved to residential or derived');
+assert(resolvedTw.lat !== 25.042 || resolvedTw.lng !== 121.514, 'TW IP did NOT place pin at 228 Peace Memorial Park datum');
+console.log(`   [TW Resolved Address]: ${resolvedTw.street}, ${resolvedTw.city} (${resolvedTw.lat}, ${resolvedTw.lng}) - Strategy: ${twConsensus.matchedStrategy}`);
 
 console.log('\n================================================================');
 console.log(`🎉 SUCCESS: All ${assertionCount} assertions passed cleanly!`);

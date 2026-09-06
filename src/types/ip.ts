@@ -1,4 +1,4 @@
-﻿import type { CountryCode } from './identity';
+import type { CountryCode } from './identity';
 
 export type IpApiSource = 'IPWhois' | 'IPInfo' | 'GeoJS' | 'IPGuide';
 
@@ -37,7 +37,15 @@ export interface IpConsensusResult {
   topCityVoteCount: number;
   confidenceRate: number; // e.g. 75 for 75%
   details: IpQuerySourceResult[];
-  matchedStrategy?: 'exact_city_landmark' | 'exact_city_derivation' | 'state_fallback_landmark' | 'general_fallback';
+  matchedStrategy?:
+    | 'exact_city_residential'
+    | 'exact_city_derivation'
+    | 'exact_city_landmark'
+    | 'state_residential_fallback'
+    | 'state_derivation_fallback'
+    | 'state_fallback_landmark'
+    | 'national_residential_fallback'
+    | 'general_fallback';
   strategySummaryZh?: string;
   strategySummaryEn?: string;
 }

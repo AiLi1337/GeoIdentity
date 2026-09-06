@@ -45,15 +45,42 @@ export function deriveStreetAddress(rule: StreetDerivationRule): RealAddress {
     houseNumber = Math.floor(min + Math.random() * (max - min + 1));
   }
 
-  // Calculate linear GIS coordinate interpolation
-  const fraction = Math.max(0, Math.min(1, (houseNumber - min) / (max - min)));
-  
-  // Tiny perpendicular/random offset (approx. +/- 2 to 4 meters) along the corridor
-  const latJitter = (Math.random() - 0.5) * 0.00008;
-  const lngJitter = (Math.random() - 0.5) * 0.00008;
-  
-  const lat = Number((rule.startCoord.lat + fraction * (rule.endCoord.lat - rule.startCoord.lat) + latJitter).toFixed(6));
-  const lng = Number((rule.startCoord.lng + fraction * (rule.endCoord.lng - rule.startCoord.lng) + lngJitter).toFixed(6));
+  // Calculate linear GIS coordinate interpolation along corridor centerline
+  // Clamp between 0.05 and 0.95 to keep coordinates well within the corridor bounds (avoiding intersection centers)
+  const fraction = Math.max(0.05, Math.min(0.95, (houseNumber - min) / (max - min || 1)));
+  const dLat = rule.endCoord.lat - rule.startCoord.lat;
+  const dLng = rule.endCoord.lng - rule.startCoord.lng;
+  const segmentLength = Math.hypot(dLat, dLng) || 0.0001;
+
+  // Unit directional vector along the street
+  const uDirLat = dLat / segmentLength;
+  const uDirLng = dLng / segmentLength;
+
+  // Unit normal perpendicular vector (90 degrees counter-clockwise to the corridor direction)
+  const uNormalLat = -uDirLng;
+  const uNormalLng = uDirLat;
+
+  // Real-world parcel setback: buildings are built alongside the road, NOT on the asphalt lanes.
+  // Municipal addressing standard: odd house numbers on one side (+), even numbers on opposite side (-).
+  const sideSign = (houseNumber % 2 === 0) ? -1 : 1;
+
+  // Setback distance from road centerline to building facade/parcel:
+  // Typical roadway half-width + sidewalk + parcel setback is 16 to 25 meters.
+  // In latitude degrees, 1 meter ≈ 0.000009 degrees.
+  const setbackMeters = 16 + (houseNumber % 7) * 1.5; // 16m to 25m off centerline
+  const setbackDeg = setbackMeters * 0.000009;
+
+  // Longitudinal drift along street (+/- 2m) so houses on the same block don't overlap exactly
+  const longitudinalDriftMeters = ((houseNumber % 5) - 2) * 1.2;
+  const longitudinalDeg = longitudinalDriftMeters * 0.000009;
+
+  // Base centerline coordinate
+  const centerLat = rule.startCoord.lat + fraction * dLat;
+  const centerLng = rule.startCoord.lng + fraction * dLng;
+
+  // Shift coordinates off the road surface onto the adjacent building lot
+  const lat = Number((centerLat + sideSign * setbackDeg * uNormalLat + longitudinalDeg * uDirLat).toFixed(6));
+  const lng = Number((centerLng + sideSign * setbackDeg * uNormalLng + longitudinalDeg * uDirLng).toFixed(6));
 
   // Format street address string based on country conventions
   let streetText = `${houseNumber} ${rule.streetName}`;
