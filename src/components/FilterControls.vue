@@ -191,8 +191,8 @@
     </div>
 
     <!-- Bottom Secondary Filters & Generate Button Bar -->
-    <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
-      <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
+    <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4">
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
         <!-- Gender Filter -->
         <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
           <button
@@ -268,12 +268,12 @@
       </div>
 
       <!-- Generate Trigger Button -->
-      <div class="w-full md:w-auto flex items-center justify-end">
+      <div class="w-full lg:w-auto flex items-center justify-end">
         <button
           type="button"
           @click="$emit('generate')"
           :disabled="isGenerating"
-          class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-600 via-teal-500 to-emerald-500 hover:from-primary-700 hover:to-emerald-600 shadow-md shadow-primary-500/20 active:scale-95 transition-all duration-150 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+          class="w-full lg:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-600 via-teal-500 to-emerald-500 hover:from-primary-700 hover:to-emerald-600 shadow-md shadow-primary-500/20 active:scale-95 transition-all duration-150 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
         >
           <Sparkles class="w-4 h-4" :class="{ 'animate-spin': isGenerating }" />
           <span>{{ isGenerating ? t('filter.generating') : t('filter.generateBtn') }}</span>

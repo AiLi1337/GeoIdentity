@@ -1,7 +1,7 @@
 <template>
   <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 overflow-hidden shadow-sm">
     <!-- Map Header -->
-    <div class="p-3 sm:px-4 sm:py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+    <div class="p-3 sm:px-4 sm:py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-col xl:flex-row xl:items-center justify-between gap-2.5">
       <!-- Title & Anti-leak status -->
       <div class="flex items-center gap-2 shrink-0">
         <div
@@ -32,7 +32,7 @@
       </div>
 
       <!-- Controls Row: Provider Switcher & Action Links -->
-      <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+      <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-between xl:justify-end">
         <!-- Map Provider Switcher -->
         <div class="flex items-center bg-slate-200/80 dark:bg-slate-800 p-0.5 rounded-lg text-xs font-medium">
           <button

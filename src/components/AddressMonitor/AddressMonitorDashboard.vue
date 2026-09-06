@@ -74,15 +74,15 @@
     </div>
 
     <!-- Core Metrics Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       <div class="p-4 rounded-2xl bg-white dark:bg-slate-850 border border-slate-200/80 dark:border-slate-800 shadow-xs">
         <div class="flex items-center justify-between">
           <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ t('monitor.metricCountries') }}</span>
           <Globe class="w-4 h-4 text-primary-500" />
         </div>
-        <div class="mt-2 flex items-baseline gap-2">
+        <div class="mt-2 flex flex-wrap items-baseline gap-1.5 sm:gap-2">
           <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono">21</span>
-          <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">100% 全球覆盖</span>
+          <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">100% 全球覆盖</span>
         </div>
       </div>
 
@@ -91,9 +91,9 @@
           <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ t('monitor.metricLandmarks') }}</span>
           <Building2 class="w-4 h-4 text-amber-500" />
         </div>
-        <div class="mt-2 flex items-baseline gap-2">
+        <div class="mt-2 flex flex-wrap items-baseline gap-1.5 sm:gap-2">
           <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono">{{ metadata.stats.totalPhysicalLandmarks }}</span>
-          <span class="text-xs text-slate-500">实体名企/商厦</span>
+          <span class="text-xs text-slate-500 whitespace-nowrap">实体名企/商厦</span>
         </div>
       </div>
 
@@ -102,9 +102,9 @@
           <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ t('monitor.metricSchemeB') }}</span>
           <Home class="w-4 h-4 text-emerald-500" />
         </div>
-        <div class="mt-2 flex items-baseline gap-2">
+        <div class="mt-2 flex flex-wrap items-baseline gap-1.5 sm:gap-2">
           <span class="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">{{ metadata.stats.totalSchemeBResidential }}</span>
-          <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">真实独栋/洋房</span>
+          <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">真实独栋/洋房</span>
         </div>
       </div>
 
@@ -113,9 +113,9 @@
           <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ t('monitor.metricSchemeA') }}</span>
           <GitFork class="w-4 h-4 text-cyan-500" />
         </div>
-        <div class="mt-2 flex items-baseline gap-2">
+        <div class="mt-2 flex flex-wrap items-baseline gap-1.5 sm:gap-2">
           <span class="text-2xl sm:text-3xl font-extrabold text-cyan-600 dark:text-cyan-400 font-mono">{{ metadata.stats.totalSchemeACapacity.toLocaleString() }}+</span>
-          <span class="text-xs text-slate-500">{{ metadata.stats.totalSchemeACorridors }}条合法街道走廊</span>
+          <span class="text-xs text-slate-500 whitespace-nowrap">{{ metadata.stats.totalSchemeACorridors }}条合法街道走廊</span>
         </div>
       </div>
     </div>
