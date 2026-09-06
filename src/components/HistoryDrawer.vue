@@ -10,8 +10,8 @@
     <!-- Slide-over Drawer -->
     <div
       :class="[
-        'fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 transform transition-transform duration-300 ease-in-out flex flex-col',
-        isOpen ? 'translate-x-0' : 'translate-x-full'
+        'fixed inset-y-0 right-0 z-50 w-full max-w-[88vw] sm:max-w-md bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 transform transition-all duration-300 ease-in-out flex flex-col',
+        isOpen ? 'translate-x-0 opacity-100 visible pointer-events-auto' : 'translate-x-full opacity-0 invisible pointer-events-none'
       ]"
     >
       <!-- Header -->

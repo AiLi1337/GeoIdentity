@@ -1,19 +1,19 @@
 <template>
   <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden transition-colors duration-200">
     <!-- Top Identity Hero Header -->
-    <div class="p-6 sm:p-8 bg-gradient-to-b from-slate-50/90 to-white dark:from-slate-800/40 dark:to-slate-900 border-b border-slate-200/80 dark:border-slate-800">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+    <div class="p-4 sm:p-8 bg-gradient-to-b from-slate-50/90 to-white dark:from-slate-800/40 dark:to-slate-900 border-b border-slate-200/80 dark:border-slate-800">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
         <!-- Left: Avatar and Names -->
-        <div class="flex items-center gap-4 sm:gap-5 min-w-0">
+        <div class="flex items-center gap-3.5 sm:gap-5 min-w-0 w-full sm:w-auto">
           <div class="relative group shrink-0">
             <img
               :src="identity.basic.avatar"
               :alt="identity.basic.fullName"
-              class="w-20 h-20 rounded-2xl bg-primary-50 dark:bg-primary-950/60 p-1 border-2 border-primary-500/20 dark:border-primary-500/30 object-cover shadow-md shadow-primary-500/10"
+              class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-primary-50 dark:bg-primary-950/60 p-1 border-2 border-primary-500/20 dark:border-primary-500/30 object-cover shadow-md shadow-primary-500/10"
             />
             <span
               :class="[
-                'absolute -bottom-1 -right-1 w-6 h-6 flex items-center justify-center text-xs font-bold rounded-full text-white shadow-sm ring-2 ring-white dark:ring-slate-900',
+                'absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-[10px] sm:text-xs font-bold rounded-full text-white shadow-sm ring-2 ring-white dark:ring-slate-900',
                 identity.basic.gender === 'male' ? 'bg-blue-500' : 'bg-rose-500'
               ]"
               :title="identity.basic.gender === 'male' ? labels.genderMale : labels.genderFemale"
@@ -22,22 +22,22 @@
             </span>
           </div>
 
-          <div>
-            <div class="flex flex-wrap items-center gap-2">
-              <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight break-words">
                 {{ displayFullName }}
               </h1>
               
               <!-- Phonetic, Latin or Native transcription if exists -->
               <span
                 v-if="displaySubName"
-                class="text-sm font-medium text-slate-500 dark:text-slate-400"
+                class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400"
               >
                 ({{ displaySubName }})
               </span>
 
               <!-- Country Flag Tag -->
-              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                 <span>{{ countryFlag }}</span>
                 <span>{{ displayCountryName }}</span>
               </span>
@@ -45,7 +45,7 @@
               <!-- Tax Free Tag if applicable -->
               <span
                 v-if="identity.address.isTaxFree"
-                class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-700 animate-pulse"
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-700 animate-pulse"
               >
                 <Zap class="w-3 h-3 fill-amber-500 text-amber-500" />
                 <span>{{ displayTaxRate }}</span>
@@ -55,7 +55,7 @@
               <button
                 type="button"
                 @click="$emit('open-disclaimer')"
-                class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors cursor-pointer"
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors cursor-pointer"
                 :title="t('card.syntheticBadgeTip')"
               >
                 <ShieldCheck class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
@@ -64,18 +64,18 @@
             </div>
 
             <!-- Meta Badges -->
-            <div class="flex flex-wrap items-center gap-2 mt-2">
-              <span class="px-2.5 py-0.5 text-xs rounded-lg bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 font-medium">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-2">
+              <span class="px-2 py-0.5 text-[11px] sm:text-xs rounded-lg bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 font-medium">
                 {{ identity.basic.age }} {{ labels.ageUnit }} ({{ identity.basic.birthDate }})
               </span>
-              <span class="px-2.5 py-0.5 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
+              <span class="px-2 py-0.5 text-[11px] sm:text-xs rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
                 {{ identity.basic.zodiacSign }}
               </span>
-              <span class="px-2.5 py-0.5 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
+              <span class="px-2 py-0.5 text-[11px] sm:text-xs rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
                 {{ identity.basic.bloodType }}
               </span>
               <!-- Timezone & Local Time -->
-              <span class="px-2.5 py-0.5 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium flex items-center gap-1">
+              <span class="px-2 py-0.5 text-[11px] sm:text-xs rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium flex items-center gap-1">
                 <Clock class="w-3 h-3 text-slate-400" />
                 <span>{{ identity.address.timezoneCode || 'UTC' }} · {{ currentTimeStr }}</span>
               </span>
@@ -84,14 +84,14 @@
         </div>
 
         <!-- Right: Actions (Card Language Switcher & Copy All Profile & Favorite) -->
-        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full sm:w-auto justify-start sm:justify-end shrink-0">
-          <!-- Card Profile Language Segmented Switcher (Option A) -->
-          <div class="inline-flex items-center p-1 bg-slate-100 dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700/80 text-xs font-semibold shadow-xs">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto shrink-0">
+          <!-- Card Profile Language Segmented Switcher -->
+          <div class="inline-flex items-center justify-center p-1 bg-slate-100 dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700/80 text-xs font-semibold shadow-xs">
             <button
               type="button"
               @click="cardLang = 'zh'"
               :class="[
-                'px-2.5 py-1.5 rounded-lg transition-all cursor-pointer select-none',
+                'flex-1 sm:flex-none px-2.5 py-1.5 rounded-lg transition-all cursor-pointer select-none text-center',
                 cardLang === 'zh'
                   ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-300 shadow-xs font-bold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -104,7 +104,7 @@
               type="button"
               @click="cardLang = 'en'"
               :class="[
-                'px-2.5 py-1.5 rounded-lg transition-all cursor-pointer select-none',
+                'flex-1 sm:flex-none px-2.5 py-1.5 rounded-lg transition-all cursor-pointer select-none text-center',
                 cardLang === 'en'
                   ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-300 shadow-xs font-bold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -117,7 +117,7 @@
               type="button"
               @click="cardLang = 'local'"
               :class="[
-                'px-2.5 py-1.5 rounded-lg transition-all cursor-pointer select-none flex items-center gap-1',
+                'flex-1 sm:flex-none px-2.5 py-1.5 rounded-lg transition-all cursor-pointer select-none flex items-center justify-center gap-1 text-center',
                 cardLang === 'local'
                   ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-300 shadow-xs font-bold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -128,35 +128,37 @@
             </button>
           </div>
 
-          <button
-            type="button"
-            @click="handleCopyAll"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-slate-900 dark:bg-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 shadow-sm active:scale-95 transition-all cursor-pointer"
-          >
-            <Check v-if="copiedAll" class="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
-            <Copy v-else class="w-4 h-4" />
-            <span>{{ copiedAll ? t('card.copiedAll') : t('card.copyAll') }}</span>
-          </button>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              @click="handleCopyAll"
+              class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-slate-900 dark:bg-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 shadow-sm active:scale-95 transition-all cursor-pointer"
+            >
+              <Check v-if="copiedAll" class="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
+              <Copy v-else class="w-4 h-4" />
+              <span>{{ copiedAll ? t('card.copiedAll') : t('card.copyAll') }}</span>
+            </button>
 
-          <button
-            type="button"
-            @click="handleToggleFav"
-            :class="[
-              'p-2.5 rounded-xl border transition-all cursor-pointer',
-              isFav
-                ? 'bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-600 text-amber-500'
-                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-500'
-            ]"
-            :title="isFav ? t('card.unfavorite') : t('card.favorite')"
-          >
-            <Star class="w-5 h-5" :class="{ 'fill-amber-400 text-amber-400': isFav }" />
-          </button>
+            <button
+              type="button"
+              @click="handleToggleFav"
+              :class="[
+                'p-2.5 rounded-xl border transition-all cursor-pointer shrink-0',
+                isFav
+                  ? 'bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-600 text-amber-500'
+                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-500'
+              ]"
+              :title="isFav ? t('card.unfavorite') : t('card.favorite')"
+            >
+              <Star class="w-5 h-5" :class="{ 'fill-amber-400 text-amber-400': isFav }" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Main Content Sections Grid -->
-    <div class="p-6 sm:p-8 space-y-8">
+    <div class="p-4 sm:p-8 space-y-6 sm:space-y-8">
       <!-- Section 1: Real Address on Google Maps -->
       <div>
         <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -293,7 +295,7 @@
           <button
             type="button"
             @click="copyField(forwarderShippingText, 'forwarder')"
-            class="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white shadow-xs active:scale-95 transition-all whitespace-nowrap cursor-pointer"
+            class="w-full md:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white shadow-xs active:scale-95 transition-all whitespace-nowrap cursor-pointer"
           >
             <Check v-if="copiedKey === 'forwarder'" class="w-3.5 h-3.5" />
             <Copy v-else class="w-3.5 h-3.5" />
@@ -339,19 +341,19 @@
               @click="copyField(identity.contact.email, 'email')"
               class="group flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors"
             >
-              <div>
+              <div class="min-w-0 flex-1 mr-2">
                 <div class="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
                   <span>{{ labels.email }}</span>
-                  <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-900/50">
+                  <span class="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-medium bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-900/50">
                     {{ labels.emailNotice }}
                   </span>
                 </div>
-                <div class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                <div class="text-sm font-semibold text-slate-800 dark:text-slate-200 break-all">
                   {{ identity.contact.email }}
                 </div>
               </div>
-              <Check v-if="copiedKey === 'email'" class="w-4 h-4 text-emerald-500" />
-              <Copy v-else class="w-4 h-4 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
+              <Check v-if="copiedKey === 'email'" class="w-4 h-4 text-emerald-500 shrink-0" />
+              <Copy v-else class="w-4 h-4 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity shrink-0" />
             </div>
 
             <!-- Username -->
@@ -359,14 +361,14 @@
               @click="copyField(identity.contact.username, 'username')"
               class="group flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors"
             >
-              <div>
+              <div class="min-w-0 flex-1 mr-2">
                 <div class="text-xs text-slate-400 dark:text-slate-500">{{ labels.username }}</div>
-                <div class="text-sm font-mono font-medium text-slate-700 dark:text-slate-300">
+                <div class="text-sm font-mono font-medium text-slate-700 dark:text-slate-300 break-all">
                   {{ identity.contact.username }}
                 </div>
               </div>
-              <Check v-if="copiedKey === 'username'" class="w-4 h-4 text-emerald-500" />
-              <Copy v-else class="w-4 h-4 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
+              <Check v-if="copiedKey === 'username'" class="w-4 h-4 text-emerald-500 shrink-0" />
+              <Copy v-else class="w-4 h-4 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity shrink-0" />
             </div>
           </div>
 
@@ -475,9 +477,9 @@
       </div>
 
       <!-- Section 4: Finance Virtual Card (Luhn Validated) -->
-      <div class="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white shadow-xl relative overflow-hidden">
+      <div class="p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white shadow-xl relative overflow-hidden">
         <!-- Ambient Card Graphic -->
-        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute -top-12 right-0 w-48 h-48 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 space-y-4">
           <div class="flex items-center justify-between">
@@ -502,13 +504,13 @@
               <Check v-if="copiedKey === 'cardNumber'" class="w-4 h-4 text-emerald-400" />
               <Copy v-else class="w-4 h-4 opacity-0 group-hover:opacity-100 text-slate-300 transition-opacity" />
             </div>
-            <div class="text-xl sm:text-2xl font-mono font-bold tracking-widest text-teal-300">
+            <div class="text-lg sm:text-2xl font-mono font-bold tracking-wider sm:tracking-widest text-teal-300 break-all">
               {{ identity.finance.cardFormatted }}
             </div>
           </div>
 
           <!-- Bottom Row: Expiry, CVV, Bank -->
-          <div class="grid grid-cols-3 gap-3">
+          <div class="grid grid-cols-3 gap-2 sm:gap-3">
             <div
               @click="copyField(`${identity.finance.expMonth}/${identity.finance.expYear}`, 'exp')"
               class="group p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer"

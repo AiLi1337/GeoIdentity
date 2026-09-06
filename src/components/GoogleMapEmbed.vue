@@ -1,11 +1,11 @@
 <template>
   <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 overflow-hidden shadow-sm">
     <!-- Map Header -->
-    <div class="px-4 py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2.5">
+    <div class="p-3 sm:px-4 sm:py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
       <!-- Title & Anti-leak status -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 shrink-0">
         <div
-          class="w-2.5 h-2.5 rounded-full"
+          class="w-2.5 h-2.5 rounded-full shrink-0"
           :class="[
             provider === 'google'
               ? (isGoogleConfirmed ? 'bg-amber-500' : 'bg-amber-500 animate-pulse')
@@ -31,52 +31,54 @@
         </span>
       </div>
 
-      <!-- Map Provider Switcher -->
-      <div class="flex items-center bg-slate-200/80 dark:bg-slate-800 p-0.5 rounded-lg text-xs font-medium">
-        <button
-          type="button"
-          @click="setProvider('osm')"
-          :class="[
-            'px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
-            provider === 'osm'
-              ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs font-semibold'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          ]"
-          :title="t('card.osmTooltip')"
-        >
-          <ShieldCheck class="w-3 h-3 text-emerald-500" />
-          <span>{{ t('card.mapOsm') }}</span>
-        </button>
+      <!-- Controls Row: Provider Switcher & Action Links -->
+      <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+        <!-- Map Provider Switcher -->
+        <div class="flex items-center bg-slate-200/80 dark:bg-slate-800 p-0.5 rounded-lg text-xs font-medium">
+          <button
+            type="button"
+            @click="setProvider('osm')"
+            :class="[
+              'px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
+              provider === 'osm'
+                ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            ]"
+            :title="t('card.osmTooltip')"
+          >
+            <ShieldCheck class="w-3 h-3 text-emerald-500" />
+            <span>{{ t('card.mapOsm') }}</span>
+          </button>
 
-        <button
-          type="button"
-          @click="setProvider('bing')"
-          :class="[
-            'px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
-            provider === 'bing'
-              ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs font-semibold'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          ]"
-          :title="t('card.bingTooltip')"
-        >
-          <span>{{ t('card.mapBing') }}</span>
-        </button>
+          <button
+            type="button"
+            @click="setProvider('bing')"
+            :class="[
+              'px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
+              provider === 'bing'
+                ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            ]"
+            :title="t('card.bingTooltip')"
+          >
+            <span>{{ t('card.mapBing') }}</span>
+          </button>
 
-        <button
-          type="button"
-          @click="setProvider('google')"
-          :class="[
-            'px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
-            provider === 'google'
-              ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-400 shadow-xs font-semibold'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          ]"
-          :title="t('card.googleTooltip')"
-        >
-          <ShieldAlert class="w-3 h-3 text-amber-500" />
-          <span>{{ t('card.mapGoogle') }}</span>
-        </button>
-      </div>
+          <button
+            type="button"
+            @click="setProvider('google')"
+            :class="[
+              'px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
+              provider === 'google'
+                ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-400 shadow-xs font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            ]"
+            :title="t('card.googleTooltip')"
+          >
+            <ShieldAlert class="w-3 h-3 text-amber-500" />
+            <span>{{ t('card.mapGoogle') }}</span>
+          </button>
+        </div>
 
       <!-- Action Links -->
       <div class="flex items-center gap-1.5 flex-wrap">
@@ -126,6 +128,7 @@
         </button>
       </div>
     </div>
+  </div>
 
     <!-- Optional Google API Key input drawer -->
     <div v-if="provider === 'google' && showKeyConfig" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2">
