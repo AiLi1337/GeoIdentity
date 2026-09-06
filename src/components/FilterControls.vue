@@ -313,7 +313,7 @@ const { t } = useI18n();
 
 const showModeGuide = ref(false);
 
-const currentMode = computed<AddressMode>(() => props.filters.addressMode || 'landmark');
+const currentMode = computed<AddressMode>(() => props.filters.addressMode || 'residential');
 
 function updateMode(mode: AddressMode) {
   emit('update:filters', { ...props.filters, addressMode: mode });

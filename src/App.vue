@@ -310,7 +310,7 @@ const activeGeneratorTab = ref<'standard' | 'ip'>('standard');
 const selectedCountryCode = ref<CountryCode>('US');
 const selectedState = ref<string>('');
 
-const savedMode = (localStorage.getItem('geo_address_mode') as AddressMode) || 'landmark';
+const savedMode = (localStorage.getItem('geo_address_mode') as AddressMode) || 'residential';
 const filters = ref<FilterOptions>({
   gender: 'random',
   ageRange: 'random',

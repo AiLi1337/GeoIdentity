@@ -15,14 +15,39 @@ function cityMatches(itemCity: string, targetCity: string): boolean {
   if (c1 === c2) return true;
   if (c1.includes(c2) || c2.includes(c1)) return true;
 
-  // Hong Kong aliases (GeoIP returns "Hong Kong", residential data has "Hong Kong" or district names)
-  if ((c2.includes('hong kong') || c2.includes('hk')) && (c1.includes('hong kong') || c1.includes('香港') || c1.includes('central') || c1.includes('中环'))) return true;
+  // Hong Kong districts / aliases (Wan Chai, Tsim Sha Tsui, Central, Sha Tin, Kowloon)
+  if (['hong kong', 'hk', 'central', 'wan chai', 'tsim sha tsui', 'sha tin', 'kowloon', 'mong kok'].some(k => c2.includes(k)) &&
+      ['hong kong', '香港', 'central', '中环', '湾仔', '尖沙咀', '沙田', '九龙'].some(k => c1.includes(k))) return true;
 
-  // Singapore aliases
+  // Singapore
   if ((c2.includes('singapore') || c2.includes('sg')) && (c1.includes('singapore') || c1.includes('新加坡'))) return true;
 
-  // Taiwan aliases
-  if (c2.includes('taipei') && (c1.includes('台北') || c1.includes('taipei') || c1.includes('大安') || c1.includes('信義'))) return true;
+  // Taiwan (Taipei, New Taipei, Taichung, Kaohsiung, Tainan, Hsinchu, Taoyuan, Xinyi, Daan, Banqiao)
+  if (['taipei', 'xinyi', 'daan', 'banqiao', 'new taipei'].some(k => c2.includes(k)) &&
+      ['台北', '新北', '大安', '信義', '板橋', 'taipei'].some(k => c1.includes(k))) return true;
+  if (c2.includes('taichung') && (c1.includes('台中') || c1.includes('taichung') || c1.includes('西屯') || c1.includes('南屯'))) return true;
+  if (c2.includes('kaohsiung') && (c1.includes('高雄') || c1.includes('kaohsiung') || c1.includes('左營') || c1.includes('鼓山'))) return true;
+
+  // Australia (Melbourne -> Victoria suburbs: South Yarra, Brighton, Carlton, Hawthorn, Camberwell)
+  // Sydney -> New South Wales suburbs: Mosman, Paddington, Manly, Chatswood, Parramatta
+  // Brisbane -> Queensland suburbs: New Farm, Paddington, Indooroopilly
+  // Perth -> Cottesloe, Subiaco, Fremantle
+  if (c2.includes('melbourne') && ['melbourne', 'south yarra', 'brighton', 'carlton', 'hawthorn', 'camberwell'].some(k => c1.includes(k))) return true;
+  if (c2.includes('sydney') && ['sydney', 'mosman', 'paddington', 'manly', 'chatswood', 'parramatta'].some(k => c1.includes(k))) return true;
+  if (c2.includes('brisbane') && ['brisbane', 'new farm', 'paddington', 'indooroopilly'].some(k => c1.includes(k))) return true;
+  if (c2.includes('perth') && ['perth', 'cottesloe', 'subiaco', 'fremantle'].some(k => c1.includes(k))) return true;
+
+  // Japan (Tokyo -> 世田谷, 杉並, 目黒, 練馬, 調布; Osaka -> 阿倍野, 吹田, 豊中; Yokohama -> 神奈川, 横浜; Kyoto -> 京都; Nagoya -> 名古屋; Sapporo -> 札幌; Fukuoka -> 福岡)
+  if (c2.includes('tokyo') && ['tokyo', '東京', '世田谷', '杉並', '目黒', '練馬', '調布'].some(k => c1.includes(k))) return true;
+  if (c2.includes('osaka') && ['osaka', '大阪', '阿倍野', '吹田', '豊中'].some(k => c1.includes(k))) return true;
+  if (c2.includes('yokohama') && ['yokohama', '横浜', '青葉'].some(k => c1.includes(k))) return true;
+  if (c2.includes('kyoto') && ['kyoto', '京都', '左京', '伏見'].some(k => c1.includes(k))) return true;
+  if (c2.includes('nagoya') && ['nagoya', '名古屋', '千種', '昭和'].some(k => c1.includes(k))) return true;
+
+  // South Korea (Seoul -> Gangnam, Banpo, Yeonnam, Jamsil, Hannam; Busan -> Haeundae, Gwangalli, Seomyeon; Incheon -> Songdo, Bupyeong, Guwol)
+  if (['seoul', 'gangnam', 'seocho', 'mapo', 'songpa', 'yongsan'].some(k => c2.includes(k)) &&
+      ['seoul', '首尔', '江南', '瑞草', '麻浦', '松坡', '龙山'].some(k => c1.includes(k))) return true;
+  if (c2.includes('busan') && ['busan', '釜山', 'haeundae', 'millak'].some(k => c1.includes(k))) return true;
 
   return false;
 }
@@ -66,7 +91,7 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
 
   // =========================================================================
   // Track 2: Same-City Street Corridor Derivation (Scheme A with Normal Offset)
-  // Generates valid house number set back 16-25m from road centerline onto building parcel.
+  // Generates valid house number set back 18-27m from road centerline onto building parcel.
   // =========================================================================
   if (targetCity && countryCorridors.length > 0) {
     const cityCorridors = countryCorridors.filter(r => cityMatches(r.city, targetCity));
@@ -91,33 +116,8 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
   }
 
   // =========================================================================
-  // Track 3: Exact Same-City Commercial Landmark (Physical Office/Enterprise)
-  // =========================================================================
-  if (targetCity && landmarkList.length > 0) {
-    const cityLandmarks = landmarkList.filter(a => cityMatches(a.city, targetCity));
-    if (cityLandmarks.length > 0) {
-      const match = getRandomItem(cityLandmarks);
-      consensus.matchedStrategy = 'exact_city_landmark';
-      consensus.strategySummaryZh = `完全同城商业地标：精准命中 ${targetCity} 已收录实体商务大厦 (适合企业/商户开户)`;
-      consensus.strategySummaryEn = `Exact City Landmark: Physical commercial building in ${targetCity}`;
-      return {
-        ...match,
-        addressMode: 'landmark',
-        buildingType: 'commercial',
-        derivationMeta: {
-          mode: 'landmark',
-          modeLabelZh: 'IP同城实体地标 (100% 真实)',
-          modeLabelEn: 'IP Exact City Landmark',
-          ruleSummary: `根据 IP 归属地精准匹配到 ${targetCity} 真实商务实体建筑`,
-          buildingType: 'commercial',
-          avsTier: 'Commercial Landmark'
-        }
-      };
-    }
-  }
-
-  // =========================================================================
-  // Track 4: Same-State/Region Residential Fallback (Scheme B)
+  // Track 3: Same-State/Region Residential Fallback (Scheme B)
+  // Ensure we find a residential home in the same state before any commercial skyscraper!
   // =========================================================================
   if (targetRegion && countryResidential.length > 0) {
     const stateResidential = countryResidential.filter(
@@ -146,7 +146,7 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
   }
 
   // =========================================================================
-  // Track 5: Same-State/Region Street Corridor Derivation Fallback
+  // Track 4: Same-State/Region Street Corridor Derivation Fallback
   // =========================================================================
   if (targetRegion && countryCorridors.length > 0) {
     const stateCorridors = countryCorridors.filter(
@@ -163,7 +163,45 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
   }
 
   // =========================================================================
-  // Track 6: Same-State Commercial Landmark Fallback
+  // Track 5: Safe National Real Residential Anchor (Scheme B)
+  // Ensure every human identity gets a genuine home address, never an office building.
+  // =========================================================================
+  if (countryResidential.length > 0) {
+    const fallbackRes = getRandomItem(countryResidential);
+    consensus.matchedStrategy = 'national_residential_fallback';
+    consensus.strategySummaryZh = `全域真实住宅保底：已为您匹配 ${fallbackRes.city} 真实居民住宅 (AVS住宅白名单)`;
+    consensus.strategySummaryEn = `National Residential Fallback: Genuine residence in ${fallbackRes.city}`;
+    return fallbackRes;
+  }
+
+  // =========================================================================
+  // Track 6: Exact Same-City Commercial Landmark (Only if country has no residential seeds)
+  // =========================================================================
+  if (targetCity && landmarkList.length > 0) {
+    const cityLandmarks = landmarkList.filter(a => cityMatches(a.city, targetCity));
+    if (cityLandmarks.length > 0) {
+      const match = getRandomItem(cityLandmarks);
+      consensus.matchedStrategy = 'exact_city_landmark';
+      consensus.strategySummaryZh = `完全同城商业地标：精准命中 ${targetCity} 已收录实体商务大厦 (适合企业/商户开户)`;
+      consensus.strategySummaryEn = `Exact City Landmark: Physical commercial building in ${targetCity}`;
+      return {
+        ...match,
+        addressMode: 'landmark',
+        buildingType: 'commercial',
+        derivationMeta: {
+          mode: 'landmark',
+          modeLabelZh: 'IP同城实体地标 (100% 真实)',
+          modeLabelEn: 'IP Exact City Landmark',
+          ruleSummary: `根据 IP 归属地精准匹配到 ${targetCity} 真实商务实体建筑`,
+          buildingType: 'commercial',
+          avsTier: 'Commercial Landmark'
+        }
+      };
+    }
+  }
+
+  // =========================================================================
+  // Track 7: Same-State Commercial Landmark Fallback
   // =========================================================================
   if (targetRegion && landmarkList.length > 0) {
     const stateLandmarks = landmarkList.filter(
@@ -190,18 +228,7 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
     }
   }
 
-  // =========================================================================
-  // Track 7: Safe National Real Residential Anchor (Never pin on monuments/roads)
-  // =========================================================================
-  if (countryResidential.length > 0) {
-    const fallbackRes = getRandomItem(countryResidential);
-    consensus.matchedStrategy = 'national_residential_fallback';
-    consensus.strategySummaryZh = `全域真实住宅保底：已为您匹配 ${fallbackRes.city} 真实居民住宅 (AVS住宅白名单)`;
-    consensus.strategySummaryEn = `National Residential Fallback: Genuine residence in ${fallbackRes.city}`;
-    return fallbackRes;
-  }
-
-  // Final fallback to curated physical landmark
+  // General fallback
   const fallback = getRandomItem(landmarkList);
   consensus.matchedStrategy = 'general_fallback';
   consensus.strategySummaryZh = `通用保底：已为您分发 ${fallback.city} 核心商业实体地标`;

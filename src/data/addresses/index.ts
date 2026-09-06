@@ -58,7 +58,7 @@ export function getRandomAddress(
   countryCode: CountryCode,
   stateCode?: string,
   isTaxFreeOnly?: boolean,
-  mode: AddressMode = 'landmark'
+  mode: AddressMode = 'residential'
 ): RealAddress {
   const countryLandmarkList = (ADDRESS_MAP[countryCode] && ADDRESS_MAP[countryCode].length > 0)
     ? ADDRESS_MAP[countryCode]
@@ -71,8 +71,12 @@ export function getRandomAddress(
       return deriveStreetAddress(rule);
     }
     // If state-specific rule was requested but not found in Scheme A:
-    // First try falling back to Landmark seed in THAT SAME STATE to strictly preserve state accuracy
+    // First preserve state isolation: check if that specific state has a genuine residential home
     if (stateCode) {
+      const stateRes = getResidentialAddress(countryCode, stateCode, isTaxFreeOnly);
+      if (stateRes) {
+        return stateRes;
+      }
       const stateLandmarks = countryLandmarkList.filter(
         a => matchesState(a.state, a.stateFull, stateCode) && (!isTaxFreeOnly || a.isTaxFree)
       );
@@ -91,10 +95,14 @@ export function getRandomAddress(
         return fallbackAddr;
       }
     }
-    // If stateCode was not specified or state exists nowhere, try country-level derivation corridor
+    // If stateCode was not specified or no state match exists, try a country-level derivation corridor
     const countryFallbackRule = getDerivationRule(countryCode, undefined, isTaxFreeOnly);
     if (countryFallbackRule) {
       return deriveStreetAddress(countryFallbackRule);
+    }
+    const countryRes = getResidentialAddress(countryCode, undefined, isTaxFreeOnly);
+    if (countryRes) {
+      return countryRes;
     }
   }
 
@@ -105,8 +113,13 @@ export function getRandomAddress(
       return resAddr;
     }
     // If state-specific address was requested but not found in Scheme B:
-    // First try falling back to Landmark seed in THAT SAME STATE to strictly preserve state accuracy
     if (stateCode) {
+      // First check if Scheme A has a corridor in that specific state!
+      const stateRule = getDerivationRule(countryCode, stateCode, isTaxFreeOnly);
+      if (stateRule) {
+        return deriveStreetAddress(stateRule);
+      }
+      // If neither has that state, check if that state has a landmark
       const stateLandmarks = countryLandmarkList.filter(
         a => matchesState(a.state, a.stateFull, stateCode) && (!isTaxFreeOnly || a.isTaxFree)
       );

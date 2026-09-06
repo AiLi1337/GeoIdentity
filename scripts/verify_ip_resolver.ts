@@ -1,4 +1,4 @@
-﻿import { queryMultiSourceIp } from '../src/services/ipService';
+import { queryMultiSourceIp } from '../src/services/ipService';
 import { resolveAddressFromIp } from '../src/services/ipAddressResolver';
 import { generateIdentityFromAddress } from '../src/services/identityGenerator';
 import type { IpConsensusResult } from '../src/types/ip';
@@ -76,10 +76,10 @@ async function runTests() {
   const laAddress = resolveAddressFromIp(mockLaConsensus);
   console.log('LA Matched Strategy:', mockLaConsensus.matchedStrategy);
   console.log('LA Matched Landmark:', laAddress.street, laAddress.city);
-  if (mockLaConsensus.matchedStrategy !== 'exact_city_landmark') {
-    throw new Error('Expected exact_city_landmark for Los Angeles');
+  if (mockLaConsensus.matchedStrategy !== 'exact_city_residential') {
+    throw new Error(`Expected exact_city_residential for Los Angeles, got ${mockLaConsensus.matchedStrategy}`);
   }
-  console.log('✅ Exact city landmark test passed.');
+  console.log('✅ Exact city residential test passed.');
 
   console.log('\n--- 5. Testing Tax-Free State Municipal Derivation (Wilmington, DE) ---');
   const mockDeConsensus: IpConsensusResult = {

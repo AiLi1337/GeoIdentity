@@ -228,71 +228,113 @@ assert(csvOutput.includes('Scheme B: Real Residential Address'), 'CSV row includ
 assert(csvOutput.includes('Residential Single Family') || csvOutput.includes('Residential Detached House'), 'CSV row includes Residential AVS Tier');
 
 // -----------------------------------------------------------------------------
-// 10. Normal Setback Algorithm Off-Road Verification
+// 10. Normal Setback Algorithm Off-Road Verification (True Metric Projection)
 // -----------------------------------------------------------------------------
-console.log('\n--- 10. Testing Normal Setback Algorithm (Zero Pins in the Middle of Roadways) ---');
-for (const rule of STREET_DERIVATION_RULES.slice(0, 10)) {
+console.log('\n--- 10. Testing Normal Setback Algorithm (True Ground Distance Metric Projection) ---');
+for (const rule of STREET_DERIVATION_RULES.slice(0, 15)) {
   const addr = deriveStreetAddress(rule);
-  const dLat = rule.endCoord.lat - rule.startCoord.lat;
-  const dLng = rule.endCoord.lng - rule.startCoord.lng;
-  const len = Math.hypot(dLat, dLng) || 0.0001;
-  const uNormalLat = -dLng / len;
-  const uNormalLng = dLat / len;
+  const midLat = (rule.startCoord.lat + rule.endCoord.lat) / 2;
+  const cosLat = Math.cos((midLat * Math.PI) / 180);
+  const METERS_PER_DEG_LAT = 111139;
+  const METERS_PER_DEG_LNG = 111139 * cosLat;
 
-  // Calculate perpendicular distance from line segment
-  const vLat = addr.lat - rule.startCoord.lat;
-  const vLng = addr.lng - rule.startCoord.lng;
-  const perpDistDeg = Math.abs(vLat * uNormalLat + vLng * uNormalLng);
-  // 1 meter ≈ 0.000009 degrees, so 14 meters ≈ 0.000126 degrees
-  assert(perpDistDeg >= 0.00010, `Address along ${rule.streetName} has perpendicular setback of ${(perpDistDeg / 0.000009).toFixed(1)}m from centerline (off-road on parcel)`);
+  const dNorth = (rule.endCoord.lat - rule.startCoord.lat) * METERS_PER_DEG_LAT;
+  const dEast = (rule.endCoord.lng - rule.startCoord.lng) * METERS_PER_DEG_LNG;
+  const lenMeters = Math.hypot(dNorth, dEast) || 1;
+  const uNormalNorth = -dEast / lenMeters;
+  const uNormalEast = dNorth / lenMeters;
+
+  // Calculate perpendicular distance in true physical meters
+  const vNorth = (addr.lat - rule.startCoord.lat) * METERS_PER_DEG_LAT;
+  const vEast = (addr.lng - rule.startCoord.lng) * METERS_PER_DEG_LNG;
+  const trueGroundPerpMeters = Math.abs(vNorth * uNormalNorth + vEast * uNormalEast);
+
+  assert(trueGroundPerpMeters >= 16.0, `Address along ${rule.streetName} (${rule.city}, lat ${rule.startCoord.lat.toFixed(2)}) has true ground setback of ${trueGroundPerpMeters.toFixed(1)}m from centerline (off-road on building parcel)`);
+}
+
+// Special check for high-latitude Anchorage, Alaska (Old Seward Hwy at lat 61.16°)
+const akRule = STREET_DERIVATION_RULES.find(r => r.id === 'us-ak-seward');
+if (akRule) {
+  const akAddr = deriveStreetAddress(akRule);
+  const cosAk = Math.cos((akAddr.lat * Math.PI) / 180);
+  const dNorth = (akRule.endCoord.lat - akRule.startCoord.lat) * 111139;
+  const dEast = (akRule.endCoord.lng - akRule.startCoord.lng) * (111139 * cosAk);
+  const lenAk = Math.hypot(dNorth, dEast);
+  const uNormN = -dEast / lenAk;
+  const uNormE = dNorth / lenAk;
+  const vN = (akAddr.lat - akRule.startCoord.lat) * 111139;
+  const vE = (akAddr.lng - akRule.startCoord.lng) * (111139 * cosAk);
+  const akMeters = Math.abs(vN * uNormN + vE * uNormE);
+  assert(akMeters >= 16.0, `High-latitude Alaska Anchorage ground setback is ${akMeters.toFixed(1)}m (>= 16m), fully clearing multi-lane highway asphalt`);
 }
 
 // -----------------------------------------------------------------------------
-// 11. IP Address Resolution Verification (No Cenotaph / Memorial Park Drops)
+// 11. IP Address Resolution Verification (Strict Residential Priority)
 // -----------------------------------------------------------------------------
-console.log('\n--- 11. Testing IP Address Resolution (No Monuments / Public Squares) ---');
-// Test Hong Kong IP
-const hkConsensus: IpConsensusResult = {
+console.log('\n--- 11. Testing IP Address Resolution (No Monuments / Public Squares / Commercial Skyscraper Traps) ---');
+// Test Hong Kong IP (Wan Chai district)
+const hkWanChaiConsensus: IpConsensusResult = {
   targetIp: '203.0.113.1',
   winnerCountry: 'Hong Kong',
   winnerCountryCode: 'HK',
-  winnerCity: 'Hong Kong',
-  winnerRegion: 'Central and Western',
-  winnerPostal: '999077',
-  winnerLat: 22.2818, // Cenotaph / Statue Square GeoIP center datum
-  winnerLng: 114.1588,
+  winnerCity: 'Wan Chai',
+  winnerRegion: 'Hong Kong Island',
   confidenceRate: 98,
   topCityVoteCount: 5,
   successQueries: 5,
   isp: 'HKBN'
 };
-const resolvedHk = resolveAddressFromIp(hkConsensus);
-assert(resolvedHk.countryCode === 'HK', 'HK IP resolved to HK country code');
-assert(resolvedHk.buildingType === 'residential' || resolvedHk.buildingType === 'derived', 'HK IP resolved to residential or derived street');
-assert(resolvedHk.lat !== 22.2818 || resolvedHk.lng !== 114.1588, 'HK IP did NOT place pin at Cenotaph datum coordinate');
-assert(!resolvedHk.street.includes('Main Street'), 'HK IP did NOT fabricate fake US Main Street');
-console.log(`   [HK Resolved Address]: ${resolvedHk.street}, ${resolvedHk.city} (${resolvedHk.lat}, ${resolvedHk.lng}) - Strategy: ${hkConsensus.matchedStrategy}`);
+const resolvedHkWanChai = resolveAddressFromIp(hkWanChaiConsensus);
+assert(resolvedHkWanChai.countryCode === 'HK', 'HK IP resolved to HK country code');
+assert(resolvedHkWanChai.buildingType === 'residential', 'HK Wan Chai IP resolved to residential, NOT commercial skyscraper');
+assert(!resolvedHkWanChai.street.includes('ICC') && !resolvedHkWanChai.street.includes('办公大楼'), 'HK Wan Chai IP did NOT assign commercial office tower');
+console.log(`   [HK Wan Chai]: ${resolvedHkWanChai.street}, ${resolvedHkWanChai.city} -> ${hkWanChaiConsensus.matchedStrategy}`);
 
-// Test Taiwan IP
-const twConsensus: IpConsensusResult = {
+// Test Taiwan IP (Taipei Xinyi district)
+const twXinyiConsensus: IpConsensusResult = {
   targetIp: '203.0.113.2',
   winnerCountry: 'Taiwan',
   winnerCountryCode: 'TW',
-  winnerCity: 'Taipei',
+  winnerCity: 'Xinyi',
   winnerRegion: 'Taipei City',
-  winnerPostal: '100',
-  winnerLat: 25.042, // 228 Peace Memorial Park datum
-  winnerLng: 121.514,
   confidenceRate: 95,
   topCityVoteCount: 4,
   successQueries: 4,
   isp: 'Chunghwa Telecom'
 };
-const resolvedTw = resolveAddressFromIp(twConsensus);
-assert(resolvedTw.countryCode === 'TW', 'TW IP resolved to TW country code');
-assert(resolvedTw.buildingType === 'residential' || resolvedTw.buildingType === 'derived', 'TW IP resolved to residential or derived');
-assert(resolvedTw.lat !== 25.042 || resolvedTw.lng !== 121.514, 'TW IP did NOT place pin at 228 Peace Memorial Park datum');
-console.log(`   [TW Resolved Address]: ${resolvedTw.street}, ${resolvedTw.city} (${resolvedTw.lat}, ${resolvedTw.lng}) - Strategy: ${twConsensus.matchedStrategy}`);
+const resolvedTwXinyi = resolveAddressFromIp(twXinyiConsensus);
+assert(resolvedTwXinyi.countryCode === 'TW', 'TW Xinyi IP resolved to TW country code');
+assert(resolvedTwXinyi.buildingType === 'residential', 'TW Xinyi IP resolved to residential, NOT Taipei 101');
+assert(!resolvedTwXinyi.street.includes('101大楼'), 'TW Xinyi IP did NOT assign Taipei 101');
+console.log(`   [TW Xinyi]: ${resolvedTwXinyi.street}, ${resolvedTwXinyi.city} -> ${twXinyiConsensus.matchedStrategy}`);
+
+// Test Australia IP (Melbourne)
+const auMelConsensus: IpConsensusResult = {
+  targetIp: '203.0.113.3',
+  winnerCountry: 'Australia',
+  winnerCountryCode: 'AU',
+  winnerCity: 'Melbourne',
+  winnerRegion: 'Victoria',
+  confidenceRate: 95,
+  topCityVoteCount: 4,
+  successQueries: 4,
+  isp: 'Telstra'
+};
+const resolvedAuMel = resolveAddressFromIp(auMelConsensus);
+assert(resolvedAuMel.countryCode === 'AU', 'AU Melbourne IP resolved to AU country code');
+assert(resolvedAuMel.buildingType === 'residential', 'AU Melbourne IP resolved to residential, NOT 120 Collins St');
+assert(!resolvedAuMel.street.includes('120 Collins'), 'AU Melbourne IP did NOT assign 120 Collins Street commercial tower');
+console.log(`   [AU Melbourne]: ${resolvedAuMel.street}, ${resolvedAuMel.city} -> ${auMelConsensus.matchedStrategy}`);
+
+// -----------------------------------------------------------------------------
+// 12. Default Mode Verification (First Visit / Zero-Config Generation)
+// -----------------------------------------------------------------------------
+console.log('\n--- 12. Testing Default Mode Generation (First Visit Defaults to Residential Home) ---');
+const defaultGen = generateIdentity('US');
+assert(defaultGen.address.addressMode === 'residential', 'Default address mode is residential');
+assert(defaultGen.address.buildingType === 'residential', 'Default building type is residential');
+assert(!defaultGen.address.street.includes('Suite 100'), 'Default address has no commercial Suite 100');
+console.log(`   [Default US Identity]: ${defaultGen.basic.fullName} living at ${defaultGen.address.street}, ${defaultGen.address.city} (${defaultGen.address.derivationMeta?.modeLabelZh})`);
 
 console.log('\n================================================================');
 console.log(`🎉 SUCCESS: All ${assertionCount} assertions passed cleanly!`);

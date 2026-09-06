@@ -269,7 +269,7 @@ function getBatchTaxRate(addr: any): string {
 }
 
 const selectedCount = ref(10);
-const selectedMode = ref<AddressMode>(props.filters.addressMode || 'landmark');
+const selectedMode = ref<AddressMode>(props.filters.addressMode || 'residential');
 const batchList = ref<GeneratedIdentity[]>([]);
 
 function generateBatch() {
