@@ -1,4 +1,4 @@
-﻿# GeoIdentity - 真实地址与本土化合理身份生成器
+# GeoIdentity - 真实地址与本土化合理身份生成器
 
 <p align="center">
   <img src="public/favicon.svg" width="72" height="72" alt="GeoIdentity Logo" />
@@ -26,16 +26,16 @@
 ## 📸 项目界面预览 (Screenshots)
 
 ### 1. 身份与地址生成主控制台 (21 国网格选择与三方案切换)
-![主界面概览与21国快速选择](docs/images/01-generator-overview.png)
+![主界面概览与21国快速选择](docs/images/01-generator-overview-v2.png)
 
 ### 2. 真实物理地址与全套本土化身份测试卡片 (含 OpenStreetMap 零送中地图)
-![真实物理地址与测试身份卡片](docs/images/02-identity-card.png)
+![真实物理地址与测试身份卡片](docs/images/02-identity-card-v2.png)
 
 ### 3. 全球 21 国真实矢量地图遥测监控大盘 (Natural Earth 1 标准地理疆界)
-![全球矢量地图监控大盘](docs/images/03-world-map-monitor.png)
+![全球矢量地图监控大盘](docs/images/03-world-map-monitor-v2.png)
 
 ### 4. 21 国三大方案走廊与门牌容量日更统计明细
-![地址库方案明细与日更统计表格](docs/images/04-address-breakdown-table.png)
+![地址库方案明细与日更统计表格](docs/images/04-address-breakdown-table-v2.png)
 
 ---
 
