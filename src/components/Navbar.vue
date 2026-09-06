@@ -104,6 +104,18 @@
           <Sun v-if="isDark" class="w-4 h-4 text-amber-400" />
           <Moon v-else class="w-4 h-4 text-slate-600" />
         </button>
+
+        <!-- GitHub Repository Link -->
+        <a
+          href="https://github.com/AiLi1337/GeoIdentity"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all flex items-center gap-1.5 cursor-pointer"
+          :title="locale === 'zh' ? '在 GitHub 查看开源项目与 Star 支持' : 'View on GitHub (Star)'"
+        >
+          <Github class="w-4 h-4" />
+          <span class="hidden xl:inline text-xs font-semibold">GitHub</span>
+        </a>
       </div>
     </div>
   </header>
@@ -111,7 +123,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { MapPin, Layers, Bookmark, Languages, Sun, Moon, ShieldAlert, Globe } from 'lucide-vue-next';
+import { MapPin, Layers, Bookmark, Languages, Sun, Moon, ShieldAlert, Globe, Github } from 'lucide-vue-next';
 import { useI18n } from '../i18n';
 
 defineProps<{

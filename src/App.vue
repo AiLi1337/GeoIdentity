@@ -214,6 +214,15 @@
               {{ t('footer.privacyPolicy') }}
             </a>
             <span>•</span>
+            <a
+              href="https://github.com/AiLi1337/GeoIdentity"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-primary-600 dark:hover:text-primary-400 underline underline-offset-4 transition-colors cursor-pointer font-medium"
+            >
+              GitHub 源码
+            </a>
+            <span>•</span>
             <span>{{ t('footer.copyright') }}</span>
           </div>
         </div>
