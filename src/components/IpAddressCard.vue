@@ -30,14 +30,14 @@
           v-model="ipInput"
           :placeholder="t('ipGen.inputPlaceholder')"
           @keydown.enter="handleSearch"
-          class="w-full pl-10 pr-28 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/60 text-slate-900 dark:text-white placeholder-slate-400 text-base sm:text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all"
+          class="w-full h-10 pl-10 pr-28 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-base sm:text-xs font-mono focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
         />
         <!-- Quick fetch client IP button inside input -->
         <button
           type="button"
           @click="handleFetchClientIp"
           :disabled="isDetectingIp"
-          class="absolute inset-y-1 right-1 px-2.5 flex items-center gap-1 text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
+          class="absolute inset-y-1 right-1 px-2.5 flex items-center gap-1 text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/60 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
           :title="t('ipGen.detectClientIpTitle')"
         >
           <Loader2 v-if="isDetectingIp" class="w-3.5 h-3.5 animate-spin" />
@@ -50,7 +50,7 @@
         type="button"
         @click="handleSearch"
         :disabled="isLoading"
-        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none whitespace-nowrap"
+        class="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-xl bg-primary-600 hover:bg-primary-700 active:scale-[0.98] text-white text-xs font-bold shadow-md shadow-primary-500/20 transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none whitespace-nowrap"
       >
         <Loader2 v-if="isLoading" class="w-4 h-4 animate-spin" />
         <Sparkles v-else class="w-4 h-4 text-indigo-200" />

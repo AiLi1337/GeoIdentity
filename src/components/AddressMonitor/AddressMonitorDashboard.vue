@@ -147,14 +147,14 @@
               v-model="searchQuery"
               type="text"
               :placeholder="t('monitor.searchPlaceholder')"
-              class="w-full pl-9 pr-3 py-1.5 text-base sm:text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+              class="w-full pl-9 pr-3 py-2 sm:py-1.5 text-base sm:text-xs rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
             />
           </div>
 
           <!-- Continent Filter -->
           <select
             v-model="continentFilter"
-            class="px-3 py-1.5 text-base sm:text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer"
+            class="px-3 py-2 sm:py-1.5 text-base sm:text-xs rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all cursor-pointer"
           >
             <option value="all">{{ t('monitor.filterAll') }}</option>
             <option value="north_america">北美洲</option>

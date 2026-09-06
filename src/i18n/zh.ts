@@ -32,7 +32,7 @@ export const zh = {
   },
   regions: {
     title: '国家与地区快速选择',
-    searchPlaceholder: '搜索国家名称或国家代码 (如: 美国、US、日本、DE)...',
+    searchPlaceholder: '搜索国家名称或代码 (如: 美国、US)...',
     selectState: '全部州 / 省 / 城市',
     customState: '指定区域：',
     taxFreeBadge: '免税州 / 低税特区',
@@ -356,7 +356,7 @@ export const zh = {
     selectedCountry: '当前选中国家',
     clearSelection: '清除聚焦 (显示全部 21 国)',
     tableTitle: '各国家/地区方案地址统计与明细',
-    searchPlaceholder: '搜索国家名称、英文名或代码 (如 US, 日本, DE)...',
+    searchPlaceholder: '搜索国家或代码 (如 US, 日本)...',
     filterAll: '全部大洲',
     filterTaxFree: '仅看免税/低税特区',
     colCountry: '国家 / 地区',

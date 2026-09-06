@@ -1,7 +1,8 @@
 <template>
   <div
     v-if="isVisible"
-    class="fixed bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-6 max-w-5xl mx-auto z-40 animate-in fade-in slide-in-from-bottom-4 duration-300"
+    class="fixed inset-x-3 sm:inset-x-6 max-w-5xl mx-auto z-40 animate-in fade-in slide-in-from-bottom-4 duration-300"
+    style="bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));"
     role="region"
     aria-label="Cookie & Legal Disclaimer Consent Banner"
   >

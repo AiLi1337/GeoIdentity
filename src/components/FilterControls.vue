@@ -244,7 +244,7 @@
           <select
             :value="filters.ageRange"
             @change="updateAge(($event.target as HTMLSelectElement).value as any)"
-            class="text-xs font-medium bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 sm:px-3 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+            class="text-base sm:text-xs font-medium bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 sm:px-3 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all cursor-pointer"
           >
             <option value="random">{{ t('filter.ageAll') }}</option>
             <option value="18-25">{{ t('filter.ageYouth') }}</option>

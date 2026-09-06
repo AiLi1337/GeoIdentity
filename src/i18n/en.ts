@@ -32,7 +32,7 @@ export const en = {
   },
   regions: {
     title: 'Country & Region Selection',
-    searchPlaceholder: 'Search country name or code (e.g. United States, US, JP, DE)...',
+    searchPlaceholder: 'Search country or code (e.g. US, UK)...',
     selectState: 'All States / Provinces / Cities',
     customState: 'Target Area:',
     taxFreeBadge: 'Tax-Free / Low Tax',
@@ -356,7 +356,7 @@ export const en = {
     selectedCountry: 'Selected Country',
     clearSelection: 'Clear Selection (Show All 21 Countries)',
     tableTitle: 'Country & Scheme Address Statistics',
-    searchPlaceholder: 'Search by country name or code (e.g. US, Japan, DE)...',
+    searchPlaceholder: 'Search country or code (e.g. US)...',
     filterAll: 'All Continents',
     filterTaxFree: 'Tax-Free Zones Only',
     colCountry: 'Country / Territory',

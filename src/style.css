@@ -2,9 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+
 @layer base {
-  body {
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Ensure all form controls strictly inherit the unified typography */
+  input, select, textarea, button {
+    font-family: inherit;
+    letter-spacing: inherit;
+  }
+
+  /* Unified crisp monospace font for card numbers, postcodes, coordinates */
+  .font-mono {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   }
 
   /* Prevent mobile browsers (iOS Safari / Android Chrome) from auto-zooming inputs under 16px */
@@ -19,6 +41,18 @@
     textarea {
       font-size: 16px !important;
     }
+  }
+}
+
+@layer components {
+  /* Unified App Input Standard: 12px rounded-xl, consistent borders, backgrounds, and focus rings */
+  .app-input {
+    @apply w-full h-10 px-3.5 py-2 text-base sm:text-xs rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all;
+  }
+
+  /* Unified App Select Standard */
+  .app-select {
+    @apply h-10 px-3 py-2 text-base sm:text-xs rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all cursor-pointer;
   }
 }
 

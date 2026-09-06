@@ -169,14 +169,14 @@
           v-model="inputKey"
           type="text"
           :placeholder="t('card.googleKeyPlaceholder')"
-          class="w-full text-xs px-2.5 py-1 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-primary-500 font-mono"
+          class="w-full text-base sm:text-xs px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 font-mono transition-all"
         />
       </div>
       <div class="flex items-center gap-1.5">
         <button
           type="button"
           @click="saveKey"
-          class="px-2.5 py-1 text-xs font-semibold bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors cursor-pointer"
+          class="px-3 py-1.5 text-xs font-semibold bg-primary-600 hover:bg-primary-700 text-white rounded-xl transition-colors cursor-pointer"
         >
           {{ t('card.googleSaveKey') }}
         </button>
@@ -184,7 +184,7 @@
           v-if="googleApiKey"
           type="button"
           @click="clearKey"
-          class="px-2.5 py-1 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-md transition-colors cursor-pointer"
+          class="px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors cursor-pointer"
         >
           {{ t('card.googleClearKey') }}
         </button>

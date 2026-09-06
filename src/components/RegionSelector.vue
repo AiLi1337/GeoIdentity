@@ -37,7 +37,7 @@
           v-model="searchQuery"
           type="text"
           :placeholder="t('regions.searchPlaceholder')"
-          class="w-full text-base sm:text-xs pl-8 pr-7 py-2 sm:py-1.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all"
+          class="w-full text-base sm:text-xs pl-8 pr-7 py-2 sm:py-1.5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
         />
         <button
           v-if="searchQuery"
@@ -103,7 +103,7 @@
           <select
             :value="selectedState"
             @change="$emit('update:selectedState', ($event.target as HTMLSelectElement).value)"
-            class="text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 w-full sm:w-auto max-w-full"
+            class="text-base sm:text-xs font-medium bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 w-full sm:w-auto max-w-full transition-all cursor-pointer"
           >
             <option value="">{{ t('regions.selectState') }}</option>
             <option

@@ -1,5 +1,8 @@
 <template>
-  <header class="fixed top-0 left-0 right-0 z-40 w-full backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
+  <header
+    class="fixed top-0 left-0 right-0 z-40 w-full backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200"
+    style="padding-top: env(safe-area-inset-top, 0px);"
+  >
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <!-- Brand Logo & Title -->
       <div class="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
@@ -227,13 +230,12 @@
 
             <!-- 4. PWA 安装应用 -->
             <button
-              v-if="canInstall || (isIos && !isInstalled)"
               type="button"
               @click="handleMobilePwaInstall"
               class="w-full px-3.5 py-2 text-left text-xs font-semibold text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950/40 flex items-center gap-2.5 transition-colors cursor-pointer"
             >
               <Smartphone class="w-4 h-4 text-teal-600 dark:text-teal-400" />
-              <span>{{ t('nav.installPwa') }}</span>
+              <span>{{ isInstalled ? (locale === 'zh' ? '已安装为桌面应用' : 'App Installed') : t('nav.installPwa') }}</span>
             </button>
 
             <div class="my-1 border-t border-slate-100 dark:border-slate-800"></div>
@@ -254,8 +256,8 @@
       </div>
     </div>
   </header>
-  <!-- Fixed Navbar Placeholder to keep natural document flow -->
-  <div class="h-16 w-full shrink-0 pointer-events-none" aria-hidden="true"></div>
+  <!-- Fixed Navbar Placeholder to keep natural document flow (with safe-area support) -->
+  <div class="w-full shrink-0 pointer-events-none" style="height: calc(4rem + env(safe-area-inset-top, 0px));" aria-hidden="true"></div>
 
   <!-- iOS Safari PWA Install Guidance Modal -->
   <Teleport to="body">
@@ -293,6 +295,48 @@
         <button
           type="button"
           @click="showIosGuide = false"
+          class="w-full mt-4 py-2 text-xs font-semibold rounded-xl bg-teal-600 text-white hover:bg-teal-700 transition-colors cursor-pointer"
+        >
+          {{ locale === 'zh' ? '我知道了' : 'Got it' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Android & Universal Mobile PWA Install Guidance Modal -->
+    <div
+      v-if="showAndroidGuide"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200"
+      @click.self="showAndroidGuide = false"
+    >
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative text-left">
+        <button
+          type="button"
+          @click="showAndroidGuide = false"
+          class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+        >
+          ✕
+        </button>
+        <div class="flex items-center gap-2 mb-3 text-teal-600 dark:text-teal-400 font-bold text-base">
+          <Smartphone class="w-5 h-5" />
+          <span>{{ locale === 'zh' ? '添加到手机桌面 (PWA)' : 'Add to Home Screen (PWA)' }}</span>
+        </div>
+        <div class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold text-[11px] shrink-0">1</span>
+            <p>{{ locale === 'zh' ? '点击浏览器右上角或底部的菜单图标（通常为 ⋮ 或 ≡）' : 'Tap browser menu icon (usually ⋮ or ≡ on top/bottom bar)' }}</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold text-[11px] shrink-0">2</span>
+            <p>{{ locale === 'zh' ? '在菜单中找到并点击「安装应用」或「添加到主屏幕」' : 'Select "Install app" or "Add to Home screen"' }}</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold text-[11px] shrink-0">3</span>
+            <p>{{ locale === 'zh' ? '确认添加后，即可像原生 App 一样从桌面离线秒开！' : 'Confirm to add, then launch instantly from your home screen like a native app!' }}</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          @click="showAndroidGuide = false"
           class="w-full mt-4 py-2 text-xs font-semibold rounded-xl bg-teal-600 text-white hover:bg-teal-700 transition-colors cursor-pointer"
         >
           {{ locale === 'zh' ? '我知道了' : 'Got it' }}
@@ -338,7 +382,7 @@ const isDark = ref(false);
 const isMobileMenuOpen = ref(false);
 const mobileMenuRef = ref<HTMLElement | null>(null);
 
-const { canInstall, isInstalled, isIos, showIosGuide, promptInstall } = usePwaInstall();
+const { canInstall, isInstalled, isIos, showIosGuide, showAndroidGuide, promptInstall } = usePwaInstall();
 
 async function handleMobilePwaInstall() {
   isMobileMenuOpen.value = false;

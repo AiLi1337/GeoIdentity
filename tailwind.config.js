@@ -21,6 +21,32 @@ export default {
           900: '#134e4a',
           950: '#042f2e',
         }
+      },
+      fontFamily: {
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          '"PingFang SC"',
+          '"Noto Sans SC"',
+          '"Hiragino Sans GB"',
+          '"Microsoft YaHei"',
+          '"WenQuanYi Micro Hei"',
+          'system-ui',
+          'sans-serif'
+        ],
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          '"SF Mono"',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          '"Liberation Mono"',
+          '"Courier New"',
+          'monospace'
+        ]
       }
     },
   },

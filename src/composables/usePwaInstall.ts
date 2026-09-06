@@ -10,6 +10,7 @@ const canInstall = ref(false);
 const isInstalled = ref(false);
 const isIos = ref(false);
 const showIosGuide = ref(false);
+const showAndroidGuide = ref(false);
 
 export function usePwaInstall() {
   function handleBeforeInstallPrompt(e: Event) {
@@ -58,6 +59,8 @@ export function usePwaInstall() {
       }
     } else if (isIos.value && !isInstalled.value) {
       showIosGuide.value = true;
+    } else if (!isInstalled.value) {
+      showAndroidGuide.value = true;
     }
     return false;
   }
@@ -67,6 +70,7 @@ export function usePwaInstall() {
     isInstalled,
     isIos,
     showIosGuide,
+    showAndroidGuide,
     promptInstall
   };
 }
