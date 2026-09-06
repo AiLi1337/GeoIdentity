@@ -95,9 +95,9 @@
                 <ShieldAlert class="w-5 h-5" />
               </div>
               <div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <span>{{ t('footer.disclaimerBadge') }}</span>
-                  <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                  <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full shrink-0 whitespace-nowrap bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
                     {{ t('card.complianceSafetyBadge') }}
                   </span>
                 </h3>

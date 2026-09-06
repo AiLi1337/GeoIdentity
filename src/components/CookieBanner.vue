@@ -11,11 +11,11 @@
           <Cookie class="w-5 h-5" />
         </div>
         <div class="space-y-1">
-          <div class="flex items-center gap-2">
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
               {{ locale === 'zh' ? '合规使用声明与 Cookie 政策' : 'Compliance Notice & Cookie Policy' }}
             </span>
-            <span class="px-2 py-0.2 text-[10px] font-semibold rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+            <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full shrink-0 whitespace-nowrap bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
               {{ t('card.privacyComplianceBadge') }}
             </span>
           </div>

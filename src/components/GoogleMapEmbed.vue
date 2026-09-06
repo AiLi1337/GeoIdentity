@@ -18,7 +18,7 @@
 
         <!-- Status Badge -->
         <span
-          class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded-full border transition-colors"
+          class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded-full border transition-colors shrink-0 whitespace-nowrap"
           :class="[
             provider === 'google'
               ? 'text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 border-amber-200 dark:border-amber-800'

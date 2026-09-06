@@ -205,7 +205,7 @@
             </span>
           </div>
           <span
-            class="text-[10px] font-bold px-2.5 py-0.5 rounded-md tracking-wide"
+            class="text-[10px] font-bold px-2.5 py-0.5 rounded-md tracking-wide shrink-0 whitespace-nowrap"
             :class="[
               identity.address.addressMode === 'residential'
                 ? 'bg-purple-200/80 dark:bg-purple-900/60 text-purple-900 dark:text-purple-200'
@@ -482,14 +482,14 @@
         <div class="absolute -top-12 right-0 w-48 h-48 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <CreditCard class="w-5 h-5 text-teal-400" />
-              <span class="text-sm font-bold tracking-wide text-slate-200">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <CreditCard class="w-5 h-5 text-teal-400 shrink-0" />
+              <span class="text-sm font-bold tracking-wide text-slate-200 truncate">
                 {{ labels.financeTitle }}
               </span>
             </div>
-            <span class="px-2.5 py-0.5 text-xs font-bold rounded-md bg-teal-500/20 text-teal-300 border border-teal-500/30">
+            <span class="px-2.5 py-0.5 text-xs font-bold rounded-md bg-white/10 text-slate-200 border border-white/20 shrink-0 whitespace-nowrap">
               {{ identity.finance.cardType }}
             </span>
           </div>
@@ -510,38 +510,38 @@
           </div>
 
           <!-- Bottom Row: Expiry, CVV, Bank -->
-          <div class="grid grid-cols-3 gap-2 sm:gap-3">
+          <div class="grid grid-cols-3 gap-2 sm:gap-3 items-stretch">
             <div
               @click="copyField(`${identity.finance.expMonth}/${identity.finance.expYear}`, 'exp')"
-              class="group p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer"
+              class="group p-2 sm:p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer flex flex-col justify-between"
             >
-              <div class="text-[11px] text-slate-400">{{ labels.expDate }}</div>
-              <div class="text-sm font-mono font-bold text-slate-200">
+              <div class="text-[10px] sm:text-[11px] text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">{{ labels.expDate }}</div>
+              <div class="text-xs sm:text-sm font-mono font-bold text-slate-200 whitespace-nowrap">
                 {{ identity.finance.expMonth }} / {{ identity.finance.expYear }}
               </div>
             </div>
 
             <div
               @click="copyField(identity.finance.cvv, 'cvv')"
-              class="group p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer"
+              class="group p-2 sm:p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer flex flex-col justify-between"
             >
-              <div class="text-[11px] text-slate-400">{{ labels.cvv }}</div>
-              <div class="text-sm font-mono font-bold text-slate-200">
+              <div class="text-[10px] sm:text-[11px] text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">{{ labels.cvv }}</div>
+              <div class="text-xs sm:text-sm font-mono font-bold text-slate-200 whitespace-nowrap">
                 {{ identity.finance.cvv }}
               </div>
             </div>
 
-            <div class="p-2.5 rounded-lg bg-white/5 border border-white/10">
-              <div class="text-[11px] text-slate-400">{{ labels.bank }}</div>
-              <div class="text-sm font-medium text-slate-200 truncate">
+            <div class="p-2 sm:p-2.5 rounded-lg bg-white/5 border border-white/10 flex flex-col justify-between">
+              <div class="text-[10px] sm:text-[11px] text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">{{ labels.bank }}</div>
+              <div class="text-xs sm:text-sm font-medium text-slate-200 truncate" :title="identity.finance.bankName">
                 {{ identity.finance.bankName }}
               </div>
             </div>
           </div>
 
           <!-- Card Compliance / Safety Notice -->
-          <div class="flex items-center gap-2 p-2.5 rounded-xl bg-teal-950/60 border border-teal-500/30 text-[11px] text-teal-200">
-            <ShieldAlert class="w-4 h-4 text-amber-400 flex-shrink-0" />
+          <div class="flex items-center gap-2 p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10 text-[10px] sm:text-[11px] text-slate-300">
+            <ShieldAlert class="w-4 h-4 text-amber-400 shrink-0" />
             <span class="leading-tight">{{ labels.financeNotice }}</span>
           </div>
         </div>

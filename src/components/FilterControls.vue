@@ -37,26 +37,27 @@
             : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700'
         ]"
       >
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-2">
+        <div class="flex items-start justify-between gap-1.5 sm:gap-2 mb-2">
+          <div class="flex items-center gap-2 min-w-0 flex-1">
             <div
               :class="[
-                'p-1.5 rounded-lg',
+                'p-1.5 rounded-lg shrink-0',
                 currentMode === 'landmark' ? 'bg-blue-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               ]"
             >
               <Building2 class="w-4 h-4" />
             </div>
             <span
-              class="text-xs font-bold tracking-tight"
+              class="text-xs font-bold tracking-tight truncate"
               :class="currentMode === 'landmark' ? 'text-blue-950 dark:text-blue-100' : 'text-slate-800 dark:text-slate-200'"
             >
-              {{ t('addressMode.landmark') }}
+              <span class="sm:hidden">{{ t('addressMode.landmarkShort') }}</span>
+              <span class="hidden sm:inline">{{ t('addressMode.landmark') }}</span>
             </span>
           </div>
           <span
             v-if="currentMode === 'landmark'"
-            class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-500 text-white shadow-xs"
+            class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-500 text-white shadow-xs shrink-0 whitespace-nowrap mt-0.5"
           >
             {{ t('addressMode.active') }}
           </span>
@@ -80,26 +81,27 @@
             : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-700'
         ]"
       >
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-2">
+        <div class="flex items-start justify-between gap-1.5 sm:gap-2 mb-2">
+          <div class="flex items-center gap-2 min-w-0 flex-1">
             <div
               :class="[
-                'p-1.5 rounded-lg',
+                'p-1.5 rounded-lg shrink-0',
                 currentMode === 'derivation' ? 'bg-emerald-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               ]"
             >
               <Route class="w-4 h-4" />
             </div>
             <span
-              class="text-xs font-bold tracking-tight"
+              class="text-xs font-bold tracking-tight truncate"
               :class="currentMode === 'derivation' ? 'text-emerald-950 dark:text-emerald-100' : 'text-slate-800 dark:text-slate-200'"
             >
-              {{ t('addressMode.derivation') }}
+              <span class="sm:hidden">{{ t('addressMode.derivationShort') }}</span>
+              <span class="hidden sm:inline">{{ t('addressMode.derivation') }}</span>
             </span>
           </div>
           <span
             v-if="currentMode === 'derivation'"
-            class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500 text-white shadow-xs"
+            class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500 text-white shadow-xs shrink-0 whitespace-nowrap mt-0.5"
           >
             {{ t('addressMode.active') }}
           </span>
@@ -123,26 +125,27 @@
             : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-700'
         ]"
       >
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-2">
+        <div class="flex items-start justify-between gap-1.5 sm:gap-2 mb-2">
+          <div class="flex items-center gap-2 min-w-0 flex-1">
             <div
               :class="[
-                'p-1.5 rounded-lg',
+                'p-1.5 rounded-lg shrink-0',
                 currentMode === 'residential' ? 'bg-purple-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               ]"
             >
               <Home class="w-4 h-4" />
             </div>
             <span
-              class="text-xs font-bold tracking-tight"
+              class="text-xs font-bold tracking-tight truncate"
               :class="currentMode === 'residential' ? 'text-purple-950 dark:text-purple-100' : 'text-slate-800 dark:text-slate-200'"
             >
-              {{ t('addressMode.residential') }}
+              <span class="sm:hidden">{{ t('addressMode.residentialShort') }}</span>
+              <span class="hidden sm:inline">{{ t('addressMode.residential') }}</span>
             </span>
           </div>
           <span
             v-if="currentMode === 'residential'"
-            class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-purple-500 text-white shadow-xs"
+            class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-purple-500 text-white shadow-xs shrink-0 whitespace-nowrap mt-0.5"
           >
             {{ t('addressMode.active') }}
           </span>
