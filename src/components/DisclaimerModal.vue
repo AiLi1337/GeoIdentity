@@ -10,19 +10,20 @@
       class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-3xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transition-all"
     >
       <!-- Modal Header -->
-      <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/80 dark:bg-slate-800/50">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-500/20">
-            <Scale class="w-5 h-5" />
+      <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/80 dark:bg-slate-800/50">
+        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-500/20 shrink-0">
+            <Scale class="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <span>{{ t('disclaimerModal.title') }}</span>
-              <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
-                {{ t('card.legalVersion') }}
+          <div class="min-w-0">
+            <h2 class="text-sm sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-1.5 sm:gap-2">
+              <span class="truncate">{{ t('disclaimerModal.title') }}</span>
+              <span class="text-[10px] sm:text-[11px] font-medium px-1.5 sm:px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 shrink-0 whitespace-nowrap">
+                <span class="sm:hidden">v2.4</span>
+                <span class="hidden sm:inline">{{ t('card.legalVersion') }}</span>
               </span>
             </h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
               {{ t('card.legalSubtitle') }}
             </p>
           </div>
@@ -31,7 +32,7 @@
         <button
           type="button"
           @click="$emit('close')"
-          class="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          class="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
           :title="t('disclaimerModal.closeLabel')"
         >
           <X class="w-5 h-5" />
@@ -39,14 +40,14 @@
       </div>
 
       <!-- Quick Navigation Filter Tabs -->
-      <div class="px-6 py-2.5 border-b border-slate-200/80 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-800/30 overflow-x-auto flex items-center gap-1.5 scrollbar-none text-xs">
+      <div class="px-4 sm:px-6 py-2 sm:py-2.5 border-b border-slate-200/80 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-800/30 overflow-x-auto flex items-center gap-1.5 scrollbar-none text-xs">
         <button
           v-for="tab in tabs"
           :key="tab.id"
           type="button"
           @click="activeTab = tab.id"
           :class="[
-            'px-3 py-1 rounded-lg font-medium transition-all whitespace-nowrap cursor-pointer',
+            'px-2.5 sm:px-3 py-1 rounded-lg font-medium transition-all whitespace-nowrap shrink-0 cursor-pointer',
             activeTab === tab.id
               ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-300 shadow-xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
@@ -57,15 +58,18 @@
       </div>
 
       <!-- Modal Body (Scrollable) -->
-      <div class="overflow-y-auto px-6 py-5 space-y-6 text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
-        <!-- Prominent Red Alert Banner -->
-        <div class="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 flex items-start gap-3">
-          <AlertTriangle class="w-5 h-5 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
+      <div class="overflow-y-auto px-4 sm:px-6 py-4 sm:py-5 space-y-5 sm:space-y-6 text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+        <!-- Compliance Summary Card -->
+        <div
+          v-show="activeTab === 'all' || activeTab === 'disclaimer'"
+          class="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/50 flex items-start gap-2.5 sm:gap-3"
+        >
+          <ShieldAlert class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div class="space-y-1">
-            <div class="font-bold text-rose-800 dark:text-rose-300 text-xs sm:text-sm">
+            <div class="font-bold text-amber-900 dark:text-amber-200 text-xs sm:text-sm">
               {{ t('disclaimerModal.criticalNotice') }}
             </div>
-            <p class="text-rose-700 dark:text-rose-400 text-xs leading-relaxed">
+            <p class="text-amber-800/90 dark:text-amber-300/90 text-xs leading-relaxed">
               {{ t('disclaimerModal.summaryAlert') }}
             </p>
           </div>
@@ -231,7 +235,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
-import { Scale, X, AlertTriangle, ShieldCheck, ExternalLink } from 'lucide-vue-next';
+import { Scale, X, ShieldAlert, ShieldCheck, ExternalLink } from 'lucide-vue-next';
 import { useI18n } from '../i18n';
 
 const props = withDefaults(

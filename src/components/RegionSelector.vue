@@ -1,37 +1,15 @@
 <template>
   <div class="space-y-3">
-    <!-- Top Bar: Title & Search & State Filter -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-      <!-- Section Title & Continent Tabs -->
-      <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-        <div class="flex items-center gap-1.5 font-bold text-sm text-slate-800 dark:text-slate-100 mr-2">
-          <Globe2 class="w-4 h-4 text-primary-500" />
-          <span>{{ t('regions.title') }}</span>
-        </div>
-
-        <!-- Continent Filter Tabs -->
-        <button
-          v-for="cat in continentTabs"
-          :key="cat.id"
-          type="button"
-          @click="activeContinent = cat.id"
-          :class="[
-            'px-2.5 py-1 text-xs font-semibold rounded-lg transition-all',
-            activeContinent === cat.id
-              ? cat.id === 'tax_free'
-                ? 'bg-amber-500 text-white shadow-xs'
-                : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-              : cat.id === 'tax_free'
-                ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200'
-          ]"
-        >
-          {{ cat.label }}
-        </button>
+    <!-- Top Bar: Title & Search -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
+      <!-- Section Title -->
+      <div class="flex items-center gap-1.5 font-bold text-sm text-slate-800 dark:text-slate-100 shrink-0">
+        <Globe2 class="w-4 h-4 text-primary-500" />
+        <span>{{ t('regions.title') }}</span>
       </div>
 
       <!-- Search Input -->
-      <div class="relative w-full md:w-64">
+      <div class="relative w-full sm:w-64">
         <Search class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
         <input
           v-model="searchQuery"
@@ -47,6 +25,34 @@
           ×
         </button>
       </div>
+    </div>
+
+    <!-- Continent Filter Tabs (Single-Row Horizontally Scrollable on Mobile, Wrap on Desktop) -->
+    <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 -mx-1 px-1 sm:mx-0 sm:px-0 sm:flex-wrap">
+      <button
+        v-for="cat in continentTabs"
+        :key="cat.id"
+        type="button"
+        @click="activeContinent = cat.id"
+        :class="[
+          'px-3 py-1.5 sm:py-1 text-xs font-semibold rounded-lg transition-all shrink-0 whitespace-nowrap cursor-pointer',
+          activeContinent === cat.id
+            ? cat.id === 'tax_free'
+              ? 'bg-amber-500 text-white shadow-xs'
+              : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+            : cat.id === 'tax_free'
+              ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200'
+        ]"
+      >
+        <template v-if="cat.id === 'tax_free'">
+          <span class="sm:hidden">⚡ 免税特区</span>
+          <span class="hidden sm:inline">{{ cat.label }}</span>
+        </template>
+        <template v-else>
+          {{ cat.label }}
+        </template>
+      </button>
     </div>
 
     <!-- Country Flag Cards Grid -->
