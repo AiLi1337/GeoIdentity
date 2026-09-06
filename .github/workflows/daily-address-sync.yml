@@ -1,0 +1,38 @@
+name: Daily Address Database Sync & Audit
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天 UTC 00:00 定时执行
+  workflow_dispatch: # 支持在 GitHub 控制台手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  sync-addresses:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Daily Address Sync & Audit
+        run: npm run sync:addresses
+
+      - name: Run Build Verification
+        run: npm run build
+
+      - name: Commit & Push Daily Updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action [Address Sync]"
+          git add src/data/addresses/metadata.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(addresses): automated daily database sync & audit [skip ci]" && git push)

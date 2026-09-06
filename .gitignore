@@ -1,0 +1,37 @@
+﻿# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production build output
+dist/
+dist-ssr/
+
+# Cache, logs and build info
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.tsbuildinfo
+.wrangler/
+
+# Personal / Third-party AdSense Credentials (EXCLUDED FROM OPEN SOURCE)
+public/ads.txt
+ads.txt
+
+# Editor & OS files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+Thumbs.db
+
+# Temporary test artifacts
+test_avatar_elizabeth.svg

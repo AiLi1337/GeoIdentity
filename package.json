@@ -1,0 +1,31 @@
+{
+  "name": "geo-identity-generator",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "test": "npx tsx scripts/verify_modes.ts",
+    "sync:addresses": "npx tsx scripts/dailySyncAddresses.ts"
+  },
+  "dependencies": {
+    "lucide-vue-next": "^0.475.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/d3-geo": "^3.1.1",
+    "@types/node": "^22.13.1",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "d3-geo": "^3.1.1",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "topojson-client": "^3.1.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vue-tsc": "^2.2.0",
+    "world-atlas": "^2.0.2"
+  }
+}
