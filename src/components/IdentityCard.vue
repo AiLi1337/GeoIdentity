@@ -160,7 +160,7 @@
     <!-- Main Content Sections Grid -->
     <div class="p-4 sm:p-8 space-y-6 sm:space-y-8">
       <!-- Section 1: Real Address on Google Maps -->
-      <div>
+      <div class="min-w-0 max-w-full">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div class="flex items-center gap-2">
             <div class="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
@@ -304,7 +304,9 @@
         </div>
 
         <!-- Google Maps Live Embed Viewer -->
-        <GoogleMapEmbed :address="identity.address" />
+        <div class="min-w-0 max-w-full overflow-hidden">
+          <GoogleMapEmbed :address="identity.address" />
+        </div>
       </div>
 
       <!-- Section 2: Contact & Document Grid -->

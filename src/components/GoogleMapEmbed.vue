@@ -1,20 +1,23 @@
 <template>
-  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 overflow-hidden shadow-sm">
+  <div class="w-full min-w-0 max-w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 overflow-hidden shadow-sm">
     <!-- Map Header -->
-    <div class="p-3 sm:px-4 sm:py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-col xl:flex-row xl:items-center justify-between gap-2.5">
+    <div class="p-3 sm:px-4 sm:py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-col xl:flex-row xl:items-center justify-between gap-2.5 min-w-0">
       <!-- Title & Anti-leak status -->
-      <div class="flex items-center gap-2 shrink-0">
-        <div
-          class="w-2.5 h-2.5 rounded-full shrink-0"
-          :class="[
-            provider === 'google'
-              ? (isGoogleConfirmed ? 'bg-amber-500' : 'bg-amber-500 animate-pulse')
-              : 'bg-emerald-500 animate-pulse'
-          ]"
-        ></div>
-        <span class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-          {{ providerTitle }}
-        </span>
+      <div class="flex items-center justify-between gap-2 min-w-0 w-full xl:w-auto">
+        <div class="flex items-center gap-2 min-w-0 flex-1">
+          <div
+            class="w-2.5 h-2.5 rounded-full shrink-0"
+            :class="[
+              provider === 'google'
+                ? (isGoogleConfirmed ? 'bg-amber-500' : 'bg-amber-500 animate-pulse')
+                : 'bg-emerald-500 animate-pulse'
+            ]"
+          ></div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 truncate">
+            <span class="sm:hidden">{{ shortProviderTitle }}</span>
+            <span class="hidden sm:inline">{{ providerTitle }}</span>
+          </span>
+        </div>
 
         <!-- Status Badge -->
         <span
@@ -25,141 +28,148 @@
               : 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800'
           ]"
         >
-          <ShieldAlert v-if="provider === 'google'" class="w-3 h-3 text-amber-600 dark:text-amber-400" />
-          <ShieldCheck v-else class="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-          {{ currentBadgeText }}
+          <ShieldAlert v-if="provider === 'google'" class="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0" />
+          <ShieldCheck v-else class="w-3 h-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <span class="sm:hidden">{{ shortBadgeText }}</span>
+          <span class="hidden sm:inline">{{ currentBadgeText }}</span>
         </span>
       </div>
 
       <!-- Controls Row: Provider Switcher & Action Links -->
-      <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-between xl:justify-end">
+      <div class="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2 w-full xl:w-auto justify-between xl:justify-end min-w-0">
         <!-- Map Provider Switcher -->
-        <div class="flex items-center bg-slate-200/80 dark:bg-slate-800 p-0.5 rounded-lg text-xs font-medium">
+        <div class="grid grid-cols-3 w-full sm:flex sm:w-auto items-center bg-slate-200/80 dark:bg-slate-800 p-0.5 rounded-lg text-xs font-medium min-w-0">
           <button
             type="button"
             @click="setProvider('osm')"
             :class="[
-              'px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
+              'px-1 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center justify-center gap-1 text-center min-w-0',
               provider === 'osm'
                 ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs font-semibold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             ]"
             :title="t('card.osmTooltip')"
           >
-            <ShieldCheck class="w-3 h-3 text-emerald-500" />
-            <span>{{ t('card.mapOsm') }}</span>
+            <ShieldCheck class="w-3 h-3 text-emerald-500 shrink-0" />
+            <span class="sm:hidden truncate">OSM 免翻</span>
+            <span class="hidden sm:inline">{{ t('card.mapOsm') }}</span>
           </button>
 
           <button
             type="button"
             @click="setProvider('bing')"
             :class="[
-              'px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
+              'px-1 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center justify-center gap-1 text-center min-w-0',
               provider === 'bing'
                 ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs font-semibold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             ]"
             :title="t('card.bingTooltip')"
           >
-            <span>{{ t('card.mapBing') }}</span>
+            <span class="sm:hidden truncate">Bing 微软</span>
+            <span class="hidden sm:inline">{{ t('card.mapBing') }}</span>
           </button>
 
           <button
             type="button"
             @click="setProvider('google')"
             :class="[
-              'px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1',
+              'px-1 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center justify-center gap-1 text-center min-w-0',
               provider === 'google'
                 ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-400 shadow-xs font-semibold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             ]"
             :title="t('card.googleTooltip')"
           >
-            <ShieldAlert class="w-3 h-3 text-amber-500" />
-            <span>{{ t('card.mapGoogle') }}</span>
+            <ShieldAlert class="w-3 h-3 text-amber-500 shrink-0" />
+            <span class="sm:hidden truncate">Google 谷歌</span>
+            <span class="hidden sm:inline">{{ t('card.mapGoogle') }}</span>
           </button>
         </div>
 
         <!-- Bing Map Layer Switcher (Road vs Satellite Hybrid) -->
-        <div v-if="provider === 'bing'" class="inline-flex items-center p-0.5 bg-slate-200/90 dark:bg-slate-800 rounded-lg text-xs font-medium border border-slate-300/60 dark:border-slate-700 shadow-2xs">
+        <div v-if="provider === 'bing'" class="grid grid-cols-2 w-full sm:inline-flex sm:w-auto items-center p-0.5 bg-slate-200/90 dark:bg-slate-800 rounded-lg text-xs font-medium border border-slate-300/60 dark:border-slate-700 shadow-2xs min-w-0">
           <button
             type="button"
             @click="bingMapStyle = 'r'"
             :class="[
-              'px-2 py-0.5 rounded-md transition-all cursor-pointer text-[11px]',
+              'px-2 py-0.5 rounded-md transition-all cursor-pointer text-[11px] text-center justify-center flex items-center gap-1 min-w-0',
               bingMapStyle === 'r'
                 ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-300 shadow-xs font-semibold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             ]"
             :title="t('card.bingRoad')"
           >
-            🗺️ {{ t('card.bingRoad') }}
+            <span class="shrink-0">🗺️</span>
+            <span class="sm:hidden truncate">{{ locale === 'zh' ? '道路' : 'Road' }}</span>
+            <span class="hidden sm:inline">{{ t('card.bingRoad') }}</span>
           </button>
           <button
             type="button"
             @click="bingMapStyle = 'h'"
             :class="[
-              'px-2 py-0.5 rounded-md transition-all cursor-pointer text-[11px] flex items-center gap-1',
+              'px-2 py-0.5 rounded-md transition-all cursor-pointer text-[11px] text-center justify-center flex items-center gap-1 min-w-0',
               bingMapStyle === 'h'
                 ? 'bg-indigo-600 text-white shadow-xs font-semibold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             ]"
             :title="t('card.bingSatelliteBtn')"
           >
-            <span>🛰️</span>
-            <span>{{ t('card.bingSatelliteBtn') }}</span>
+            <span class="shrink-0">🛰️</span>
+            <span class="sm:hidden truncate">{{ locale === 'zh' ? '卫星' : 'Satellite' }}</span>
+            <span class="hidden sm:inline">{{ t('card.bingSatelliteBtn') }}</span>
           </button>
         </div>
 
-      <!-- Action Links -->
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <!-- Direct open link (Protected) -->
-        <button
-          type="button"
-          @click="handleOpenDirect"
-          class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 bg-primary-50 dark:bg-primary-950/50 hover:bg-primary-100 dark:hover:bg-primary-900/40 rounded-lg transition-colors cursor-pointer"
-        >
-          <ExternalLink class="w-3.5 h-3.5" />
-          <span>{{ currentDirectLabel }}</span>
-        </button>
+        <!-- Action Links -->
+        <div class="flex items-center gap-1.5 flex-wrap min-w-0">
+          <!-- Direct open link (Protected) -->
+          <button
+            type="button"
+            @click="handleOpenDirect"
+            class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 bg-primary-50 dark:bg-primary-950/50 hover:bg-primary-100 dark:hover:bg-primary-900/40 rounded-lg transition-colors cursor-pointer min-w-0"
+          >
+            <ExternalLink class="w-3.5 h-3.5 shrink-0" />
+            <span class="truncate">{{ currentDirectLabel }}</span>
+          </button>
 
-        <!-- Satellite Link (Protected / Provider-Aware) -->
-        <button
-          type="button"
-          @click="handleOpenSatellite"
-          class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
-          :title="provider === 'google' ? t('card.googleSatellite') : t('card.bingSatellite')"
-        >
-          <Layers class="w-3.5 h-3.5" />
-          <span>{{ t('card.openSatellite') }}</span>
-        </button>
+          <!-- Satellite Link (Protected / Provider-Aware) -->
+          <button
+            type="button"
+            @click="handleOpenSatellite"
+            class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer min-w-0"
+            :title="provider === 'google' ? t('card.googleSatellite') : t('card.bingSatellite')"
+          >
+            <Layers class="w-3.5 h-3.5 shrink-0" />
+            <span class="truncate">{{ t('card.openSatellite') }}</span>
+          </button>
 
-        <!-- Re-lock Google Maps Button (When loaded) -->
-        <button
-          v-if="provider === 'google' && isGoogleConfirmed"
-          type="button"
-          @click="relockGoogle"
-          class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-950/60 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-lg transition-colors cursor-pointer"
-          :title="t('card.googleRelockBtn')"
-        >
-          <Lock class="w-3.5 h-3.5" />
-          <span class="hidden sm:inline">{{ t('card.googleRelockBtn') }}</span>
-        </button>
+          <!-- Re-lock Google Maps Button (When loaded) -->
+          <button
+            v-if="provider === 'google' && isGoogleConfirmed"
+            type="button"
+            @click="relockGoogle"
+            class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-950/60 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-lg transition-colors cursor-pointer min-w-0 shrink-0"
+            :title="t('card.googleRelockBtn')"
+          >
+            <Lock class="w-3.5 h-3.5 shrink-0" />
+            <span class="hidden sm:inline">{{ t('card.googleRelockBtn') }}</span>
+          </button>
 
-        <!-- Google API Key Config Toggle (Only when google selected) -->
-        <button
-          v-if="provider === 'google'"
-          type="button"
-          @click="showKeyConfig = !showKeyConfig"
-          class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors cursor-pointer"
-          :title="t('card.googleEnterKey')"
-        >
-          <Key class="w-3.5 h-3.5" />
-          <span class="hidden md:inline">{{ googleApiKey ? 'API Key ✓' : t('card.googleEnterKey') }}</span>
-        </button>
+          <!-- Google API Key Config Toggle (Only when google selected) -->
+          <button
+            v-if="provider === 'google'"
+            type="button"
+            @click="showKeyConfig = !showKeyConfig"
+            class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors cursor-pointer min-w-0 shrink-0"
+            :title="t('card.googleEnterKey')"
+          >
+            <Key class="w-3.5 h-3.5 shrink-0" />
+            <span class="hidden md:inline">{{ googleApiKey ? 'API Key ✓' : t('card.googleEnterKey') }}</span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
     <!-- Optional Google API Key input drawer -->
     <div v-if="provider === 'google' && showKeyConfig" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2">
@@ -220,9 +230,10 @@
         </div>
 
         <!-- Watermark Badge -->
-        <div class="absolute bottom-2 right-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 pointer-events-none">
-          <ShieldCheck class="w-3 h-3 text-emerald-400" />
-          <span>{{ currentBadgeText }}</span>
+        <div class="absolute bottom-2 right-2 max-w-[55%] bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 pointer-events-none truncate">
+          <ShieldCheck class="w-3 h-3 text-emerald-400 shrink-0" />
+          <span class="sm:hidden truncate">{{ shortBadgeText }}</span>
+          <span class="hidden sm:inline truncate">{{ currentBadgeText }}</span>
         </div>
       </div>
 
@@ -352,14 +363,15 @@
         </div>
 
         <!-- Watermark Badge & Quick Relock -->
-        <div class="absolute bottom-2 right-2 bg-slate-900/85 backdrop-blur-xs text-white text-[10px] px-2.5 py-1 rounded-md shadow-sm flex items-center gap-2">
-          <ShieldAlert class="w-3 h-3 text-amber-400" />
-          <span class="text-amber-300 font-medium">{{ currentBadgeText }}</span>
+        <div class="absolute bottom-2 right-2 max-w-[65%] bg-slate-900/85 backdrop-blur-xs text-white text-[10px] px-2.5 py-1 rounded-md shadow-sm flex items-center gap-1.5 truncate">
+          <ShieldAlert class="w-3 h-3 text-amber-400 shrink-0" />
+          <span class="text-amber-300 font-medium truncate sm:hidden">{{ shortBadgeText }}</span>
+          <span class="text-amber-300 font-medium truncate hidden sm:inline">{{ currentBadgeText }}</span>
           <span class="text-slate-500">|</span>
           <button
             type="button"
             @click="relockGoogle"
-            class="text-slate-300 hover:text-white underline cursor-pointer"
+            class="text-slate-300 hover:text-white underline cursor-pointer shrink-0"
             :title="t('card.googleRelockBtn')"
           >
             {{ t('card.googleRelockBtn') }}
@@ -370,7 +382,7 @@
 
     <!-- Security & Status Info Banner -->
     <div
-      class="px-4 py-2 border-t text-xs flex flex-wrap items-center justify-between gap-2"
+      class="p-3 sm:px-4 sm:py-2.5 border-t text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0"
       :class="[
         provider === 'google'
           ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200/60 dark:border-amber-900/60 text-amber-800 dark:text-amber-300'
@@ -379,18 +391,18 @@
             : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200/60 dark:border-slate-800 text-slate-700 dark:text-slate-300'
       ]"
     >
-      <div class="flex items-center gap-1.5">
-        <ShieldCheck v-if="provider === 'osm'" class="w-3.5 h-3.5 flex-shrink-0 text-emerald-600 dark:text-emerald-400" />
-        <ShieldAlert v-else-if="provider === 'google'" class="w-3.5 h-3.5 flex-shrink-0 text-amber-600 dark:text-amber-400" />
-        <Info v-else class="w-3.5 h-3.5 flex-shrink-0 text-slate-500" />
-        <span>{{ currentBannerTip }}</span>
+      <div class="flex items-start sm:items-center gap-1.5 min-w-0 w-full sm:w-auto flex-1">
+        <ShieldCheck v-if="provider === 'osm'" class="w-3.5 h-3.5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5 sm:mt-0" />
+        <ShieldAlert v-else-if="provider === 'google'" class="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5 sm:mt-0" />
+        <Info v-else class="w-3.5 h-3.5 shrink-0 text-slate-500 mt-0.5 sm:mt-0" />
+        <span class="text-[11px] leading-relaxed text-slate-700 dark:text-slate-300 break-words">{{ currentBannerTip }}</span>
       </div>
 
-      <div class="flex items-center gap-3 ml-auto">
+      <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto text-xs shrink-0">
         <!-- Auto-relock switch when Google is active -->
         <label
           v-if="provider === 'google' && isGoogleConfirmed"
-          class="flex items-center gap-1 cursor-pointer select-none text-[11px] text-amber-800 dark:text-amber-200"
+          class="inline-flex items-center gap-1.5 cursor-pointer select-none text-[11px] text-amber-800 dark:text-amber-200 shrink-0 whitespace-nowrap"
           :title="t('card.autoRelockTip')"
         >
           <input
@@ -401,24 +413,26 @@
           <span>{{ t('card.autoRelockTip') }}</span>
         </label>
 
-        <button
-          type="button"
-          @click="showGuide = !showGuide"
-          class="underline font-semibold hover:opacity-80 flex-shrink-0 cursor-pointer flex items-center gap-0.5"
-        >
-          <span>{{ showGuide ? t('card.googleGuideClose') : t('card.googleGuideToggle') }}</span>
-          <ChevronUp v-if="showGuide" class="w-3 h-3" />
-          <ChevronDown v-else class="w-3 h-3" />
-        </button>
+        <div class="flex items-center gap-2.5 ml-auto sm:ml-0 shrink-0">
+          <button
+            type="button"
+            @click="showGuide = !showGuide"
+            class="underline font-semibold hover:opacity-80 shrink-0 cursor-pointer flex items-center gap-0.5"
+          >
+            <span>{{ showGuide ? t('card.googleGuideClose') : t('card.googleGuideToggle') }}</span>
+            <ChevronUp v-if="showGuide" class="w-3 h-3" />
+            <ChevronDown v-else class="w-3 h-3" />
+          </button>
 
-        <button
-          v-if="provider === 'google'"
-          type="button"
-          @click="setProvider('osm')"
-          class="underline font-semibold hover:opacity-80 flex-shrink-0 cursor-pointer"
-        >
-          {{ t('card.switchToOsm') }}
-        </button>
+          <button
+            v-if="provider === 'google'"
+            type="button"
+            @click="setProvider('osm')"
+            class="underline font-semibold hover:opacity-80 shrink-0 cursor-pointer text-emerald-700 dark:text-emerald-400"
+          >
+            {{ t('card.switchToOsm') }}
+          </button>
+        </div>
       </div>
     </div>
 
@@ -779,6 +793,13 @@ const providerTitle = computed(() => {
   return t('card.googleTitle');
 });
 
+// Short provider title for mobile screens (< sm)
+const shortProviderTitle = computed(() => {
+  if (provider.value === 'osm') return locale.value === 'zh' ? 'OSM 实体定位' : 'OSM Map';
+  if (provider.value === 'bing') return locale.value === 'zh' ? 'Bing 微软直连' : 'Bing Maps';
+  return locale.value === 'zh' ? 'Google 谷歌定位' : 'Google Maps';
+});
+
 // Watermark badge text localized
 const currentBadgeText = computed(() => {
   if (provider.value === 'osm') return t('card.osmBadge');
@@ -791,6 +812,18 @@ const currentBadgeText = computed(() => {
     return isGoogleConfirmed.value ? t('card.googleBadgeActive') : t('card.googleBadge');
   }
   return t('card.antiLeakBadge');
+});
+
+// Short watermark badge text for mobile screens (< sm)
+const shortBadgeText = computed(() => {
+  if (provider.value === 'osm') return locale.value === 'zh' ? '免翻·零送中' : 'No VPN';
+  if (provider.value === 'bing') return locale.value === 'zh' ? '微软直连' : 'Direct';
+  if (provider.value === 'google') {
+    return isGoogleConfirmed.value
+      ? (locale.value === 'zh' ? '运行中' : 'Active')
+      : (locale.value === 'zh' ? '防送中隔离' : 'Shielded');
+  }
+  return locale.value === 'zh' ? '安全保护' : 'Protected';
 });
 
 // Bottom banner tip text localized
