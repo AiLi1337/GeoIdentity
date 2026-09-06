@@ -63,6 +63,74 @@ for (const rule of STREET_DERIVATION_RULES) {
   }
 }
 
+// Delaware tightened corridor regression tests
+console.log('\n--- Testing Delaware Tightened Inhabited Corridors (DE Limestone, Kirkwood, Pulaski) ---');
+const limestoneRule = STREET_DERIVATION_RULES.find(r => r.id === 'us-de-limestone')!;
+assert(limestoneRule.minNumber === 4200, 'Limestone minNumber tightened to 4200');
+assert(limestoneRule.maxNumber === 5350, 'Limestone maxNumber tightened to 5350');
+assert(limestoneRule.startCoord.lat === 39.7379 && limestoneRule.startCoord.lng === -75.6859, 'Limestone startCoord matches Arundel residential area');
+assert(limestoneRule.endCoord.lat === 39.7455 && limestoneRule.endCoord.lng === -75.6980, 'Limestone endCoord matches Pike Creek shopping center');
+
+for (let i = 0; i < 20; i++) {
+  const addr = deriveStreetAddress(limestoneRule);
+  const match = addr.street.match(/^(\d+)/);
+  const num = match ? parseInt(match[1], 10) : 0;
+  assert(num >= 4200 && num <= 5350, `Limestone address #${num} is within [4200, 5350] (never #2706 in uninhabited ravine)`);
+  assert(addr.lat >= 39.735 && addr.lat <= 39.748, `Limestone address #${num} lat ${addr.lat} is on inhabited corridor`);
+  assert(addr.lng >= -75.700 && addr.lng <= -75.684, `Limestone address #${num} lng ${addr.lng} is on inhabited corridor`);
+}
+
+const kirkwoodRule = STREET_DERIVATION_RULES.find(r => r.id === 'us-de-kirkwood')!;
+assert(kirkwoodRule.minNumber === 3600, 'Kirkwood minNumber tightened to 3600');
+assert(kirkwoodRule.maxNumber === 4800, 'Kirkwood maxNumber tightened to 4800');
+assert(kirkwoodRule.startCoord.lat === 39.7345 && kirkwoodRule.startCoord.lng === -75.6359, 'Kirkwood startCoord matches #3600 Wilmington Prices Corner');
+assert(kirkwoodRule.endCoord.lat === 39.7219 && kirkwoodRule.endCoord.lng === -75.6615, 'Kirkwood endCoord matches #4800 Wilmington Meadowood');
+
+for (let i = 0; i < 20; i++) {
+  const addr = deriveStreetAddress(kirkwoodRule);
+  const match = addr.street.match(/^(\d+)/);
+  const num = match ? parseInt(match[1], 10) : 0;
+  assert(num >= 3600 && num <= 4800, `Kirkwood address #${num} is within [3600, 4800]`);
+  assert(addr.lat >= 39.720 && addr.lat <= 39.736, `Kirkwood address #${num} lat ${addr.lat} is in Wilmington 19808 corridor`);
+  assert(addr.lng >= -75.664 && addr.lng <= -75.634, `Kirkwood address #${num} lng ${addr.lng} is in Wilmington 19808 corridor`);
+}
+
+const pulaskiRule = STREET_DERIVATION_RULES.find(r => r.id === 'us-de-pulaski')!;
+assert(pulaskiRule.minNumber === 1100, 'Pulaski minNumber tightened to 1100');
+assert(pulaskiRule.maxNumber === 1700, 'Pulaski maxNumber tightened to 1700');
+assert(pulaskiRule.startCoord.lat === 39.6328 && pulaskiRule.startCoord.lng === -75.6598, 'Pulaski startCoord matches #1100 Bear Wawa');
+assert(pulaskiRule.endCoord.lat === 39.6186 && pulaskiRule.endCoord.lng === -75.6946, 'Pulaski endCoord matches #1700 Bear');
+
+for (let i = 0; i < 20; i++) {
+  const addr = deriveStreetAddress(pulaskiRule);
+  const match = addr.street.match(/^(\d+)/);
+  const num = match ? parseInt(match[1], 10) : 0;
+  assert(num >= 1100 && num <= 1700, `Pulaski address #${num} is within [1100, 1700]`);
+  assert(addr.lat >= 39.617 && addr.lat <= 39.635, `Pulaski address #${num} lat ${addr.lat} is in Bear 19701 corridor`);
+  assert(addr.lng >= -75.696 && addr.lng <= -75.658, `Pulaski address #${num} lng ${addr.lng} is in Bear 19701 corridor`);
+}
+
+const capitolRule = STREET_DERIVATION_RULES.find(r => r.id === 'us-de-capitol')!;
+assert(capitolRule.minNumber === 200, 'Capitol minNumber is 200');
+assert(capitolRule.maxNumber === 1950, 'Capitol maxNumber tightened to 1950 (eliminating phantom numbers beyond Newark)');
+assert(capitolRule.startCoord.lat === 39.6893 && capitolRule.startCoord.lng === -75.7328, 'Capitol startCoord matches #200 Newark');
+assert(capitolRule.endCoord.lat === 39.7009 && capitolRule.endCoord.lng === -75.6996, 'Capitol endCoord matches #1950 Newark');
+
+for (let i = 0; i < 20; i++) {
+  const addr = deriveStreetAddress(capitolRule);
+  const match = addr.street.match(/^(\d+)/);
+  const num = match ? parseInt(match[1], 10) : 0;
+  assert(num >= 200 && num <= 1950, `Capitol address #${num} is within [200, 1950]`);
+  assert(addr.lat >= 39.688 && addr.lat <= 39.703, `Capitol address #${num} lat ${addr.lat} is in Newark 19711 corridor`);
+  assert(addr.lng >= -75.735 && addr.lng <= -75.698, `Capitol address #${num} lng ${addr.lng} is in Newark 19711 corridor`);
+}
+
+const concordRule = STREET_DERIVATION_RULES.find(r => r.id === 'us-de-concord')!;
+assert(concordRule.minNumber === 1800, 'Concord minNumber is 1800');
+assert(concordRule.maxNumber === 4750, 'Concord maxNumber tightened to 4750 (never crossing into Pennsylvania)');
+assert(concordRule.startCoord.lat === 39.7856 && concordRule.startCoord.lng === -75.5461, 'Concord startCoord matches #1800 Wilmington');
+assert(concordRule.endCoord.lat === 39.8255 && concordRule.endCoord.lng === -75.5450, 'Concord endCoord matches #4750 Wilmington Concord Mall');
+
 // -----------------------------------------------------------------------------
 // 3. Mode 3: Scheme B (Residential Pool) Verification
 // -----------------------------------------------------------------------------

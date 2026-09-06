@@ -1,18 +1,18 @@
 {
   "version": "v2026.09.06.2",
-  "lastUpdated": "2026-09-06T06:13:20.938Z",
-  "lastUpdatedFormattedZh": "2026-09-06 14:13:20 (UTC)",
-  "lastUpdatedFormattedEn": "2026-09-06 14:13:20 UTC",
+  "lastUpdated": "2026-09-06T09:35:59.464Z",
+  "lastUpdatedFormattedZh": "2026-09-06 17:35:59 (UTC)",
+  "lastUpdatedFormattedEn": "2026-09-06 17:35:59 UTC",
   "healthStatus": "HEALTHY",
   "syncSchedule": "Daily at 00:00:00 UTC",
   "totalCountries": 21,
   "stats": {
     "totalPhysicalLandmarks": 113,
     "totalSchemeACorridors": 74,
-    "totalSchemeACapacity": 99456,
+    "totalSchemeACapacity": 90906,
     "totalSchemeBResidential": 381,
     "totalPhysicalVerifiedAddresses": 494,
-    "totalReachableAddresses": 99950
+    "totalReachableAddresses": 91400
   },
   "countryBreakdown": {
     "US": {
@@ -24,10 +24,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 26,
       "schemeACorridorCount": 27,
-      "schemeACapacity": 83067,
+      "schemeACapacity": 74517,
       "schemeBResidentialCount": 124,
       "totalPhysicalPoints": 150,
-      "totalDerivableCapacity": 83217
+      "totalDerivableCapacity": 74667
     },
     "CA": {
       "code": "CA",
@@ -312,10 +312,10 @@
   },
   "syncLogs": [
     {
-      "timestamp": "2026-09-06T06:13:20.938Z",
+      "timestamp": "2026-09-06T09:35:59.464Z",
       "action": "DAILY_AUTOMATED_SYNC",
       "status": "SUCCESS",
-      "message": "自动化扫描完成：已验证 21 国全部地址，共收录 113 个真实地标种子、381 处真实独栋住宅、74 条街道走廊（可衍生 99,456 条门牌）。所有坐标合法，健康度 100%。"
+      "message": "自动化扫描完成：已验证 21 国全部地址，共收录 113 个真实地标种子、381 处真实独栋住宅、74 条街道走廊（可衍生 90,906 条门牌）。所有坐标合法，健康度 100%。"
     }
   ]
 }
