@@ -1,18 +1,18 @@
 {
-  "version": "v2026.09.06.2",
-  "lastUpdated": "2026-09-06T09:35:59.464Z",
-  "lastUpdatedFormattedZh": "2026-09-06 17:35:59 (UTC)",
-  "lastUpdatedFormattedEn": "2026-09-06 17:35:59 UTC",
+  "version": "v2026.09.07.3",
+  "lastUpdated": "2026-09-07T01:30:52.516Z",
+  "lastUpdatedFormattedZh": "2026-09-07 01:30:52 (UTC)",
+  "lastUpdatedFormattedEn": "2026-09-07 01:30:52 UTC",
   "healthStatus": "HEALTHY",
   "syncSchedule": "Daily at 00:00:00 UTC",
   "totalCountries": 21,
   "stats": {
     "totalPhysicalLandmarks": 113,
     "totalSchemeACorridors": 74,
-    "totalSchemeACapacity": 90906,
+    "totalSchemeACapacity": 91411,
     "totalSchemeBResidential": 381,
     "totalPhysicalVerifiedAddresses": 494,
-    "totalReachableAddresses": 91400
+    "totalReachableAddresses": 91905
   },
   "countryBreakdown": {
     "US": {
@@ -24,10 +24,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 26,
       "schemeACorridorCount": 27,
-      "schemeACapacity": 74517,
+      "schemeACapacity": 76007,
       "schemeBResidentialCount": 124,
       "totalPhysicalPoints": 150,
-      "totalDerivableCapacity": 74667
+      "totalDerivableCapacity": 76157
     },
     "CA": {
       "code": "CA",
@@ -38,10 +38,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 6,
       "schemeACorridorCount": 4,
-      "schemeACapacity": 6184,
+      "schemeACapacity": 6134,
       "schemeBResidentialCount": 16,
       "totalPhysicalPoints": 22,
-      "totalDerivableCapacity": 6206
+      "totalDerivableCapacity": 6156
     },
     "CH": {
       "code": "CH",
@@ -52,10 +52,10 @@
       "isTaxFreeZone": true,
       "landmarkCount": 3,
       "schemeACorridorCount": 3,
-      "schemeACapacity": 312,
+      "schemeACapacity": 282,
       "schemeBResidentialCount": 12,
       "totalPhysicalPoints": 15,
-      "totalDerivableCapacity": 327
+      "totalDerivableCapacity": 297
     },
     "LU": {
       "code": "LU",
@@ -66,10 +66,10 @@
       "isTaxFreeZone": true,
       "landmarkCount": 2,
       "schemeACorridorCount": 2,
-      "schemeACapacity": 212,
+      "schemeACapacity": 192,
       "schemeBResidentialCount": 8,
       "totalPhysicalPoints": 10,
-      "totalDerivableCapacity": 222
+      "totalDerivableCapacity": 202
     },
     "IE": {
       "code": "IE",
@@ -94,10 +94,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 8,
       "schemeACorridorCount": 3,
-      "schemeACapacity": 933,
+      "schemeACapacity": 923,
       "schemeBResidentialCount": 18,
       "totalPhysicalPoints": 26,
-      "totalDerivableCapacity": 959
+      "totalDerivableCapacity": 949
     },
     "DE": {
       "code": "DE",
@@ -108,10 +108,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 6,
       "schemeACorridorCount": 4,
-      "schemeACapacity": 514,
+      "schemeACapacity": 618,
       "schemeBResidentialCount": 16,
       "totalPhysicalPoints": 22,
-      "totalDerivableCapacity": 536
+      "totalDerivableCapacity": 640
     },
     "FR": {
       "code": "FR",
@@ -192,10 +192,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 4,
       "schemeACorridorCount": 3,
-      "schemeACapacity": 1253,
+      "schemeACapacity": 1093,
       "schemeBResidentialCount": 14,
       "totalPhysicalPoints": 18,
-      "totalDerivableCapacity": 1271
+      "totalDerivableCapacity": 1111
     },
     "HK": {
       "code": "HK",
@@ -206,10 +206,10 @@
       "isTaxFreeZone": true,
       "landmarkCount": 6,
       "schemeACorridorCount": 1,
-      "schemeACapacity": 251,
+      "schemeACapacity": 106,
       "schemeBResidentialCount": 12,
       "totalPhysicalPoints": 18,
-      "totalDerivableCapacity": 269
+      "totalDerivableCapacity": 124
     },
     "TW": {
       "code": "TW",
@@ -220,10 +220,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 6,
       "schemeACorridorCount": 1,
-      "schemeACapacity": 266,
+      "schemeACapacity": 37,
       "schemeBResidentialCount": 12,
       "totalPhysicalPoints": 18,
-      "totalDerivableCapacity": 284
+      "totalDerivableCapacity": 55
     },
     "SG": {
       "code": "SG",
@@ -234,10 +234,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 6,
       "schemeACorridorCount": 1,
-      "schemeACapacity": 331,
+      "schemeACapacity": 141,
       "schemeBResidentialCount": 12,
       "totalPhysicalPoints": 18,
-      "totalDerivableCapacity": 349
+      "totalDerivableCapacity": 159
     },
     "AU": {
       "code": "AU",
@@ -290,10 +290,10 @@
       "isTaxFreeZone": false,
       "landmarkCount": 2,
       "schemeACorridorCount": 2,
-      "schemeACapacity": 243,
+      "schemeACapacity": 318,
       "schemeBResidentialCount": 10,
       "totalPhysicalPoints": 12,
-      "totalDerivableCapacity": 255
+      "totalDerivableCapacity": 330
     },
     "PH": {
       "code": "PH",
@@ -304,18 +304,18 @@
       "isTaxFreeZone": false,
       "landmarkCount": 2,
       "schemeACorridorCount": 2,
-      "schemeACapacity": 912,
+      "schemeACapacity": 582,
       "schemeBResidentialCount": 10,
       "totalPhysicalPoints": 12,
-      "totalDerivableCapacity": 924
+      "totalDerivableCapacity": 594
     }
   },
   "syncLogs": [
     {
-      "timestamp": "2026-09-06T09:35:59.464Z",
+      "timestamp": "2026-09-07T01:30:52.516Z",
       "action": "DAILY_AUTOMATED_SYNC",
       "status": "SUCCESS",
-      "message": "自动化扫描完成：已验证 21 国全部地址，共收录 113 个真实地标种子、381 处真实独栋住宅、74 条街道走廊（可衍生 90,906 条门牌）。所有坐标合法，健康度 100%。"
+      "message": "自动化扫描完成：已验证 21 国全部地址，共收录 113 个真实地标种子、381 处真实独栋住宅、74 条街道走廊（可衍生 91,411 条门牌）。所有坐标合法，健康度 100%。"
     }
   ]
 }
