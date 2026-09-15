@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 .pnp
 .pnp.js
@@ -18,9 +18,6 @@ lerna-debug.log*
 *.tsbuildinfo
 .wrangler/
 
-# Personal / Third-party AdSense Credentials (EXCLUDED FROM OPEN SOURCE)
-public/ads.txt
-ads.txt
 
 # Editor & OS files
 .vscode/
