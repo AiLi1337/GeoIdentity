@@ -323,6 +323,7 @@ export const en = {
     detectClientIpTitle: 'Detect your current public IP / proxy IP',
     analyzeBtn: 'Analyze & Generate Same-City Identity',
     analyzing: 'Querying 4 Authoritative APIs...',
+    lookupFailed: 'IP lookup failed. Please try again later. No address was generated.',
     consensusWinner: 'Consensus Winner',
     confidence: 'Agreement Rate',
     votesAgree: 'APIs agreed',

@@ -222,10 +222,16 @@ async function handleFetchClientIp() {
 async function handleSearch() {
   if (isLoading.value) return;
   isLoading.value = true;
+  addressError.value = '';
+  consensus.value = null;
+  emit('no-address');
   try {
     const res = await queryMultiSourceIp(ipInput.value);
+    if (res.successQueries === 0) {
+      addressError.value = t('ipGen.lookupFailed');
+      return;
+    }
     consensus.value = res;
-    addressError.value = '';
     if (res.targetIp && !ipInput.value) {
       ipInput.value = res.targetIp;
     }
@@ -244,6 +250,9 @@ async function handleSearch() {
       res.strategySummaryEn = t('addressMode.noSourcedAddress');
       emit('no-address');
     }
+  } catch (error) {
+    console.error('IP lookup failed', error);
+    addressError.value = t('ipGen.lookupFailed');
   } finally {
     isLoading.value = false;
   }

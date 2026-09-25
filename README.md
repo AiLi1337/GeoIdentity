@@ -65,30 +65,11 @@
 
 本项目为纯静态 SPA（单页面应用），天生完美契合 **Cloudflare Pages** 全球边缘分发网络，具备全球极速访问、自动 HTTPS 证书、DDoS 防护和 100% 免费额度。
 
-### 方式一：连接 GitHub 仓库自动持续部署 (推荐，零运维)
+### Cloudflare Pages 直接部署
 
-这是最推荐的部署方式。绑定后，每次你向 GitHub 仓库 `push` 代码，Cloudflare Pages 会自动拉取、构建并分发到全球 300+ 数据中心。
+`address.vllme.com` 绑定到 `geo-identity` Pages 项目。该项目当前未连接 Git 提供商：只推送 GitHub 不会自动更新网站，必须运行下方的每日任务或手动上传构建产物。普通 GitHub 构建不带广告；Cloudflare 发布构建从私有环境变量注入 AdSense 脚本和 `ads.txt`。
 
-1. 登录 [Cloudflare 控制台](https://dash.cloudflare.com/)；
-2. 在左侧导航栏点击 **Workers 和 Pages (Workers & Pages)** ➔ **创建应用程序 (Create application)**；
-3. 选择 **Pages** 选项卡 ➔ 点击 **连接到 Git (Connect to Git)**；
-4. 授权并选择你的本开源仓库（例如 `AiLi1337/GeoIdentity`）；
-5. 配置构建预设与命令：
-   - **项目名称 (Project name)**：`geo-identity`（或自定义名称）
-   - **生产分支 (Production branch)**：`main`
-   - **框架预设 (Framework preset)**：`Vite`
-   - **构建命令 (Build command)**：`npm run build`
-   - **构建输出目录 (Build output directory)**：`dist`
-   - **环境变量 (Environment variables)** *(可选，建议配置)*：
-     - 添加变量：`NODE_VERSION` = `20` 或 `22`
-6. 点击 **保存并部署 (Save and Deploy)**；
-7. 等待约 1 分钟，Cloudflare 即构建完成并提供一个类似 `https://geo-identity.pages.dev` 的全球访问网址。
-
----
-
-### 方式二：使用 Cloudflare Wrangler CLI 命令行一键部署
-
-如果你习惯在本地终端直接构建并发布，可以通过官方 CLI 工具 `wrangler`：
+手动发布（在本地私有环境中设置 `VITE_ADSENSE_ID`，不要提交 `.env` 或 `dist`）：
 
 ```bash
 # 1. 在本地克隆并进入项目目录
@@ -98,13 +79,13 @@ cd GeoIdentity
 # 2. 安装项目依赖
 npm install
 
-# 3. 本地打包构建生成 dist 产物
+# 3. 从私有环境提供 VITE_ADSENSE_ID 后打包生成 dist
 npm run build
 
 # 4. 首次使用请登录 Cloudflare 账户 (会弹出浏览器授权)
 npx wrangler login
 
-# 5. 一键发布构建产物到 Cloudflare Pages
+# 5. 发布构建产物到 Cloudflare Pages
 npx wrangler pages deploy dist --project-name geo-identity --branch main
 ```
 
@@ -129,7 +110,7 @@ npx wrangler pages deploy dist --project-name geo-identity --branch main
 * **定时运行**：计划每天 UTC 00:00（北京时间 08:00）运行；GitHub 的定时任务可能延迟。
 * **公开数据采样**：从 [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL) 获取特拉华州 Wilmington 与俄勒冈州 Portland 的公开公寓建筑门牌、邮编、城市和坐标，过滤无效或重复记录，写入 `osmApartments.json`，并加入方案 C。只代表 OSM 有建筑门牌，**不保证可投递或通过 AVS**，不关联住户。
 * **失败处理**：上游查询失败时任务失败，保留仓库已有数据和上次成功时间。页面显示的是已部署包的数据快照，并非实时查询；页面按钮只校验本地字段和数量。
-* **部署设置**：在 GitHub 仓库 Secrets 设置 `CLOUDFLARE_API_TOKEN`（对目标 Pages 项目有部署权限）、`CLOUDFLARE_ACCOUNT_ID` 与 `VITE_ADSENSE_ID`，在 Variables 设置 `CF_PAGES_PROJECT`（Pages 项目名，例如 `geo-identity`）。任务先做无广告构建并仅提交地址数据，再用 Secret 构建带广告的 `dist` 上传 Cloudflare；`dist`、`ads.txt` 和广告脚本不会推送到 Git。请确认 `address.vllme.com` 绑定在同一个项目；缺少部署配置时任务会失败，而不会假报部署成功。
+* **部署设置**：在 GitHub 仓库 Secrets 设置 `CLOUDFLARE_API_TOKEN`（对目标 Pages 项目有部署权限）、`CLOUDFLARE_ACCOUNT_ID` 与 `VITE_ADSENSE_ID`，在 Variables 设置 `CF_PAGES_PROJECT`（当前为 `geo-identity`）。任务先检查凭据，再同步数据；无广告构建仅用于校验，然后提交地址数据。带广告的 `dist` 只上传 Cloudflare，不推送 GitHub。缺少部署配置时任务会在同步前失败；上游 OSM 不可用时也不会覆盖旧数据。
 * **许可**：新增 OSM 数据受 [Open Database License](https://opendatacommons.org/licenses/odbl/) 约束，使用或再分发时保留归属与许可要求。原有静态地址库不由 OSM 同步验证。
 
 ---

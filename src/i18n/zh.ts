@@ -323,6 +323,7 @@ export const zh = {
     detectClientIpTitle: '一键识别您当前访问网络/代理节点的公网 IP',
     analyzeBtn: '多源研判并生成同城身份',
     analyzing: '正在并发研判 4 大数据库...',
+    lookupFailed: 'IP 查询失败，请稍后重试。未生成地址。',
     consensusWinner: '多源多数裁决胜出',
     confidence: '权威库一致率',
     votesAgree: '家一致同意',

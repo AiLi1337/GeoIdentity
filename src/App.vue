@@ -72,7 +72,7 @@
 
         <!-- Tab 2: IP Address Based Generator -->
         <div v-show="activeGeneratorTab === 'ip'">
-          <IpAddressCard @identity-generated="handleIpIdentityGenerated" @no-address="currentIdentity = null" />
+          <IpAddressCard @identity-generated="handleIpIdentityGenerated" @no-address="handleIpNoAddress" />
         </div>
 
         <!-- Current Identity Card Display -->
@@ -268,7 +268,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import type { CountryCode, GeneratedIdentity, FilterOptions } from './types/identity';
 import { COUNTRIES } from './data/countries';
 import { generateIdentity } from './services/identityGenerator';
@@ -381,25 +381,21 @@ function handleGenerate() {
   isGenerating.value = true;
   currentIdentity.value = null;
   addressError.value = '';
-  setTimeout(() => {
-    try {
-      const newId = generateIdentity(selectedCountryCode.value, {
-        ...filters.value,
-        addressMode: 'sourced',
-        state: selectedState.value || undefined
-      });
-      currentIdentity.value = newId;
-      addressError.value = '';
-      saveToHistory(newId);
-      historyList.value = getHistory().filter(i => i.address.source === 'OpenStreetMap');
-    } catch (error) {
-      if (!(error instanceof Error) || !error.message.startsWith('No sourced address')) throw error;
-      currentIdentity.value = null;
-      addressError.value = t('addressMode.noSourcedAddress');
-    } finally {
-      isGenerating.value = false;
-    }
-  }, 120);
+  try {
+    const newId = generateIdentity(selectedCountryCode.value, {
+      ...filters.value,
+      addressMode: 'sourced',
+      state: selectedState.value || undefined
+    });
+    currentIdentity.value = newId;
+    saveToHistory(newId);
+    historyList.value = getHistory().filter(i => i.address.source === 'OpenStreetMap');
+  } catch (error) {
+    if (!(error instanceof Error) || !error.message.startsWith('No sourced address')) throw error;
+    addressError.value = t('addressMode.noSourcedAddress');
+  } finally {
+    isGenerating.value = false;
+  }
 }
 
 function handleCountryChange(code: CountryCode) {
@@ -416,6 +412,7 @@ function handleStateChange(state: string) {
 }
 
 function handleIpIdentityGenerated(identity: GeneratedIdentity) {
+  if (activeGeneratorTab.value !== 'ip') return;
   currentIdentity.value = identity;
   selectedCountryCode.value = identity.countryCode;
   selectedState.value = identity.address.state;
@@ -425,6 +422,15 @@ function handleIpIdentityGenerated(identity: GeneratedIdentity) {
     toastRef.value.show(locale.value === 'zh' ? '已找到同城 OSM 建筑门牌（房号与投递未核验）' : 'Found a same-city OSM building address (delivery unverified)');
   }
 }
+
+function handleIpNoAddress() {
+  if (activeGeneratorTab.value === 'ip') currentIdentity.value = null;
+}
+
+watch(activeGeneratorTab, () => {
+  currentIdentity.value = null;
+  addressError.value = '';
+});
 
 function handleJumpToCountry(code: CountryCode) {
   selectedCountryCode.value = code;

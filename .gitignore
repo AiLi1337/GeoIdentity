@@ -18,6 +18,11 @@ lerna-debug.log*
 *.tsbuildinfo
 .wrangler/
 
+# Local deployment environment
+.env
+.env.*
+!.env.example
+
 # Personal / Third-party AdSense Credentials (EXCLUDED FROM OPEN SOURCE)
 public/ads.txt
 ads.txt

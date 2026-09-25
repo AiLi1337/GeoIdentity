@@ -106,7 +106,7 @@
         </span>
         <div class="flex flex-wrap gap-1">
           <button
-            v-for="tf in usTaxFreeStates"
+            v-for="tf in sourcedStates.filter(s => s.isTaxFree)"
             :key="tf.code"
             type="button"
             @click="selectTaxFreeState(tf.code)"
@@ -148,11 +148,6 @@ const { locale, t } = useI18n();
 const searchQuery = ref('');
 const sourcedStates = computed(() => currentCountry.value.popularStates.filter(s => OSM_APARTMENTS.some(a => a.countryCode === currentCountry.value.code && a.state === s.code)));
 
-const usTaxFreeStates = [
-  { code: 'DE', nameZh: '特拉华', nameEn: 'Delaware' },
-  { code: 'OR', nameZh: '俄勒冈', nameEn: 'Oregon' },
-];
-
 const currentCountry = computed(() => {
   return COUNTRIES.find(c => c.code === props.selectedCountryCode) || COUNTRIES[0];
 });
@@ -177,11 +172,9 @@ const filteredCountries = computed(() => {
 
 function selectCountry(code: CountryCode) {
   emit('update:selectedCountryCode', code);
-  emit('update:selectedState', '');
 }
 
 function selectTaxFreeState(stateCode: string) {
-  emit('update:selectedCountryCode', 'US');
   emit('update:selectedState', stateCode);
 }
 </script>
