@@ -738,6 +738,7 @@ const modeIcon = computed(() => {
 
 const modeBadgeText = computed(() => {
   const mode = props.identity.address.addressMode;
+  if (props.identity.address.source === 'OpenStreetMap') return t('addressMode.sourcedShort');
   if (mode === 'sourced') return t('addressMode.sourcedShort');
   if (mode === 'derivation') return t('addressMode.derivationBadge');
   if (mode === 'residential') return t('addressMode.residentialBadge');
@@ -770,7 +771,12 @@ const localizedAvsTier = computed(() => {
   const mode = props.identity.address.addressMode;
   const rawTier = props.identity.address.derivationMeta?.avsTier;
   if (props.identity.address.source === 'OpenStreetMap') {
-    return locale.value === 'zh' ? '公寓建筑门牌 · AVS 未验证' : 'Apartment Building · AVS Unverified';
+    const building = props.identity.address.sourceBuildingType;
+    if (building === 'apartments') return locale.value === 'zh' ? '公寓建筑 · AVS 未核验' : 'Apartment Building · AVS Unverified';
+    if (['house', 'detached', 'semidetached_house', 'terrace'].includes(building || '')) {
+      return locale.value === 'zh' ? '独栋/联排住宅 · AVS 未核验' : 'House / Townhouse · AVS Unverified';
+    }
+    return locale.value === 'zh' ? '住宅建筑 · AVS 未核验' : 'Residential Building · AVS Unverified';
   }
   if (locale.value === 'zh') {
     if (mode === 'residential') return '住宅样本 · AVS 未核验';

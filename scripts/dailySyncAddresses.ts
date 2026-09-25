@@ -99,7 +99,7 @@ const metadata = {
       timestamp: now.toISOString(),
       action: 'DAILY_AUTOMATED_SYNC',
       status: 'SUCCESS',
-      message: `已同步 OpenStreetMap 公开公寓建筑门牌 ${osmApartments.length} 处。其余地址来自仓库静态数据；已检查 ${totalLandmarks + totalSchemeB} 处地址坐标是否为数字，未核验 AVS、邮政投递或住宅归属。`
+      message: `已同步 OpenStreetMap 公开住宅建筑门牌 ${osmApartments.length} 处。其余地址来自仓库静态数据；已检查 ${totalLandmarks + totalSchemeB} 处地址坐标是否为数字，未核验 AVS 或邮政投递。`
     }
   ]
 };

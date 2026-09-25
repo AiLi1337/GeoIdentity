@@ -58,6 +58,7 @@ export interface RealAddress {
   street: string;
   source?: 'OpenStreetMap';
   sourceId?: string;
+  sourceBuildingType?: string;
   addressLine1?: string;
   addressLine2?: string;
   city: string;

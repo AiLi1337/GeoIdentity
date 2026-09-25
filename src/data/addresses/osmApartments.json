@@ -369,6 +369,216 @@
     "lng": -122.6860995
   },
   {
+    "id": "way/368335887",
+    "building": "detached",
+    "street": "1441 Southwest College Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5122227,
+    "lng": -122.6920283
+  },
+  {
+    "id": "way/368335907",
+    "building": "detached",
+    "street": "1502 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5125917,
+    "lng": -122.6920756
+  },
+  {
+    "id": "way/368335917",
+    "building": "detached",
+    "street": "1505 Southwest College Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5123582,
+    "lng": -122.6922046
+  },
+  {
+    "id": "way/368335925",
+    "building": "detached",
+    "street": "1510 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5126274,
+    "lng": -122.6923295
+  },
+  {
+    "id": "way/368335931",
+    "building": "detached",
+    "street": "1515 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5131984,
+    "lng": -122.6925281
+  },
+  {
+    "id": "way/368335933",
+    "building": "detached",
+    "street": "1517 Southwest College Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5122948,
+    "lng": -122.6925201
+  },
+  {
+    "id": "way/368335937",
+    "building": "house",
+    "street": "1518 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.513025,
+    "lng": -122.6926109
+  },
+  {
+    "id": "way/368335940",
+    "building": "detached",
+    "street": "1525 Southwest College Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.512341,
+    "lng": -122.6927183
+  },
+  {
+    "id": "way/368335944",
+    "building": "apartments",
+    "street": "1530 Southwest Harrison Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5133984,
+    "lng": -122.6922155
+  },
+  {
+    "id": "way/368335947",
+    "building": "detached",
+    "street": "1531 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5134467,
+    "lng": -122.6928237
+  },
+  {
+    "id": "way/368335952",
+    "building": "detached",
+    "street": "1545 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5137671,
+    "lng": -122.6931084
+  },
+  {
+    "id": "way/368335955",
+    "building": "house",
+    "street": "1561 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5136936,
+    "lng": -122.6938154
+  },
+  {
+    "id": "way/368335956",
+    "building": "detached",
+    "street": "1558 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5134568,
+    "lng": -122.6933274
+  },
+  {
+    "id": "way/368335957",
+    "building": "detached",
+    "street": "1565 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5134352,
+    "lng": -122.693785
+  },
+  {
+    "id": "way/368335958",
+    "building": "detached",
+    "street": "1581 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5129733,
+    "lng": -122.6937041
+  },
+  {
+    "id": "way/368335959",
+    "building": "detached",
+    "street": "1597 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5125471,
+    "lng": -122.6934741
+  },
+  {
+    "id": "way/368335960",
+    "building": "detached",
+    "street": "1598 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5123729,
+    "lng": -122.6929362
+  },
+  {
+    "id": "way/368335965",
+    "building": "detached",
+    "street": "1610 Southwest College Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5122554,
+    "lng": -122.6935844
+  },
+  {
+    "id": "way/368335966",
+    "building": "detached",
+    "street": "1628 Southwest College Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5123162,
+    "lng": -122.6938698
+  },
+  {
+    "id": "way/368335967",
+    "building": "detached",
+    "street": "1633 Southwest College Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5126772,
+    "lng": -122.6939298
+  },
+  {
+    "id": "way/368336053",
+    "building": "apartments",
+    "street": "1843 Southwest 16th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5137965,
+    "lng": -122.6927283
+  },
+  {
     "id": "way/368336140",
     "street": "730 Southwest 16th Avenue",
     "city": "Portland",
@@ -385,6 +595,16 @@
     "postcode": "97205",
     "lat": 45.5198184,
     "lng": -122.6887898
+  },
+  {
+    "id": "way/368336764",
+    "building": "detached",
+    "street": "1965 Southwest 16th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5120979,
+    "lng": -122.6935556
   },
   {
     "id": "way/369721302",
@@ -421,6 +641,36 @@
     "postcode": "97205",
     "lat": 45.516616,
     "lng": -122.6857086
+  },
+  {
+    "id": "way/395138393",
+    "building": "apartments",
+    "street": "1533 Southwest Harrison Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.513816,
+    "lng": -122.6922066
+  },
+  {
+    "id": "way/395143236",
+    "building": "residential",
+    "street": "1537 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5137214,
+    "lng": -122.6929441
+  },
+  {
+    "id": "way/395143237",
+    "building": "residential",
+    "street": "1539 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5135893,
+    "lng": -122.6930296
   },
   {
     "id": "way/39944841",

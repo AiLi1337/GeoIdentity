@@ -347,7 +347,7 @@ Perfil 100% sintético generado por algoritmo para pruebas de software y validac
   const isZh = lang === 'zh';
   if (isZh) {
     const avsTierZh = identity.address.source === 'OpenStreetMap'
-      ? 'OSM 公寓建筑门牌 · AVS 未验证 (© OpenStreetMap contributors, ODbL)'
+      ? 'OSM 住宅建筑门牌 · AVS 未验证 (© OpenStreetMap contributors, ODbL)'
       : identity.address.addressMode === 'residential'
       ? '住宅样本 · AVS 未核验'
       : (identity.address.addressMode === 'derivation' ? '插值门牌 · 未逐条核验' : '内置公寓样本 · AVS 未核验');
@@ -414,7 +414,7 @@ ${identity.document.typeNameZh}：${identity.document.docNumber}
 
   // 3. 英文模式 (English Format)
   const avsTierEn = identity.address.source === 'OpenStreetMap'
-    ? 'OSM Apartment Building · AVS Unverified (© OpenStreetMap contributors, ODbL)'
+    ? 'OSM Residential Building · AVS Unverified (© OpenStreetMap contributors, ODbL)'
     : identity.address.addressMode === 'residential'
     ? 'Residential Sample · AVS Unverified'
     : (identity.address.addressMode === 'derivation' ? 'Interpolated Number (unverified)' : 'Bundled Apartment Sample (AVS unverified)');
@@ -517,7 +517,7 @@ export function buildCSVContent(identities: GeneratedIdentity[]): string {
     id.address.country,
     id.address.source === 'OpenStreetMap' ? 'OSM-sourced building' : id.address.addressMode === 'derivation' ? 'Scheme A: Interpolated Number' : id.address.addressMode === 'residential' ? 'Scheme B: Residential Sample' : 'Scheme C: Apartment Sample',
     id.address.source === 'OpenStreetMap'
-      ? 'Apartment Building (AVS unverified) © OpenStreetMap contributors (ODbL)'
+      ? 'Residential Building (AVS unverified) © OpenStreetMap contributors (ODbL)'
       : id.address.addressMode === 'derivation' ? 'Interpolated Number (unverified)' : id.address.addressMode === 'residential' ? 'Residential Sample (delivery and AVS unverified)' : 'Apartment Sample (delivery and AVS unverified)',
     id.basic.fullName,
     id.basic.localFullName || '',

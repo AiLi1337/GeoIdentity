@@ -12,17 +12,25 @@ const valid = (id: number, tags: Record<string, string> = {}) => ({
 
 const fetchOk = async (url: string) => ({
   ok: true,
-  json: async () => ({ elements: url.includes('45.515')
+  json: async () => ({ elements: url.includes('45.512')
+    ? [valid(7, { building: 'detached', 'addr:housenumber': '1441', 'addr:street': 'Southwest College Street', 'addr:city': 'Portland', 'addr:state': '', 'addr:postcode': '97201' }),
+      valid(8, { building: 'retail', 'addr:city': 'Portland', 'addr:postcode': '97201' }),
+      valid(9, { building: 'house', 'addr:city': 'Portland', 'addr:state': 'WA', 'addr:postcode': '97201' }),
+      { ...valid(10, { building: 'house', 'addr:city': 'Portland', 'addr:state': 'OR', 'addr:postcode': '97201' }), type: 'node' }]
+    : url.includes('45.515')
     ? [valid(6, { 'addr:city': 'Portland', 'addr:state': 'OR', 'addr:postcode': '97205' })]
     : [valid(2), valid(2), valid(3, { 'addr:postcode': '' }),
       valid(4, { building: 'retail' }), valid(5, { 'addr:city': 'Elsewhere' })] })
 });
 
 const result = await syncOsmApartments(fetchOk);
-assert.equal(result.length, 2);
+assert.equal(result.length, 3);
 assert.equal(result[0].id, 'way/2');
 assert.equal(result[0].street, '902 North Market Street');
 assert.equal(result[1].state, 'OR');
+assert.equal(result[2].building, 'detached');
+assert.equal(result[2].state, 'OR');
+assert.equal(result[2].street, '1441 Southwest College Street');
 assert.deepEqual(await syncOsmApartments(fetchOk), result);
 assert.deepEqual(await syncOsmApartments(async (url) => {
   if (url.startsWith('https://overpass-api.de/')) return { ok: false, status: 504, json: async () => ({}) };
@@ -34,5 +42,5 @@ await assert.rejects(
   /OpenStreetMap query for Wilmington failed/
 );
 await assert.rejects(syncOsmApartments(async () => ({ ok: true, json: async () => ({ elements: [] }) })),
-  /no valid apartment addresses for Wilmington/);
+  /no valid residential building addresses for Wilmington/);
 console.log('Address sync validation, deduplication and failure handling passed');

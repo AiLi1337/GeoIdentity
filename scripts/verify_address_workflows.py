@@ -1,6 +1,7 @@
 """Optional browser regression: run against a local Vite server with Playwright installed."""
 
 import sys
+import re
 
 from playwright.sync_api import sync_playwright
 
@@ -29,15 +30,20 @@ def check(base_url: str, width: int, height: int) -> None:
             page.get_by_role("button", name="关闭", exact=True).last.click()
 
             page.locator("button").filter(has_text="US · +1").first.click()
-            page.get_by_role("button", name="OSM 来源建筑门牌", exact=False).first.click()
-            assert page.evaluate('localStorage.getItem("geo_address_mode")') == "sourced"
+            osm_button = page.get_by_role("button", name=re.compile(r"^OSM 住宅建筑门牌"))
+            osm_button.click()
+            saved_mode = page.evaluate('localStorage.getItem("geo_address_mode")')
+            assert saved_mode == "sourced", (saved_mode, page.get_by_role("alert").all_text_contents())
             page.reload(wait_until="domcontentloaded")
-            assert "border-amber-500" in page.get_by_role("button", name="OSM 来源建筑门牌", exact=False).first.get_attribute("class")
+            assert "border-amber-500" in osm_button.get_attribute("class")
             assert page.get_by_text("OSM 公开建筑门牌（收件未核验）").count() == 1
+            page.locator("select").filter(has=page.locator('option[value="OR"]')).select_option("OR")
+            assert page.get_by_role("link", name="核对 OSM 原始对象").count() == 1
+            assert page.get_by_text("OSM 住宅建筑门牌", exact=True).count() >= 1
             page.locator("button").filter(has_text="JP · +81").first.click()
             assert page.get_by_role("alert").filter(has_text="暂无可核对来源").count() == 1
 
-            page.locator("button").filter(has_text="方案C·公寓样本" if width < 768 else "方案C：公寓建筑地址库").first.click()
+            page.locator("button").filter(has_text="方案C·建筑样本" if width < 768 else "方案C：建筑地址样本").first.click()
             page.locator("select").filter(has=page.locator('option[value="01"]')).select_option("01")
             assert page.get_by_role("alert").filter(has_text="该地区暂无").count() == 1
             if width < 768:

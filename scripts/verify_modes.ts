@@ -38,7 +38,7 @@ assert(landmarkUS.address.buildingType === 'residential', 'Landmark (Scheme C) b
 assert(!!landmarkUS.address.street, 'Landmark address has street');
 assert(!!landmarkUS.address.lat && !!landmarkUS.address.lng, 'Landmark address has lat/lng');
 assert(landmarkUS.address.derivationMeta?.avsTier === (landmarkUS.address.source === 'OpenStreetMap'
-  ? 'Residential Apartment (AVS unverified)' : 'Residential Condominium / Apartment'), 'Landmark AVS tier matches its source');
+  ? 'Residential Building (AVS unverified)' : 'Residential Condominium / Apartment'), 'Landmark AVS tier matches its source');
 if (landmarkUS.address.source === 'OpenStreetMap') {
   assert(!landmarkUS.address.addressLine2, 'OSM building address has no invented apartment unit');
 }
@@ -665,7 +665,7 @@ for (const [countryKey, list] of Object.entries(ADDRESS_MAP)) {
     }
   }
 }
-console.log(`   Audited all ${totalSeedAddresses} seed addresses in ADDRESS_MAP across 21 countries: 100% verified residential condos/apartments!`);
+console.log(`   Audited all ${totalSeedAddresses} bundled address records across 21 countries for residential classification; only OSM records have object links.`);
 
 // 14.2 High-volume multi-mode stress test: 150 random identities across all modes & countries
 const modesToTest: AddressMode[] = ['landmark', 'derivation', 'residential'];
