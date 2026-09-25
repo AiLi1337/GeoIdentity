@@ -79,12 +79,42 @@ function enrichLandmarkAddress(raw: RealAddress): RealAddress {
   };
 }
 
+export function getSourcedAddress(countryCode: CountryCode, stateCode?: string, city?: string): RealAddress {
+  const candidates = OSM_APARTMENTS.filter(a => a.countryCode === countryCode &&
+    (!stateCode || matchesState(a.state, a.stateFull, stateCode)) &&
+    (!city || a.city.toLowerCase() === city.trim().toLowerCase()));
+  if (candidates.length === 0) {
+    throw new Error(`No sourced address for ${countryCode}${stateCode ? `/${stateCode}` : ''}${city ? `/${city}` : ''}`);
+  }
+  const raw = candidates[Math.floor(Math.random() * candidates.length)];
+  return {
+    ...raw,
+    addressMode: 'sourced',
+    buildingType: 'residential',
+    derivationMeta: {
+      mode: 'sourced',
+      modeLabelZh: 'OpenStreetMap 可核对建筑门牌',
+      modeLabelEn: 'OpenStreetMap Sourced Building Address',
+      ruleSummary: '公开建筑门牌，房号、收件与 AVS 未核验',
+      ruleSummaryEn: 'Public building address; unit, delivery and AVS unverified',
+      interpolated: false,
+      buildingType: 'residential',
+      avsTier: 'Apartment Building (AVS unverified)'
+    }
+  };
+}
+
 export function getRandomAddress(
   countryCode: CountryCode,
   stateCode?: string,
   isTaxFreeOnly?: boolean,
   mode: AddressMode = 'residential'
 ): RealAddress {
+  if (mode === 'sourced') {
+    const address = getSourcedAddress(countryCode, stateCode);
+    if (isTaxFreeOnly && !address.isTaxFree) throw new Error(`No sourced address for ${countryCode} in a tax-free region`);
+    return address;
+  }
   const countryLandmarkList = (ADDRESS_MAP[countryCode] && ADDRESS_MAP[countryCode].length > 0)
     ? ADDRESS_MAP[countryCode]
     : ADDRESS_MAP.US;

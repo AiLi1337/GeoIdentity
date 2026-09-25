@@ -67,11 +67,12 @@
             @update:filters="filters = $event"
             @generate="handleGenerate"
           />
+          <p v-if="addressError" role="alert" class="text-sm text-amber-700 dark:text-amber-300">{{ addressError }}</p>
         </div>
 
         <!-- Tab 2: IP Address Based Generator -->
         <div v-show="activeGeneratorTab === 'ip'">
-          <IpAddressCard @identity-generated="handleIpIdentityGenerated" />
+          <IpAddressCard @identity-generated="handleIpIdentityGenerated" @no-address="currentIdentity = null" />
         </div>
 
         <!-- Current Identity Card Display -->
@@ -268,7 +269,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import type { CountryCode, GeneratedIdentity, FilterOptions, AddressMode } from './types/identity';
+import type { CountryCode, GeneratedIdentity, FilterOptions } from './types/identity';
 import { COUNTRIES } from './data/countries';
 import { generateIdentity } from './services/identityGenerator';
 import {
@@ -310,11 +311,10 @@ const activeGeneratorTab = ref<'standard' | 'ip'>('standard');
 const selectedCountryCode = ref<CountryCode>('US');
 const selectedState = ref<string>('');
 
-const savedMode = (localStorage.getItem('geo_address_mode') as AddressMode) || 'residential';
 const filters = ref<FilterOptions>({
   gender: 'random',
   ageRange: 'random',
-  addressMode: savedMode
+  addressMode: 'sourced'
 });
 
 const currentIdentity = ref<GeneratedIdentity | null>(null);
@@ -326,6 +326,7 @@ const isHistoryDrawerOpen = ref(false);
 const isDisclaimerModalOpen = ref(false);
 const disclaimerActiveTab = ref('all');
 const isGenerating = ref(false);
+const addressError = ref('');
 const toastRef = ref<InstanceType<typeof Toast> | null>(null);
 
 const currentCountryName = computed(() => {
@@ -378,20 +379,26 @@ function handleHashChange() {
 
 function handleGenerate() {
   isGenerating.value = true;
-  if (filters.value.addressMode) {
-    try {
-      localStorage.setItem('geo_address_mode', filters.value.addressMode);
-    } catch (_e) {}
-  }
+  currentIdentity.value = null;
+  addressError.value = '';
   setTimeout(() => {
-    const newId = generateIdentity(selectedCountryCode.value, {
-      ...filters.value,
-      state: selectedState.value || undefined
-    });
-    currentIdentity.value = newId;
-    saveToHistory(newId);
-    historyList.value = getHistory();
-    isGenerating.value = false;
+    try {
+      const newId = generateIdentity(selectedCountryCode.value, {
+        ...filters.value,
+        addressMode: 'sourced',
+        state: selectedState.value || undefined
+      });
+      currentIdentity.value = newId;
+      addressError.value = '';
+      saveToHistory(newId);
+      historyList.value = getHistory().filter(i => i.address.source === 'OpenStreetMap');
+    } catch (error) {
+      if (!(error instanceof Error) || !error.message.startsWith('No sourced address')) throw error;
+      currentIdentity.value = null;
+      addressError.value = t('addressMode.noSourcedAddress');
+    } finally {
+      isGenerating.value = false;
+    }
   }, 120);
 }
 
@@ -413,9 +420,9 @@ function handleIpIdentityGenerated(identity: GeneratedIdentity) {
   selectedCountryCode.value = identity.countryCode;
   selectedState.value = identity.address.state;
   saveToHistory(identity);
-  historyList.value = getHistory();
+  historyList.value = getHistory().filter(i => i.address.source === 'OpenStreetMap');
   if (toastRef.value) {
-    toastRef.value.show(locale.value === 'zh' ? '已成功基于 IP 多数仲裁生成同城真实档案！' : 'Generated same-city identity from IP consensus!');
+    toastRef.value.show(locale.value === 'zh' ? '已找到同城 OSM 建筑门牌（房号与投递未核验）' : 'Found a same-city OSM building address (delivery unverified)');
   }
 }
 
@@ -434,13 +441,17 @@ function handleJumpToCountry(code: CountryCode) {
 
 function handleToggleFav(identity: GeneratedIdentity) {
   const isNowFav = toggleFavorite(identity);
-  favoritesList.value = getFavorites();
+  favoritesList.value = getFavorites().filter(i => i.address.source === 'OpenStreetMap');
   if (toastRef.value) {
     toastRef.value.show(isNowFav ? t('card.favorite') : t('card.unfavorite'));
   }
 }
 
 function handleSelectIdentity(identity: GeneratedIdentity) {
+  if (identity.address.source !== 'OpenStreetMap') {
+    if (toastRef.value) toastRef.value.show(t('addressMode.noSourcedAddress'));
+    return;
+  }
   currentIdentity.value = identity;
   selectedCountryCode.value = identity.countryCode;
   selectedState.value = identity.address.state;
@@ -464,20 +475,15 @@ function handleCopyFeedback(_text: string, label: string) {
 }
 
 onMounted(() => {
-  historyList.value = getHistory();
-  favoritesList.value = getFavorites();
+  historyList.value = getHistory().filter(i => i.address.source === 'OpenStreetMap');
+  favoritesList.value = getFavorites().filter(i => i.address.source === 'OpenStreetMap');
 
   // URL Hash deep link check
   window.addEventListener('hashchange', handleHashChange);
   handleHashChange();
 
   // Load first identity
-  if (historyList.value.length > 0) {
-    currentIdentity.value = historyList.value[0];
-    selectedCountryCode.value = currentIdentity.value.countryCode;
-  } else {
-    handleGenerate();
-  }
+  handleGenerate();
 });
 
 onUnmounted(() => {

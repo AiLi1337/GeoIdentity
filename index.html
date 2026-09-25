@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>GeoIdentity - 真实地址生成器 | 美国免税州地址与开发者合成身份测试工具</title>
-    <meta name="description" content="公开公寓建筑门牌检索与开发者合成测试身份生成工具。支持美国免税州 OpenStreetMap 建筑地址、住宅样本、街道门牌区间衍生及虚拟身份批量生成；不验证投递、住户或 AVS。" />
+    <title>GeoIdentity - OpenStreetMap 公寓建筑门牌与合成测试身份</title>
+    <meta name="description" content="检索可回溯 OpenStreetMap 对象的美国公寓建筑门牌，目前覆盖 Wilmington 与 Portland。仅建筑级地址；不验证房号、收件、住户或 AVS。个人资料均为合成测试数据。" />
     <meta name="keywords" content="真实地址生成器, 美国免税州地址, 美区Apple ID地址, 跨境电商收货地址, 海淘防砍单地址, 开发者测试数据, 虚拟身份生成器, 住宅AVS地址, Real Address Generator, US Tax-Free Address, Synthetic Identity" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="https://vllme.com/" />
@@ -22,15 +22,15 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://vllme.com/" />
     <meta property="og:site_name" content="GeoIdentity" />
-    <meta property="og:title" content="GeoIdentity - 真实地址生成器 | 美国免税州与开发者合成身份工具" />
-    <meta property="og:description" content="公开建筑门牌、内置住宅样本和合成测试身份。新导入地址源自 OpenStreetMap，未验证投递或 AVS。" />
+    <meta property="og:title" content="GeoIdentity - 可核对来源的建筑门牌与合成测试身份" />
+    <meta property="og:description" content="公开 OSM 公寓建筑门牌，附对象链接；无来源的地区不生成地址，收件与 AVS 未验证。" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:locale:alternate" content="en_US" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="GeoIdentity - 真实物理地址与开发者合成测试身份工具" />
-    <meta name="twitter:description" content="支持公开公寓建筑门牌、内置住宅样本、合成测试身份与批量导出；不保证投递或 AVS。" />
+    <meta name="twitter:description" content="可核对 OSM 对象的公寓建筑门牌，仅覆盖已有数据地区；不保证投递或 AVS。" />
 
     <!-- Structured Data (JSON-LD) for Search Engine Rich Snippets -->
     <script type="application/ld+json">
@@ -41,17 +41,16 @@
       "url": "https://vllme.com/",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "All",
-      "description": "面向开发者的公开建筑地址检索与本土化合成测试数据工具。支持美国免税州 OSM 公寓建筑门牌、内置住宅样本和街道门牌区间衍生；不验证住户、投递或 AVS。",
+      "description": "面向开发者的 OSM 公寓建筑门牌检索与合成测试数据工具。仅对来源可回溯的建筑门牌生成地址；不验证住户、投递或 AVS。",
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
       },
       "featureList": [
-        "美国免税州真实地址检索",
-        "OpenStreetMap 公开公寓建筑门牌 (方案C)",
-        "街道门牌与GIS坐标插值衍生 (方案A，合成地址)",
-        "全球内置住宅样本库 (方案B，未验证AVS)",
+        "美国特拉华州和俄勒冈州 OSM 公寓建筑门牌",
+        "OpenStreetMap 对象链接核对",
+        "无匹配来源时不生成地址",
         "Luhn模10测试卡号与虚拟证件生成",
         "OpenStreetMap / Bing Maps / Google Maps 防送中沙箱"
       ]

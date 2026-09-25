@@ -25,7 +25,9 @@ jobs:
         run: npm ci
 
       - name: Verify Address Import
-        run: npx tsx scripts/verify_address_sync.ts
+        run: |
+          npx tsx scripts/verify_address_sync.ts
+          npx tsx scripts/verify_sourced_addresses.ts
 
       - name: Run Daily Address Sync & Audit
         run: npm run sync:addresses

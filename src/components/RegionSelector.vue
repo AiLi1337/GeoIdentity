@@ -27,34 +27,6 @@
       </div>
     </div>
 
-    <!-- Continent Filter Tabs (Single-Row Horizontally Scrollable on Mobile, Wrap on Desktop) -->
-    <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 -mx-1 px-1 sm:mx-0 sm:px-0 sm:flex-wrap">
-      <button
-        v-for="cat in continentTabs"
-        :key="cat.id"
-        type="button"
-        @click="activeContinent = cat.id"
-        :class="[
-          'px-3 py-1.5 sm:py-1 text-xs font-semibold rounded-lg transition-all shrink-0 whitespace-nowrap cursor-pointer',
-          activeContinent === cat.id
-            ? cat.id === 'tax_free'
-              ? 'bg-amber-500 text-white shadow-xs'
-              : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-            : cat.id === 'tax_free'
-              ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200'
-        ]"
-      >
-        <template v-if="cat.id === 'tax_free'">
-          <span class="sm:hidden">⚡ 免税特区</span>
-          <span class="hidden sm:inline">{{ cat.label }}</span>
-        </template>
-        <template v-else>
-          {{ cat.label }}
-        </template>
-      </button>
-    </div>
-
     <!-- Country Flag Cards Grid -->
     <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 lg:grid-cols-10 gap-2 max-h-72 overflow-y-auto pr-1">
       <button
@@ -71,7 +43,7 @@
       >
         <!-- Tax Free Badge -->
         <span
-          v-if="country.isTaxFreeZone || (country.code === 'US' && activeContinent === 'tax_free')"
+          v-if="country.isTaxFreeZone"
           class="absolute top-1 right-1 px-1 py-0.2 text-[8px] font-bold rounded-sm bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-700"
           :title="locale === 'zh' ? '免税州 / 低税特区' : 'Tax-Free / Low Tax'"
         >
@@ -113,7 +85,7 @@
           >
             <option value="">{{ t('regions.selectState') }}</option>
             <option
-              v-for="st in currentCountry.popularStates"
+              v-for="st in sourcedStates"
               :key="st.code"
               :value="st.code"
             >
@@ -157,7 +129,8 @@
 import { ref, computed } from 'vue';
 import { Globe2, Search, Zap } from 'lucide-vue-next';
 import { COUNTRIES } from '../data/countries';
-import type { CountryCode, Continent } from '../types/identity';
+import type { CountryCode } from '../types/identity';
+import { OSM_APARTMENTS } from '../data/addresses';
 import { useI18n } from '../i18n';
 
 const props = defineProps<{
@@ -172,39 +145,20 @@ const emit = defineEmits<{
 
 const { locale, t } = useI18n();
 
-const activeContinent = ref<Continent>('all');
 const searchQuery = ref('');
+const sourcedStates = computed(() => currentCountry.value.popularStates.filter(s => OSM_APARTMENTS.some(a => a.countryCode === currentCountry.value.code && a.state === s.code)));
 
 const usTaxFreeStates = [
   { code: 'DE', nameZh: '特拉华', nameEn: 'Delaware' },
   { code: 'OR', nameZh: '俄勒冈', nameEn: 'Oregon' },
-  { code: 'NH', nameZh: '新罕布什尔', nameEn: 'New Hampshire' },
-  { code: 'MT', nameZh: '蒙大拿', nameEn: 'Montana' },
-  { code: 'AK', nameZh: '阿拉斯加', nameEn: 'Alaska' }
 ];
-
-const continentTabs = computed(() => [
-  { id: 'all' as Continent, label: t('continents.all') },
-  { id: 'tax_free' as Continent, label: t('continents.tax_free') },
-  { id: 'north_america' as Continent, label: t('continents.north_america') },
-  { id: 'europe' as Continent, label: t('continents.europe') },
-  { id: 'asia_pacific' as Continent, label: t('continents.asia_pacific') },
-  { id: 'southeast_asia' as Continent, label: t('continents.southeast_asia') }
-]);
 
 const currentCountry = computed(() => {
   return COUNTRIES.find(c => c.code === props.selectedCountryCode) || COUNTRIES[0];
 });
 
 const filteredCountries = computed(() => {
-  let list = COUNTRIES;
-
-  // Continent filter
-  if (activeContinent.value === 'tax_free') {
-    list = list.filter(c => c.isTaxFreeZone || c.code === 'US' || c.popularStates.some(s => s.isTaxFree));
-  } else if (activeContinent.value !== 'all') {
-    list = list.filter(c => c.continent === activeContinent.value);
-  }
+  let list = COUNTRIES.filter(c => OSM_APARTMENTS.some(a => a.countryCode === c.code));
 
   // Search filter
   if (searchQuery.value.trim()) {

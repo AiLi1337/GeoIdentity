@@ -175,6 +175,10 @@
             >
               {{ labels.taxFreeTag }}
             </span>
+            <a v-if="identity.address.sourceId" :href="`https://www.openstreetmap.org/${identity.address.sourceId}`"
+              target="_blank" rel="noopener noreferrer" class="text-xs text-primary-600 dark:text-primary-400 underline">
+              {{ t('addressMode.viewSource') }}
+            </a>
           </div>
           <button
             type="button"
@@ -734,6 +738,7 @@ const modeIcon = computed(() => {
 
 const modeBadgeText = computed(() => {
   const mode = props.identity.address.addressMode;
+  if (mode === 'sourced') return t('addressMode.sourcedShort');
   if (mode === 'derivation') return t('addressMode.derivationBadge');
   if (mode === 'residential') return t('addressMode.residentialBadge');
   return t('addressMode.landmarkBadge');
@@ -770,12 +775,12 @@ const localizedAvsTier = computed(() => {
   if (locale.value === 'zh') {
     if (mode === 'residential') return '住宅样本 · AVS 未核验';
     if (rawTier === 'Residential Condominium / Apartment' || mode === 'landmark') return '真实都会名苑 · 优质公寓';
-    if (rawTier === 'Residential Street (GIS Validated)' || rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return '市政合法门牌 · 独一无二';
+    if (rawTier === 'Residential Street (GIS Validated)' || rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return '插值门牌 · 未逐条核验';
     return rawTier || '100% 真实住宅建筑';
   } else {
     if (mode === 'residential') return 'Residential Sample · AVS Unverified';
     if (rawTier === 'Residential Condominium / Apartment' || mode === 'landmark') return 'Residential Condominium / Apartment';
-    if (rawTier === 'Residential Street (GIS Validated)' || rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return 'Residential Street (GIS Validated)';
+    if (rawTier === 'Residential Street (GIS Validated)' || rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return 'Interpolated Number · Unverified';
     return rawTier || '100% Real Residential';
   }
 });

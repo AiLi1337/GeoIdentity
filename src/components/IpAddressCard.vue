@@ -20,6 +20,7 @@
     </div>
 
     <!-- IP Input & Action Bar -->
+    <p v-if="addressError" role="alert" class="text-xs text-amber-700 dark:text-amber-300">{{ addressError }}</p>
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
       <div class="relative flex-1">
         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -187,12 +188,13 @@ import {
 import type { IpConsensusResult } from '../types/ip';
 import type { GeneratedIdentity } from '../types/identity';
 import { detectClientIp, queryMultiSourceIp } from '../services/ipService';
-import { resolveAddressFromIp } from '../services/ipAddressResolver';
+import { getSourcedAddress } from '../data/addresses';
 import { generateIdentityFromAddress } from '../services/identityGenerator';
 import { useI18n } from '../i18n';
 
 const emit = defineEmits<{
   (e: 'identity-generated', identity: GeneratedIdentity, consensus: IpConsensusResult): void;
+  (e: 'no-address'): void;
 }>();
 
 const { locale, t } = useI18n();
@@ -202,6 +204,7 @@ const isDetectingIp = ref(false);
 const isLoading = ref(false);
 const showDetails = ref(false);
 const consensus = ref<IpConsensusResult | null>(null);
+const addressError = ref('');
 
 async function handleFetchClientIp() {
   if (isDetectingIp.value) return;
@@ -222,17 +225,25 @@ async function handleSearch() {
   try {
     const res = await queryMultiSourceIp(ipInput.value);
     consensus.value = res;
+    addressError.value = '';
     if (res.targetIp && !ipInput.value) {
       ipInput.value = res.targetIp;
     }
     
-    // Resolve address matching this consensus
-    const resolvedAddress = resolveAddressFromIp(res);
-    
-    // Generate complete identity
-    const identity = generateIdentityFromAddress(resolvedAddress);
-    
-    emit('identity-generated', identity, res);
+    try {
+      if (!res.winnerCity?.trim()) throw new Error('No sourced address for IP city');
+      const resolvedAddress = getSourcedAddress(res.winnerCountryCode, res.winnerRegion || undefined, res.winnerCity);
+      res.strategySummaryZh = '同城 OSM 公寓建筑门牌，房号与投递未核验';
+      res.strategySummaryEn = 'Same-city OSM apartment building; unit and delivery unverified';
+      addressError.value = '';
+      emit('identity-generated', generateIdentityFromAddress(resolvedAddress), res);
+    } catch (error) {
+      if (!(error instanceof Error) || !error.message.startsWith('No sourced address')) throw error;
+      addressError.value = t('addressMode.noSourcedAddress');
+      res.strategySummaryZh = addressError.value;
+      res.strategySummaryEn = t('addressMode.noSourcedAddress');
+      emit('no-address');
+    }
   } finally {
     isLoading.value = false;
   }
