@@ -237,8 +237,10 @@ async function handleSearch() {
     }
     
     const resolvedAddress = resolveAddressFromIp(res);
-    res.strategySummaryZh = `匹配 ${resolvedAddress.city}, ${resolvedAddress.state} 的内置地址样本；可能并非 IP 同城，投递与 AVS 未核验`;
-    res.strategySummaryEn = `Bundled address sample in ${resolvedAddress.city}, ${resolvedAddress.state}; may differ from IP city. Delivery and AVS unverified.`;
+    const addressKindZh = resolvedAddress.addressMode === 'derivation' ? '街道插值门牌' : '内置地址样本';
+    const addressKindEn = resolvedAddress.addressMode === 'derivation' ? 'Interpolated street number' : 'Bundled address sample';
+    res.strategySummaryZh = `匹配 ${resolvedAddress.city}, ${resolvedAddress.state} 的${addressKindZh}；可能并非 IP 同城，投递与 AVS 未核验`;
+    res.strategySummaryEn = `${addressKindEn} in ${resolvedAddress.city}, ${resolvedAddress.state}; may differ from IP city. Delivery and AVS unverified.`;
     emit('identity-generated', generateIdentityFromAddress(resolvedAddress), res);
   } catch (error) {
     console.error('IP lookup failed', error);

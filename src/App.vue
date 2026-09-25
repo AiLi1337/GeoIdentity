@@ -315,7 +315,7 @@ const savedMode = localStorage.getItem('geo_address_mode') as AddressMode | null
 const filters = ref<FilterOptions>({
   gender: 'random',
   ageRange: 'random',
-  addressMode: savedMode && ['landmark', 'derivation', 'residential'].includes(savedMode) ? savedMode : 'residential'
+  addressMode: savedMode && ['sourced', 'landmark', 'derivation', 'residential'].includes(savedMode) ? savedMode : 'residential'
 });
 
 const currentIdentity = ref<GeneratedIdentity | null>(null);
@@ -382,6 +382,13 @@ function handleGenerate() {
   isGenerating.value = true;
   currentIdentity.value = null;
   addressError.value = '';
+  if (filters.value.addressMode) {
+    try {
+      localStorage.setItem('geo_address_mode', filters.value.addressMode);
+    } catch (error) {
+      console.warn('Could not save address mode preference', error);
+    }
+  }
   try {
     const newId = generateIdentity(selectedCountryCode.value, {
       ...filters.value,
@@ -390,16 +397,11 @@ function handleGenerate() {
     currentIdentity.value = newId;
     saveToHistory(newId);
     historyList.value = getHistory();
-    if (filters.value.addressMode) {
-      try {
-        localStorage.setItem('geo_address_mode', filters.value.addressMode);
-      } catch (error) {
-        console.warn('Could not save address mode preference', error);
-      }
-    }
   } catch (error) {
-    if (!(error instanceof Error) || !error.message.startsWith('No sourced address')) throw error;
-    addressError.value = t('addressMode.noSourcedAddress');
+    if (!(error instanceof Error)) throw error;
+    if (error.message.startsWith('No sourced address')) addressError.value = t('addressMode.noSourcedAddress');
+    else if (error.message.startsWith('No matching address')) addressError.value = t('addressMode.noMatchingAddress');
+    else throw error;
   } finally {
     isGenerating.value = false;
   }
@@ -493,7 +495,7 @@ onMounted(() => {
   handleHashChange();
 
   // Load first identity
-  if (historyList.value.length > 0) {
+  if (historyList.value.length > 0 && historyList.value[0].address.addressMode === filters.value.addressMode) {
     currentIdentity.value = historyList.value[0];
     selectedCountryCode.value = currentIdentity.value.countryCode;
     selectedState.value = currentIdentity.value.address.state;

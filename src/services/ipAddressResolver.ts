@@ -60,16 +60,15 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
   const countryCorridors = STREET_DERIVATION_RULES.filter(r => r.countryCode === countryCode);
 
   // =========================================================================
-  // Track 1: Prioritize Genuine Residential Home in Same City (Scheme B)
-  // Guarantees AVS residential pass and 100% real livable house/apartment.
+  // Track 1: Prefer a bundled residential sample in the same city (Scheme B).
   // =========================================================================
   if (targetCity && countryResidential.length > 0) {
     const cityResidential = countryResidential.filter(a => cityMatches(a.city, targetCity));
     if (cityResidential.length > 0) {
       const match = getRandomItem(cityResidential);
       consensus.matchedStrategy = 'exact_city_residential';
-      consensus.strategySummaryZh = `IP同城真实住宅：精准命中 ${match.city} 真实居民洋房/独栋 (AVS住宅认证，非马路/公共地标)`;
-      consensus.strategySummaryEn = `Exact City Residential: Genuine residential property in ${match.city} for buyer AVS`;
+      consensus.strategySummaryZh = `IP 同城住宅样本：匹配 ${match.city} 的内置地址；投递、住宅属性与 AVS 未核验`;
+      consensus.strategySummaryEn = `Same-city residential sample in ${match.city}; delivery, occupancy and AVS unverified`;
       return {
         ...match,
         addressMode: 'residential',
@@ -77,19 +76,18 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
         derivationMeta: {
           ...match.derivationMeta,
           mode: 'residential',
-          modeLabelZh: 'IP同城真实住宅 (AVS 白名单)',
-          modeLabelEn: 'IP Same-City Residential (AVS)',
-          ruleSummary: `根据 IP 归属地 ${targetCity} 优先匹配真实居民独立门牌与经纬度`,
+          modeLabelZh: 'IP 同城住宅样本',
+          modeLabelEn: 'IP Same-City Residential Sample',
+          ruleSummary: `根据 IP 归属地 ${targetCity} 匹配内置地址样本；投递与 AVS 未核验`,
           buildingType: 'residential',
-          avsTier: 'Residential Single Family'
+          avsTier: 'Residential Sample (AVS unverified)'
         }
       };
     }
   }
 
   // =========================================================================
-  // Track 2: Same-City Street Corridor Derivation (Scheme A with Normal Offset)
-  // Generates valid house number set back 18-27m from road centerline onto building parcel.
+  // Track 2: Same-city street interpolation (Scheme A).
   // =========================================================================
   if (targetCity && countryCorridors.length > 0) {
     const cityCorridors = countryCorridors.filter(r => cityMatches(r.city, targetCity));
@@ -97,28 +95,27 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
       const rule = getRandomItem(cityCorridors);
       const derived = deriveStreetAddress(rule);
       consensus.matchedStrategy = 'exact_city_derivation';
-      consensus.strategySummaryZh = `同城街道衍生：基于 ${rule.city} ${rule.streetName} 真实路段合法门牌衍生 (建筑红线偏移，避开大马路/中心地标)`;
-      consensus.strategySummaryEn = `Same-City Corridor Derivation: Parcel setback along ${rule.streetName}, ${rule.city}`;
+      consensus.strategySummaryZh = `同城街道插值：沿 ${rule.city} ${rule.streetName} 插值门牌，未逐条核验建筑或投递`;
+      consensus.strategySummaryEn = `Same-city interpolation along ${rule.streetName}, ${rule.city}; building and delivery unverified`;
       return {
         ...derived,
-        addressMode: 'residential',
+        addressMode: 'derivation',
         buildingType: 'residential',
         derivationMeta: {
           ...derived.derivationMeta,
-          mode: 'residential',
-          modeLabelZh: '方案A·IP同城真实街道衍生',
-          modeLabelEn: 'Scheme A · Same-City IP Derivation',
-          ruleSummary: `基于 IP 归属地 ${targetCity} 沿 ${rule.streetName} 合法门牌走廊生成真实建筑点位`,
+          mode: 'derivation',
+          modeLabelZh: '方案A·IP 同城街道插值',
+          modeLabelEn: 'Scheme A · Same-City IP Interpolation',
+          ruleSummary: `基于 IP 归属地 ${targetCity} 沿 ${rule.streetName} 插值；门牌未逐条核验`,
           buildingType: 'residential',
-          avsTier: 'GIS Derived Street (Parcel Setback)'
+          avsTier: 'Interpolated Number (unverified)'
         }
       };
     }
   }
 
   // =========================================================================
-  // Track 3: Same-State/Region Residential Fallback (Scheme B)
-  // Ensure we find a residential home in the same state before any commercial skyscraper!
+  // Track 3: Same-state/region residential sample (Scheme B).
   // =========================================================================
   if (targetRegion && countryResidential.length > 0) {
     const stateResidential = countryResidential.filter(
@@ -127,8 +124,8 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
     if (stateResidential.length > 0) {
       const match = getRandomItem(stateResidential);
       consensus.matchedStrategy = 'state_residential_fallback';
-      consensus.strategySummaryZh = `同州住宅保底：${targetCity || '该区域'} 细分住宅未收录，已匹配 ${targetRegion} 真实居民住宅`;
-      consensus.strategySummaryEn = `State Residential Match: Genuine home in ${targetRegion} for buyer AVS`;
+      consensus.strategySummaryZh = `同州住宅样本：${targetCity || '该区域'} 暂无同城样本，已匹配 ${targetRegion} 的内置地址；投递与 AVS 未核验`;
+      consensus.strategySummaryEn = `Residential sample in ${targetRegion}; delivery and AVS unverified`;
       return {
         ...match,
         addressMode: 'residential',
@@ -136,11 +133,11 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
         derivationMeta: {
           ...match.derivationMeta,
           mode: 'residential',
-          modeLabelZh: '同州真实住宅 (平滑保底)',
-          modeLabelEn: 'State Residential (Fallback)',
-          ruleSummary: `已安全匹配至 ${targetRegion} 州级真实居民住宅`,
+          modeLabelZh: '同州住宅样本',
+          modeLabelEn: 'State Residential Sample',
+          ruleSummary: `匹配 ${targetRegion} 的内置地址样本；投递与 AVS 未核验`,
           buildingType: 'residential',
-          avsTier: 'Residential Single Family'
+          avsTier: 'Residential Sample (AVS unverified)'
         }
       };
     }
@@ -157,34 +154,33 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
       const rule = getRandomItem(stateCorridors);
       const derived = deriveStreetAddress(rule);
       consensus.matchedStrategy = 'state_derivation_fallback';
-      consensus.strategySummaryZh = `同州走廊衍生：${targetCity || '该区域'} 暂无直达住宅，已匹配 ${targetRegion} 核心街道合法门牌`;
-      consensus.strategySummaryEn = `State Corridor Derivation: Valid parcel along ${rule.streetName}, ${targetRegion}`;
+      consensus.strategySummaryZh = `同州街道插值：${targetCity || '该区域'} 暂无同城样本，沿 ${targetRegion} ${rule.streetName} 插值门牌，未逐条核验`;
+      consensus.strategySummaryEn = `State street interpolation along ${rule.streetName}, ${targetRegion}; street number unverified`;
       return {
         ...derived,
-        addressMode: 'residential',
+        addressMode: 'derivation',
         buildingType: 'residential',
         derivationMeta: {
           ...derived.derivationMeta,
-          mode: 'residential',
-          modeLabelZh: '同州走廊衍生 (平滑保底)',
-          modeLabelEn: 'State Corridor Derivation (Fallback)',
-          ruleSummary: `已安全匹配至 ${targetRegion} 核心街道合法门牌`,
+          mode: 'derivation',
+          modeLabelZh: '同州街道插值',
+          modeLabelEn: 'State Street Interpolation',
+          ruleSummary: `沿 ${targetRegion} 的 ${rule.streetName} 插值；门牌未逐条核验`,
           buildingType: 'residential',
-          avsTier: 'GIS Derived Street'
+          avsTier: 'Interpolated Number (unverified)'
         }
       };
     }
   }
 
   // =========================================================================
-  // Track 5: Safe National Real Residential Anchor (Scheme B)
-  // Ensure every human identity gets a genuine home address, never an office building.
+  // Track 5: Country-level bundled residential sample (Scheme B).
   // =========================================================================
   if (countryResidential.length > 0) {
     const fallbackRes = getRandomItem(countryResidential);
     consensus.matchedStrategy = 'national_residential_fallback';
-    consensus.strategySummaryZh = `全域真实住宅保底：已为您匹配 ${fallbackRes.city} 真实居民住宅 (AVS住宅白名单)`;
-    consensus.strategySummaryEn = `National Residential Fallback: Genuine residence in ${fallbackRes.city}`;
+    consensus.strategySummaryZh = `全国住宅样本：已匹配 ${fallbackRes.city} 的内置地址；可能并非 IP 同城，投递与 AVS 未核验`;
+    consensus.strategySummaryEn = `Bundled residential sample in ${fallbackRes.city}; may differ from IP city, delivery and AVS unverified`;
     return {
       ...fallbackRes,
       addressMode: 'residential',
@@ -193,14 +189,13 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
   }
 
   // =========================================================================
-  // Track 6: Global Safe Residential Fallback
-  // Under NO circumstances does IP resolution EVER return a commercial skyscraper or unlivable landmark!
+  // Track 6: Global bundled residential sample for unsupported countries.
   // =========================================================================
   const globalRes = RESIDENTIAL_ADDRESSES.filter(a => a.countryCode === 'US');
   const fallback = globalRes.length > 0 ? getRandomItem(globalRes) : RESIDENTIAL_ADDRESSES[0];
   consensus.matchedStrategy = 'global_residential_fallback';
-  consensus.strategySummaryZh = `全域住宅保底：已为您分发真实居民住宅 (AVS住宅白名单，坚决不分配商业办公楼)`;
-  consensus.strategySummaryEn = `Global Residential Fallback: Assigned authentic residential home`;
+  consensus.strategySummaryZh = `未收录该国家的 IP 地址样本，返回美国内置地址；投递与 AVS 未核验`;
+  consensus.strategySummaryEn = `Country unavailable; using a bundled US address sample, delivery and AVS unverified`;
   return {
     ...fallback,
     addressMode: 'residential',

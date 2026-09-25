@@ -132,6 +132,7 @@ export function getRandomAddress(
       if (stateRes) {
         return stateRes;
       }
+      throw new Error(`No matching address for ${countryCode}/${stateCode} in ${mode} mode`);
     }
     // If stateCode was not specified or no state match exists, try a country-level derivation corridor
     const countryFallbackRule = getDerivationRule(countryCode, undefined, isTaxFreeOnly);
@@ -152,6 +153,7 @@ export function getRandomAddress(
     if (resAddr) {
       return resAddr;
     }
+    if (stateCode) throw new Error(`No matching address for ${countryCode}/${stateCode} in ${mode} mode`);
     // Fallback within country: strictly prioritize other residential addresses in that country
     const countryFallbackRes = getResidentialAddress(countryCode, undefined, isTaxFreeOnly)
       || (isTaxFreeOnly ? getResidentialAddress(countryCode, undefined, false) : null);
@@ -169,15 +171,16 @@ export function getRandomAddress(
 
   if (stateCode) {
     const filtered = countryLandmarkList.filter(a => matchesState(a.state, a.stateFull, stateCode));
-    if (filtered.length > 0) {
-      candidates = filtered;
-    }
+    if (filtered.length === 0) throw new Error(`No matching address for ${countryCode}/${stateCode} in ${mode} mode`);
+    candidates = filtered;
   }
 
   if (isTaxFreeOnly) {
     const taxFreeList = candidates.filter(a => a.isTaxFree);
     if (taxFreeList.length > 0) {
       candidates = taxFreeList;
+    } else if (stateCode) {
+      throw new Error(`No matching address for ${countryCode}/${stateCode} in ${mode} mode`);
     }
   }
 

@@ -30,8 +30,24 @@ def check(base_url: str, width: int, height: int) -> None:
 
             page.locator("button").filter(has_text="US · +1").first.click()
             page.get_by_role("button", name="OSM 来源建筑门牌", exact=False).first.click()
+            assert page.evaluate('localStorage.getItem("geo_address_mode")') == "sourced"
+            page.reload(wait_until="domcontentloaded")
+            assert "border-amber-500" in page.get_by_role("button", name="OSM 来源建筑门牌", exact=False).first.get_attribute("class")
+            assert page.get_by_text("OSM 公开建筑门牌（收件未核验）").count() == 1
             page.locator("button").filter(has_text="JP · +81").first.click()
             assert page.get_by_role("alert").filter(has_text="暂无可核对来源").count() == 1
+
+            page.locator("button").filter(has_text="方案C·公寓样本" if width < 768 else "方案C：公寓建筑地址库").first.click()
+            page.locator("select").filter(has=page.locator('option[value="01"]')).select_option("01")
+            assert page.get_by_role("alert").filter(has_text="该地区暂无").count() == 1
+            if width < 768:
+                page.get_by_role("button", name="More Options").click()
+                page.get_by_role("button", name="批量生成").last.click()
+            else:
+                page.locator('button[title="批量生成"]').first.click()
+            assert page.get_by_role("alert").filter(has_text="该地区暂无").count() >= 1
+            assert page.get_by_text("已生成 0 条合成测试资料", exact=False).count() == 1
+            page.get_by_role("button", name="关闭", exact=True).last.click()
 
             if width < 768:
                 page.get_by_role("button", name="监控", exact=True).first.click()

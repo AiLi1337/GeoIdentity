@@ -292,8 +292,10 @@ function generateBatch() {
     }
     batchError.value = '';
   } catch (error) {
-    if (!(error instanceof Error) || !error.message.startsWith('No sourced address')) throw error;
-    batchError.value = t('addressMode.noSourcedAddress');
+    if (!(error instanceof Error)) throw error;
+    if (error.message.startsWith('No sourced address')) batchError.value = t('addressMode.noSourcedAddress');
+    else if (error.message.startsWith('No matching address')) batchError.value = t('addressMode.noMatchingAddress');
+    else throw error;
     result.length = 0;
   }
   batchList.value = result;

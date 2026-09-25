@@ -249,9 +249,14 @@ assert(!!krDerived.address.street, 'KR produces valid street address');
 assert(!!krDerived.address.city, 'KR has valid city');
 assert(krDerived.address.addressMode === 'derivation', 'KR addressMode is derivation');
 
-// Rare state filter in Scheme A that doesn't have custom corridor
-const wyDerived = generateIdentity('US', { gender: 'random', ageRange: 'random', state: 'WY', addressMode: 'derivation' });
-assert(!!wyDerived.address.street, 'WY fallback produces valid address without throwing');
+// An explicitly requested state without data must not be replaced by another state.
+let wyRejected = false;
+try {
+  generateIdentity('US', { gender: 'random', ageRange: 'random', state: 'WY', addressMode: 'derivation' });
+} catch (error) {
+  wyRejected = error instanceof Error && error.message.startsWith('No matching address');
+}
+assert(wyRejected, 'WY derivation rejects a cross-state fallback');
 
 // -----------------------------------------------------------------------------
 // 8. Batch Generation Simulation Verification
@@ -457,16 +462,66 @@ for (const cc of allSupportedCountries) {
     assert(resAddr.buildingType === 'residential', `getRandomAddress(${cc}, residential) buildingType is strictly residential`);
     assert(resAddr.addressMode === 'residential', `getRandomAddress(${cc}, residential) addressMode is residential`);
   }
-  // Test with invalid state to ensure fallback strictly preserves residential
-  const fallbackRes = getRandomAddress(cc, 'BOGUS_STATE_CODE_XYZ', false, 'residential');
-  assert(fallbackRes.buildingType === 'residential', `getRandomAddress(${cc}, bogus state, residential) fallback strictly preserves residential (never commercial)`);
-
-  // Test derivation mode with invalid state to ensure fallback never returns commercial landmarks
-  const derivFallback = getRandomAddress(cc, 'BOGUS_STATE_CODE_XYZ', false, 'derivation');
-  assert(derivFallback.buildingType !== 'commercial', `getRandomAddress(${cc}, bogus state, derivation) never falls back to commercial landmark`);
+  for (const mode of ['landmark', 'derivation', 'residential'] as AddressMode[]) {
+    let rejected = false;
+    try {
+      getRandomAddress(cc, 'BOGUS_STATE_CODE_XYZ', false, mode);
+    } catch (error) {
+      rejected = error instanceof Error && error.message.startsWith('No matching address');
+    }
+    assert(rejected, `getRandomAddress(${cc}, bogus state, ${mode}) rejects a cross-region fallback`);
+  }
 }
 
+for (const [country, state, mode] of [
+  ['JP', '01', 'landmark'], ['CH', 'BE', 'landmark'], ['US', 'WY', 'residential']
+] as [CountryCode, string, AddressMode][]) {
+  let rejected = false;
+  try {
+    getRandomAddress(country, state, false, mode);
+  } catch (error) {
+    rejected = error instanceof Error && error.message.startsWith('No matching address');
+  }
+  assert(rejected, `${mode} in ${country}/${state} does not silently generate in another region`);
+}
+assert(getRandomAddress('JP', '01', false, 'residential').state === '01', 'existing Hokkaido residential sample remains selectable');
+assert(getRandomAddress('US', 'DE', false, 'derivation').state === 'DE', 'existing Delaware interpolation remains selectable');
+
 // 13.5 IP Resolution Reality & Residential Livability Guarantee
+const santaClaraConsensus: IpConsensusResult = {
+  targetIp: '203.0.113.1',
+  winnerCountry: 'United States',
+  winnerCountryCode: 'US',
+  winnerCity: 'Santa Clara',
+  winnerRegion: 'CA',
+  confidenceRate: 100,
+  topCityVoteCount: 4,
+  successQueries: 4,
+  details: []
+};
+const santaClaraAddress = resolveAddressFromIp(santaClaraConsensus);
+assert(santaClaraConsensus.matchedStrategy === 'exact_city_derivation', 'Santa Clara IP selects a street corridor');
+assert(santaClaraAddress.addressMode === 'derivation' && santaClaraAddress.derivationMeta?.mode === 'derivation', 'IP street corridor keeps interpolation mode');
+assert(santaClaraConsensus.strategySummaryEn?.includes('unverified') === true, 'IP street interpolation does not claim verified delivery');
+const santaClaraIdentity = generateIdentityFromAddress(santaClaraAddress);
+assert(buildCSVContent([santaClaraIdentity]).includes('Scheme A: Interpolated Number'), 'CSV identifies IP-derived street numbers as interpolated');
+assert(formatFullIdentityText(santaClaraIdentity, 'zh').includes('地址方案模式：方案A·插值门牌'), 'text export identifies IP-derived street numbers as interpolated');
+const baselConsensus: IpConsensusResult = {
+  ...santaClaraConsensus,
+  winnerCountry: 'Switzerland',
+  winnerCountryCode: 'CH',
+  winnerCity: 'Unknown City',
+  winnerRegion: 'BS'
+};
+const baselAddress = resolveAddressFromIp(baselConsensus);
+assert(baselConsensus.matchedStrategy === 'state_derivation_fallback', 'Basel IP selects a state street corridor');
+assert(baselAddress.addressMode === 'derivation' && baselAddress.derivationMeta?.mode === 'derivation', 'IP state corridor keeps interpolation mode');
+assert(buildCSVContent([generateIdentityFromAddress(baselAddress)]).includes('Scheme A: Interpolated Number'), 'CSV identifies IP state corridors as interpolated');
+const citySampleConsensus: IpConsensusResult = { ...santaClaraConsensus, winnerCity: 'Dallas', winnerRegion: 'TX' };
+const citySampleAddress = resolveAddressFromIp(citySampleConsensus);
+assert(citySampleConsensus.matchedStrategy === 'exact_city_residential', 'Dallas IP selects a same-city residential sample');
+assert(citySampleAddress.derivationMeta?.avsTier?.includes('unverified') === true && citySampleConsensus.strategySummaryEn?.includes('unverified') === true, 'IP residential sample does not claim AVS verification');
+
 const sampleIpConsensuses: IpConsensusResult[] = [
   {
     targetIp: '202.64.12.1',

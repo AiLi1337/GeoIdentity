@@ -58,6 +58,7 @@ export const zh = {
     viewSource: '核对 OSM 原始对象 ↗',
     sourcedDesc: '仅提供可打开 OSM 对象核对的公寓建筑门牌（目前仅美国 Wilmington / Portland）。房号、收件、居住身份与 AVS 均未核验。',
     noSourcedAddress: '该国家/地区或城市暂无可核对来源的建筑门牌，未生成地址。请选择美国特拉华州或俄勒冈州。',
+    noMatchingAddress: '该地区暂无符合当前模式的地址样本，未生成地址。请更换州/省或地址模式。',
     title: '地址生成模式',
     label: '模式选择',
     landmark: '方案C：公寓建筑地址库 (含公开 OSM 门牌)',

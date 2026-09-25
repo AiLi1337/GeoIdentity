@@ -58,6 +58,7 @@ export const en = {
     viewSource: 'View OSM source ↗',
     sourcedDesc: 'Only apartment building addresses with an OSM object link (currently Wilmington and Portland, US). Unit, delivery, occupancy and AVS are unverified.',
     noSourcedAddress: 'No sourced building address for this country, region or city. No address was generated. Select Delaware or Oregon, US.',
+    noMatchingAddress: 'No address sample for this region and mode. No address was generated. Choose another region or mode.',
     title: 'Address Mode',
     label: 'Address Generation Mode',
     landmark: 'Scheme C: Apartment Address Samples',
