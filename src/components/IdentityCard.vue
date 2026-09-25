@@ -167,7 +167,7 @@
               <MapPin class="w-4 h-4" />
             </div>
             <h3 class="text-base font-bold text-slate-900 dark:text-white">
-              {{ labels.addressTitle }}
+              {{ identity.address.source === 'OpenStreetMap' ? t('card.addressTitle') : labels.addressTitle }}
             </h3>
             <span
               v-if="identity.address.isTaxFree"
@@ -290,7 +290,7 @@
           <div class="space-y-1">
             <div class="flex items-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300">
               <PackageCheck class="w-4 h-4" />
-              <span>{{ identity.address.addressMode === 'residential' ? labels.residentialTitle : labels.forwarderTitle }}</span>
+              <span>{{ identity.address.source === 'OpenStreetMap' ? t('card.forwarderTitle') : identity.address.addressMode === 'residential' ? labels.residentialTitle : labels.forwarderTitle }}</span>
             </div>
             <div class="text-xs font-mono text-slate-600 dark:text-slate-400 line-clamp-1">
               {{ displayFullName }} · {{ identity.address.addressLine1 || identity.address.street }}{{ identity.address.addressLine2 ? ` · ${identity.address.addressLine2}` : '' }} · {{ identity.address.city }}, {{ identity.address.state }} {{ identity.address.postcode }}
@@ -303,7 +303,7 @@
           >
             <Check v-if="copiedKey === 'forwarder'" class="w-3.5 h-3.5" />
             <Copy v-else class="w-3.5 h-3.5" />
-            <span>{{ copiedKey === 'forwarder' ? t('card.copiedField') : labels.copyForwarder }}</span>
+            <span>{{ copiedKey === 'forwarder' ? t('card.copiedField') : identity.address.source === 'OpenStreetMap' ? t('card.copyForwarder') : labels.copyForwarder }}</span>
           </button>
         </div>
 

@@ -1,7 +1,7 @@
 export const zh = {
   app: {
     title: 'GeoIdentity',
-    subtitle: '真实地址与本土化合理身份生成器',
+    subtitle: '可核对 OSM 建筑门牌与合成测试身份',
     description: '采用真实谷歌地图实体坐标与本土化逻辑，开箱即用，支持美国免税州、欧洲低税区、跨境电商与合规表单验证。',
     github: '代码仓库',
     cloudflareNotice: '纯静态安全架构 · 零服务器依赖 · 支持 Cloudflare Pages'
@@ -176,7 +176,7 @@ export const zh = {
     bingSatelliteBadge: '微软必应 卫星混合 (直连·零送中)',
     googleLoadedBanner: 'Google Maps 已加载。本站 iframe 已强制注入物理级禁用定位策略，切断 GPS 坐标回传，保护 VPS 原生 IP。',
     forwarderTitle: '建筑门牌格式（仅供测试，不能作为收件地址）',
-    copyForwarder: '复制标准收件地址',
+    copyForwarder: '复制测试地址格式',
     contactTitle: '本地联系方式',
     phone: '联系电话',
     email: '电子邮箱',

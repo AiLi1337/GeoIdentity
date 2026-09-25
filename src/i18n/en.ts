@@ -176,7 +176,7 @@ export const en = {
     bingSatelliteBadge: 'Bing Satellite Hybrid (Safe & Direct)',
     googleLoadedBanner: 'Google Maps is active. Geolocation APIs are strictly blocked by iframe policy to safeguard your proxy IP.',
     forwarderTitle: 'Building Address Format (testing only; delivery unverified)',
-    copyForwarder: 'Copy Standard Shipping Address',
+    copyForwarder: 'Copy Test Address Format',
     contactTitle: 'Contact Details',
     phone: 'Phone Number',
     email: 'Email Address',
