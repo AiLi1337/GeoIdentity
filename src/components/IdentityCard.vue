@@ -764,13 +764,16 @@ const displayTaxRate = computed(() => {
 const localizedAvsTier = computed(() => {
   const mode = props.identity.address.addressMode;
   const rawTier = props.identity.address.derivationMeta?.avsTier;
+  if (props.identity.address.source === 'OpenStreetMap') {
+    return locale.value === 'zh' ? '公寓建筑门牌 · AVS 未验证' : 'Apartment Building · AVS Unverified';
+  }
   if (locale.value === 'zh') {
-    if (rawTier === 'Residential AVS Pass' || mode === 'residential') return '住宅 AVS 认证 (独栋洋房)';
+    if (mode === 'residential') return '住宅样本 · AVS 未核验';
     if (rawTier === 'Residential Condominium / Apartment' || mode === 'landmark') return '真实都会名苑 · 优质公寓';
     if (rawTier === 'Residential Street (GIS Validated)' || rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return '市政合法门牌 · 独一无二';
     return rawTier || '100% 真实住宅建筑';
   } else {
-    if (rawTier === 'Residential AVS Pass' || mode === 'residential') return 'Residential AVS Pass';
+    if (mode === 'residential') return 'Residential Sample · AVS Unverified';
     if (rawTier === 'Residential Condominium / Apartment' || mode === 'landmark') return 'Residential Condominium / Apartment';
     if (rawTier === 'Residential Street (GIS Validated)' || rawTier === 'Unique Synthetic AVS' || mode === 'derivation') return 'Residential Street (GIS Validated)';
     return rawTier || '100% Real Residential';
@@ -780,6 +783,11 @@ const localizedAvsTier = computed(() => {
 const localizedRuleSummary = computed(() => {
   const meta = props.identity.address.derivationMeta;
   const mode = props.identity.address.addressMode;
+  if (props.identity.address.source === 'OpenStreetMap') {
+    return locale.value === 'zh'
+      ? '© OpenStreetMap contributors (ODbL) · 建筑门牌，无房号或投递认证'
+      : '© OpenStreetMap contributors (ODbL) · Building address, no verified unit or delivery';
+  }
   if (locale.value === 'zh') {
     return meta?.ruleSummary || (mode === 'residential' ? '真实居民独栋/住宅 · 纯天然居民房' : (mode === 'derivation' ? '真实居住街区门牌衍生 · GIS插值' : '真实都会高层公寓/优质名苑社区 · 100% 物理真实居住'));
   } else {

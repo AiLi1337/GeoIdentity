@@ -5,17 +5,27 @@ import { COUNTRIES } from '../src/data/countries';
 import { ADDRESS_MAP } from '../src/data/addresses/index';
 import { STREET_DERIVATION_RULES } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES } from '../src/data/addresses/schemes/residentialAddresses';
+import { syncOsmApartments } from './osmAddressSync';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 console.log('🔄 开始执行每日地址库自动化扫描与同步校验...');
 
+const osmPath = path.resolve(__dirname, '../src/data/addresses/osmApartments.json');
+let osmApartments;
+try {
+  osmApartments = await syncOsmApartments();
+} catch (error) {
+  console.error('OpenStreetMap 同步失败；保留上次成功的数据与时间戳。', error);
+  throw error;
+}
+
 // 1. 基础校验
 let totalLandmarks = 0;
-let totalSchemeACorridors = STREET_DERIVATION_RULES.length;
+const totalSchemeACorridors = STREET_DERIVATION_RULES.length;
 let totalSchemeACapacity = 0;
-let totalSchemeB = RESIDENTIAL_ADDRESSES.length;
+const totalSchemeB = RESIDENTIAL_ADDRESSES.length;
 let coordinateErrors = 0;
 
 for (const rule of STREET_DERIVATION_RULES) {
@@ -27,7 +37,9 @@ const countryBreakdown: Record<string, any> = {};
 
 for (const country of COUNTRIES) {
   const code = country.code;
-  const landmarks = ADDRESS_MAP[code] || [];
+  const landmarks = code === 'US'
+    ? [...(ADDRESS_MAP.US || []).filter(a => a.source !== 'OpenStreetMap'), ...osmApartments]
+    : ADDRESS_MAP[code] || [];
   totalLandmarks += landmarks.length;
 
   const corridors = STREET_DERIVATION_RULES.filter(r => r.countryCode === code);
@@ -40,7 +52,7 @@ for (const country of COUNTRIES) {
 
   // 坐标合法性校验
   for (const a of [...landmarks, ...resList]) {
-    if (typeof a.lat !== 'number' || typeof a.lng !== 'number' || isNaN(a.lat) || isNaN(a.lng)) {
+    if (!Number.isFinite(a.lat) || !Number.isFinite(a.lng) || Math.abs(a.lat) > 90 || Math.abs(a.lng) > 180) {
       coordinateErrors++;
     }
   }
@@ -63,7 +75,7 @@ for (const country of COUNTRIES) {
 
 const now = new Date();
 const dateStr = now.toISOString().slice(0, 10);
-const timeStr = now.toTimeString().slice(0, 8);
+const timeStr = now.toISOString().slice(11, 19);
 
 const metadata = {
   version: `v${dateStr.replace(/-/g, '.')}.${Math.floor(now.getTime() / 86400000) % 100}`,
@@ -71,7 +83,7 @@ const metadata = {
   lastUpdatedFormattedZh: `${dateStr} ${timeStr} (UTC)`,
   lastUpdatedFormattedEn: `${dateStr} ${timeStr} UTC`,
   healthStatus: coordinateErrors === 0 ? 'HEALTHY' : 'WARNING',
-  syncSchedule: 'Daily at 00:00:00 UTC',
+  syncSchedule: 'Scheduled daily at 00:00 UTC; GitHub Actions may start later',
   totalCountries: COUNTRIES.length,
   stats: {
     totalPhysicalLandmarks: totalLandmarks,
@@ -87,12 +99,14 @@ const metadata = {
       timestamp: now.toISOString(),
       action: 'DAILY_AUTOMATED_SYNC',
       status: 'SUCCESS',
-      message: `自动化扫描完成：已验证 21 国全部地址，共收录 ${totalLandmarks} 个真实地标种子、${totalSchemeB} 处真实独栋住宅、${totalSchemeACorridors} 条街道走廊（可衍生 ${totalSchemeACapacity.toLocaleString()} 条门牌）。所有坐标合法，健康度 100%。`
+      message: `已同步 OpenStreetMap 公开公寓建筑门牌 ${osmApartments.length} 处。其余地址来自仓库静态数据；已检查 ${totalLandmarks + totalSchemeB} 处地址坐标是否为数字，未核验 AVS、邮政投递或住宅归属。`
     }
   ]
 };
 
 const targetPath = path.resolve(__dirname, '../src/data/addresses/metadata.json');
+if (coordinateErrors > 0) throw new Error(`${coordinateErrors} invalid address coordinates; refusing to publish`);
+fs.writeFileSync(osmPath, JSON.stringify(osmApartments, null, 2) + '\n', 'utf-8');
 fs.writeFileSync(targetPath, JSON.stringify(metadata, null, 2), 'utf-8');
 
 console.log(`✅ 每日地址库同步与健康校验成功！`);

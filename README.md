@@ -42,9 +42,9 @@
 ## 🌟 核心特性
 
 - 🎯 **三级真实物理地址生成模式体系（自由选择）**：
-  1. **🏢 高精度真实地标种子库 (Landmark Seeds)**：100% 著名商业中心、名企总部、写字楼与转运仓实体，适合跨境电商入驻与商务业务。
-  2. **⚡ 方案 A：真实街道门牌合法区间衍生 (Street Derivation)**：基于真实主干道路规划门牌范围与单双号规则动态衍生，结合经纬度线性插值，海量唯一且不重复（全球 74 条走廊，可衍生 **99,456** 独立门牌）。
-  3. **🏡 方案 B：全球真实住宅/居民独栋地址库 (Residential Pool)**：采集自官方公开测绘的真实独栋住宅 (Single-Family Homes)，专为通过买家 **AVS 住宅评级校验** 打造（已收录 381 处真实独栋）。
+  1. **🏢 方案 C：公寓建筑地址库**：仓库内置地址加上 OSM 公开公寓建筑门牌；新导入建筑不含具体房号、住户或投递保证。
+  2. **⚡ 方案 A：街道门牌区间衍生 (Street Derivation)**：基于街道门牌范围与经纬度插值生成合成地址（74 条走廊，约 91,411 个编号组合）；插值门牌并非逐个核验的真实建筑。
+  3. **🏡 方案 B：已有住宅样本 (Residential Pool)**：内置 381 条住宅地址；未通过本工具验证收件、产权、居住身份或付款 AVS。
 - 🌍 **覆盖全球 21 个国家与地区 (100% 全方案覆盖)**：
   - **北美洲**：美国 (US)、加拿大 (CA)。
   - **欧洲**：英国 (GB)、德国 (DE)、法国 (FR)、意大利 (IT)、西班牙 (ES)、荷兰 (NL)、瑞士 (CH)、卢森堡 (LU)、爱尔兰 (IE)。
@@ -60,7 +60,7 @@
   - **Google Maps 隔离门禁**：默认绝不发起静默请求，支持点击确认加载；生成新身份自动重新上锁 (Auto-Relock)；物理拦截浏览器 HTML5 定位回传，保护海外 VPS 原生 IP。
 - 📦 **电商与转运仓合规双行地址生成**：
   - **Address Line 1**：真实实体街道与门牌。
-  - **Address Line 2**：智能转运仓单元号（方案 B 独栋住宅自动省略 Line 2，完美通过 AVS）。
+  - **Address Line 2**：部分内置样本可生成测试单元号；新导入的 OSM 建筑地址不自动虚构房号，不保证通过 AVS。
   - **电商多行格式一键复制**：专为 Amazon、Shopify、PayPal 打造的标准化地址映射卡片。
 - 🛠️ **全套生产力工具**：
   - 单字段一键复制（带打勾动画与 Toast 反馈）。
@@ -136,9 +136,11 @@ npx wrangler pages deploy dist --project-name geo-identity --branch main
 ### 开启每日地址库自动健康同步 (GitHub Actions)
 
 项目仓库内已内置每日自动化调度工作流 [`.github/workflows/daily-address-sync.yml`](.github/workflows/daily-address-sync.yml)：
-* **定时运行**：每天 UTC 00:00（北京时间 08:00）自动在 GitHub 云端执行 `npm run sync:addresses`；
-* **全面审计**：自动扫描 21 国三大方案地址的经纬度合法性并重新统计容量；
-* **持续集成**：同步更新 `metadata.json` 后自动构建与提交，直接联动 Cloudflare Pages 实现生产数据日更。
+* **定时运行**：计划每天 UTC 00:00（北京时间 08:00）运行；GitHub 的定时任务可能延迟。
+* **公开数据采样**：从 [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL) 获取特拉华州 Wilmington 与俄勒冈州 Portland 的公开公寓建筑门牌、邮编、城市和坐标，过滤无效或重复记录，写入 `osmApartments.json`，并加入方案 C。只代表 OSM 有建筑门牌，**不保证可投递或通过 AVS**，不关联住户。
+* **失败处理**：上游查询失败时任务失败，保留仓库已有数据和上次成功时间。页面显示的是已部署包的数据快照，并非实时查询；页面按钮只校验本地字段和数量。
+* **部署设置**：在 GitHub 仓库 Secrets 设置 `CLOUDFLARE_API_TOKEN`（对目标 Pages 项目有部署权限）、`CLOUDFLARE_ACCOUNT_ID` 与 `VITE_ADSENSE_ID`，在 Variables 设置 `CF_PAGES_PROJECT`（Pages 项目名，例如 `geo-identity`）。任务先做无广告构建并仅提交地址数据，再用 Secret 构建带广告的 `dist` 上传 Cloudflare；`dist`、`ads.txt` 和广告脚本不会推送到 Git。请确认 `address.vllme.com` 绑定在同一个项目；缺少部署配置时任务会失败，而不会假报部署成功。
+* **许可**：新增 OSM 数据受 [Open Database License](https://opendatacommons.org/licenses/odbl/) 约束，使用或再分发时保留归属与许可要求。原有静态地址库不由 OSM 同步验证。
 
 ---
 

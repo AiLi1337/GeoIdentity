@@ -15,7 +15,7 @@
           <h3 class="text-base font-bold text-white flex items-center gap-2">
             <span>{{ t('monitor.mapTitle') }}</span>
             <span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full">
-              LIVE · 21/21 国全量收录
+              {{ t('monitor.mapSnapshot') }}
             </span>
           </h3>
           <p class="text-xs text-slate-400 mt-0.5">
@@ -282,7 +282,7 @@
 
         <div class="space-y-1.5 text-[11px]">
           <div class="flex justify-between items-center text-slate-300">
-            <span class="flex items-center gap-1">🏢 商业地标种子:</span>
+            <span class="flex items-center gap-1">🏢 {{ t('monitor.buildingAddresses') }}:</span>
             <span class="font-bold text-amber-400">{{ activeTooltipPin.landmarkCount }} 处</span>
           </div>
           <div class="flex justify-between items-center text-slate-300">
@@ -312,7 +312,7 @@
         <div class="text-base font-bold text-emerald-400 font-mono">21 / 21</div>
       </div>
       <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">
-        <div class="text-[11px] text-slate-400">物理商业地标种子</div>
+        <div class="text-[11px] text-slate-400">{{ t('monitor.buildingAddresses') }}</div>
         <div class="text-base font-bold text-amber-400 font-mono">{{ totalLandmarks }} 处</div>
       </div>
       <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">

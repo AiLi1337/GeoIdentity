@@ -36,17 +36,14 @@
             : 'text-slate-800 dark:text-slate-100 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border border-emerald-300 dark:border-emerald-800'"
           :title="t('monitor.navTitle')"
         >
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
+          <span class="relative flex h-2 w-2 rounded-full bg-emerald-500"></span>
           <Globe class="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           <span class="font-bold">
             <span class="inline lg:hidden">{{ currentView === 'monitor' ? (locale === 'zh' ? '返回' : 'Back') : (locale === 'zh' ? '监控' : 'Radar') }}</span>
             <span class="hidden lg:inline">{{ currentView === 'monitor' ? t('monitor.backToGenerator') : t('monitor.navTitle') }}</span>
           </span>
           <span class="hidden xl:inline-block px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-medium">
-            21国·日更
+            {{ t('monitor.navBadge') }}
           </span>
         </button>
 

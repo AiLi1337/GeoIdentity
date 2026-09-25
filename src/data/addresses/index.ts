@@ -12,6 +12,22 @@ import { SG_ADDRESSES } from './sg';
 import { EXTENDED_ADDRESSES } from './extended';
 import { getDerivationRule, deriveStreetAddress, matchesState } from './schemes/derivationRules';
 import { getResidentialAddress, RESIDENTIAL_ADDRESSES } from './schemes/residentialAddresses';
+import osmApartments from './osmApartments.json';
+
+type OsmApartment = Pick<RealAddress, 'street' | 'city' | 'state' | 'postcode' | 'lat' | 'lng'> & { id: string };
+
+export const OSM_APARTMENTS: RealAddress[] = (osmApartments as OsmApartment[]).map(a => ({
+  ...a,
+  stateFull: a.state === 'DE' ? 'Delaware' : 'Oregon',
+  country: 'United States',
+  countryCode: 'US',
+  isTaxFree: true,
+  taxRate: '0.00% (No Sales Tax)',
+  timezone: a.state === 'DE' ? 'America/New_York (EST/EDT)' : 'America/Los_Angeles (PST/PDT)',
+  timezoneCode: a.state === 'DE' ? 'EST' : 'PST',
+  source: 'OpenStreetMap',
+  sourceId: a.id
+}));
 
 function initResidentialSeedList(list: RealAddress[]): RealAddress[] {
   return list.map(addr => ({
@@ -21,7 +37,7 @@ function initResidentialSeedList(list: RealAddress[]): RealAddress[] {
 }
 
 export const ADDRESS_MAP: Record<CountryCode, RealAddress[]> = {
-  US: initResidentialSeedList(US_ADDRESSES),
+  US: initResidentialSeedList([...US_ADDRESSES, ...OSM_APARTMENTS]),
   GB: initResidentialSeedList(GB_ADDRESSES),
   JP: initResidentialSeedList(JP_ADDRESSES),
   CA: initResidentialSeedList(CA_ADDRESSES),
@@ -45,18 +61,20 @@ export const ADDRESS_MAP: Record<CountryCode, RealAddress[]> = {
 };
 
 function enrichLandmarkAddress(raw: RealAddress): RealAddress {
+  const fromOsm = raw.source === 'OpenStreetMap';
   return {
     ...raw,
     addressMode: 'landmark',
     buildingType: 'residential',
     derivationMeta: {
       mode: 'landmark',
-      modeLabelZh: '方案C·真实都会公寓 (100% 真实住宅)',
-      modeLabelEn: 'Scheme C (Residential Condos)',
-      ruleSummary: '真实都会高层公寓/优质名苑社区 · 100% 物理真实居住',
+      modeLabelZh: fromOsm ? '方案C·OSM 公寓建筑门牌' : '方案C·都会公寓',
+      modeLabelEn: fromOsm ? 'Scheme C (OSM Apartment Building)' : 'Scheme C (Residential Condos)',
+      ruleSummary: fromOsm ? 'OpenStreetMap 公开公寓建筑门牌，未验证住户或 AVS' : '已有公寓地址样本，未验证住户或 AVS',
+      ruleSummaryEn: fromOsm ? 'Public OSM apartment building address; no unit, delivery or AVS verification' : undefined,
       interpolated: false,
       buildingType: 'residential',
-      avsTier: 'Residential Condominium / Apartment'
+      avsTier: fromOsm ? 'Residential Apartment (AVS unverified)' : 'Residential Condominium / Apartment'
     }
   };
 }

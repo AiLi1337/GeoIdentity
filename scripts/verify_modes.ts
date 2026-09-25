@@ -1,5 +1,6 @@
 import { generateIdentity, generateIdentityFromAddress } from '../src/services/identityGenerator';
 import { getRandomAddress, ADDRESS_MAP } from '../src/data/addresses';
+import { OSM_APARTMENTS } from '../src/data/addresses';
 import { STREET_DERIVATION_RULES, deriveStreetAddress, getDerivationRule, matchesState } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES, getResidentialAddress } from '../src/data/addresses/schemes/residentialAddresses';
 import { formatFullIdentityText, buildCSVContent } from '../src/services/exportService';
@@ -27,11 +28,20 @@ console.log('================================================================');
 // -----------------------------------------------------------------------------
 console.log('\n--- 1. Testing Mode 1: Scheme C (Residential Condominiums & Apartments) ---');
 const landmarkUS = generateIdentity('US', { gender: 'random', ageRange: 'random', addressMode: 'landmark' });
+if (OSM_APARTMENTS.length > 0) {
+  const osmIdentity = generateIdentityFromAddress(OSM_APARTMENTS[0]);
+  assert(!osmIdentity.address.addressLine2, 'IP-resolved OSM building does not invent an apartment unit');
+  assert(osmIdentity.address.source === 'OpenStreetMap', 'OSM source survives identity generation');
+}
 assert(landmarkUS.address.addressMode === 'landmark', 'Landmark (Scheme C) address mode is set');
 assert(landmarkUS.address.buildingType === 'residential', 'Landmark (Scheme C) building type is strictly residential');
 assert(!!landmarkUS.address.street, 'Landmark address has street');
 assert(!!landmarkUS.address.lat && !!landmarkUS.address.lng, 'Landmark address has lat/lng');
-assert(landmarkUS.address.derivationMeta?.avsTier === 'Residential Condominium / Apartment', 'Landmark AVS tier is Residential Condominium / Apartment');
+assert(landmarkUS.address.derivationMeta?.avsTier === (landmarkUS.address.source === 'OpenStreetMap'
+  ? 'Residential Apartment (AVS unverified)' : 'Residential Condominium / Apartment'), 'Landmark AVS tier matches its source');
+if (landmarkUS.address.source === 'OpenStreetMap') {
+  assert(!landmarkUS.address.addressLine2, 'OSM building address has no invented apartment unit');
+}
 
 // -----------------------------------------------------------------------------
 // 2. Mode 2: Scheme A (Street Derivation) Verification

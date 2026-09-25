@@ -1,18 +1,18 @@
 {
-  "version": "v2026.09.15.11",
-  "lastUpdated": "2026-09-15T02:05:53.620Z",
-  "lastUpdatedFormattedZh": "2026-09-15 02:05:53 (UTC)",
-  "lastUpdatedFormattedEn": "2026-09-15 02:05:53 UTC",
+  "version": "v2026.09.25.21",
+  "lastUpdated": "2026-09-25T09:56:16.555Z",
+  "lastUpdatedFormattedZh": "2026-09-25 09:56:16 (UTC)",
+  "lastUpdatedFormattedEn": "2026-09-25 09:56:16 UTC",
   "healthStatus": "HEALTHY",
-  "syncSchedule": "Daily at 00:00:00 UTC",
+  "syncSchedule": "Scheduled daily at 00:00 UTC; GitHub Actions may start later",
   "totalCountries": 21,
   "stats": {
-    "totalPhysicalLandmarks": 113,
+    "totalPhysicalLandmarks": 164,
     "totalSchemeACorridors": 74,
     "totalSchemeACapacity": 91411,
     "totalSchemeBResidential": 381,
-    "totalPhysicalVerifiedAddresses": 494,
-    "totalReachableAddresses": 91905
+    "totalPhysicalVerifiedAddresses": 545,
+    "totalReachableAddresses": 91956
   },
   "countryBreakdown": {
     "US": {
@@ -22,12 +22,12 @@
       "flag": "🇺🇸",
       "continent": "north_america",
       "isTaxFreeZone": false,
-      "landmarkCount": 26,
+      "landmarkCount": 77,
       "schemeACorridorCount": 27,
       "schemeACapacity": 76007,
       "schemeBResidentialCount": 124,
-      "totalPhysicalPoints": 150,
-      "totalDerivableCapacity": 76157
+      "totalPhysicalPoints": 201,
+      "totalDerivableCapacity": 76208
     },
     "CA": {
       "code": "CA",
@@ -312,10 +312,10 @@
   },
   "syncLogs": [
     {
-      "timestamp": "2026-09-15T02:05:53.620Z",
+      "timestamp": "2026-09-25T09:56:16.555Z",
       "action": "DAILY_AUTOMATED_SYNC",
       "status": "SUCCESS",
-      "message": "自动化扫描完成：已验证 21 国全部地址，共收录 113 个真实地标种子、381 处真实独栋住宅、74 条街道走廊（可衍生 91,411 条门牌）。所有坐标合法，健康度 100%。"
+      "message": "已同步 OpenStreetMap 公开公寓建筑门牌 51 处。其余地址来自仓库静态数据；已检查 545 处地址坐标是否为数字，未核验 AVS、邮政投递或住宅归属。"
     }
   ]
 }

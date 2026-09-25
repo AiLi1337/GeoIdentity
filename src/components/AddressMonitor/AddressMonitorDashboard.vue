@@ -3,7 +3,7 @@
     <!-- Top Ops & Health Status Banner -->
     <div class="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 p-4 sm:p-6 shadow-xl text-white">
       <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-        <!-- Left: Title & Live Beacon -->
+        <!-- Left: Title & Snapshot Status -->
         <div class="space-y-1">
           <div class="flex items-center gap-3">
             <button
@@ -16,10 +16,7 @@
             </button>
 
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
               {{ t('monitor.syncActive') }}
             </span>
           </div>
@@ -32,7 +29,7 @@
           </p>
         </div>
 
-        <!-- Right: Real-time Sync & Version Indicators -->
+        <!-- Right: Bundled Dataset Version -->
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
           <div class="px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs">
             <div class="text-[10px] text-slate-400">{{ t('monitor.versionLabel') }}</div>
@@ -42,11 +39,6 @@
           <div class="px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs">
             <div class="text-[10px] text-slate-400">{{ t('monitor.lastSync') }}</div>
             <div class="font-mono font-bold text-emerald-400">{{ isZh ? metadata.lastUpdatedFormattedZh : metadata.lastUpdatedFormattedEn }}</div>
-          </div>
-
-          <div class="px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs">
-            <div class="text-[10px] text-slate-400">{{ t('monitor.nextSync') }}</div>
-            <div class="font-mono font-bold text-cyan-400">{{ countdownText }}</div>
           </div>
 
           <button
@@ -61,8 +53,8 @@
         </div>
       </div>
 
-      <!-- Live Audit Success Notice -->
-      <div v-if="auditNotice" class="mt-4 p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-700/60 text-emerald-300 text-xs flex items-center justify-between animate-in fade-in">
+      <div v-if="auditNotice" class="mt-4 p-2.5 rounded-xl border text-xs flex items-center justify-between animate-in fade-in"
+        :class="auditPassed ? 'bg-emerald-950/60 border-emerald-700/60 text-emerald-300' : 'bg-red-950/60 border-red-700/60 text-red-300'">
         <span class="flex items-center gap-2">
           <CheckCircle2 class="w-4 h-4 text-emerald-400" />
           <span>{{ auditNotice }}</span>
@@ -73,6 +65,11 @@
       </div>
     </div>
 
+    <p class="text-xs text-slate-500 dark:text-slate-400">
+      {{ t('monitor.sourceNotice') }}
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" class="underline hover:text-emerald-500">© OpenStreetMap contributors (ODbL)</a>
+    </p>
+
     <!-- Core Metrics Cards -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       <div class="p-4 rounded-2xl bg-white dark:bg-slate-850 border border-slate-200/80 dark:border-slate-800 shadow-xs">
@@ -81,8 +78,8 @@
           <Globe class="w-4 h-4 text-primary-500" />
         </div>
         <div class="mt-2 flex flex-wrap items-baseline gap-1.5 sm:gap-2">
-          <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono">21</span>
-          <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">100% 全球覆盖</span>
+          <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono">{{ metadata.totalCountries }}</span>
+          <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">{{ t('monitor.supportedRegions') }}</span>
         </div>
       </div>
 
@@ -93,7 +90,7 @@
         </div>
         <div class="mt-2 flex flex-wrap items-baseline gap-1.5 sm:gap-2">
           <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono">{{ metadata.stats.totalPhysicalLandmarks }}</span>
-          <span class="text-xs text-slate-500 whitespace-nowrap">实体名企/商厦</span>
+          <span class="text-xs text-slate-500 whitespace-nowrap">{{ t('monitor.buildingAddresses') }}</span>
         </div>
       </div>
 
@@ -286,7 +283,7 @@
                 {{ isZh ? activeSampleCountry.nameZh : activeSampleCountry.nameEn }} · 真实物理地址库检视
               </h4>
               <p class="text-xs text-slate-500 dark:text-slate-400">
-                收录 {{ sampleResidentialList.length }} 处居民独栋住宅与 {{ sampleLandmarkList.length }} 处物理地标种子
+                收录 {{ sampleResidentialList.length }} 处居民住宅与 {{ sampleLandmarkList.length }} 处方案 C 建筑门牌
               </p>
             </div>
           </div>
@@ -355,6 +352,10 @@
                   <span>·</span>
                   <span class="font-mono text-[10px] text-slate-400">经纬度: {{ addr.lat }}, {{ addr.lng }}</span>
                 </div>
+                <a v-if="addr.sourceId" :href="`https://www.openstreetmap.org/${addr.sourceId}`"
+                  target="_blank" rel="noopener noreferrer" class="text-emerald-600 dark:text-emerald-400 underline">
+                  © OpenStreetMap contributors (ODbL) · {{ t('monitor.osmBuilding') }}
+                </a>
               </div>
             </div>
           </div>
@@ -384,7 +385,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed } from 'vue';
 import {
   ArrowLeft, Globe, Building2, Home, GitFork, RefreshCw,
   Search, CheckCircle2, X, Zap
@@ -411,7 +412,7 @@ const continentFilter = ref('all');
 const taxFreeOnly = ref(false);
 const isAuditing = ref(false);
 const auditNotice = ref('');
-const countdownText = ref('--:--:--');
+const auditPassed = ref(false);
 
 // Convert countryBreakdown object into list
 const countryList = computed(() => {
@@ -459,40 +460,15 @@ function formatContinent(c: string) {
   return map[c] || c;
 }
 
-// Live Countdown to UTC 00:00:00
-let timer: any = null;
-function updateCountdown() {
-  const now = new Date();
-  const nextSync = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
-  const diffMs = nextSync.getTime() - now.getTime();
-  if (diffMs <= 0) {
-    countdownText.value = '即将同步';
-    return;
-  }
-  const hours = Math.floor(diffMs / 3600000);
-  const minutes = Math.floor((diffMs % 3600000) / 60000);
-  const seconds = Math.floor((diffMs % 60000) / 1000);
-  countdownText.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-onMounted(() => {
-  updateCountdown();
-  timer = setInterval(updateCountdown, 1000);
-});
-
-onUnmounted(() => {
-  if (timer) clearInterval(timer);
-});
-
-// Run simulated in-browser health check
 function runHealthAudit() {
   isAuditing.value = true;
   auditNotice.value = '';
-  setTimeout(() => {
-    isAuditing.value = false;
-    const totalPhysical = metadata.stats.totalPhysicalVerifiedAddresses;
-    auditNotice.value = `健康校验通过！成功验证 21 国全部 ${totalPhysical} 处物理地址坐标、邮政规范及 AVS 状态，数据健康度 100% (HEALTHY)！`;
-  }, 600);
+  const addresses = [...Object.values(ADDRESS_MAP).flat(), ...RESIDENTIAL_ADDRESSES];
+  const valid = addresses.every(a => a.street.trim() && a.city.trim() && a.postcode.trim() &&
+    Number.isFinite(a.lat) && Number.isFinite(a.lng) && Math.abs(a.lat) <= 90 && Math.abs(a.lng) <= 180);
+  auditPassed.value = valid && addresses.length === metadata.stats.totalPhysicalVerifiedAddresses;
+  auditNotice.value = auditPassed.value ? t('monitor.auditPassed') : t('monitor.auditFailed');
+  isAuditing.value = false;
 }
 
 // Sample modal state
@@ -503,7 +479,7 @@ const sampleResidentialList = ref<RealAddress[]>([]);
 
 function openSampleDrawer(country: any) {
   activeSampleCountry.value = country;
-  sampleLandmarkList.value = (ADDRESS_MAP[country.code as CountryCode] || []).slice(0, 10);
+  sampleLandmarkList.value = ADDRESS_MAP[country.code as CountryCode] || [];
   sampleResidentialList.value = RESIDENTIAL_ADDRESSES.filter(a => a.countryCode === country.code);
   sampleDrawerOpen.value = true;
 }

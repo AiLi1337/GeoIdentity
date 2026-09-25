@@ -22,7 +22,10 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Verify Address Import
+        run: npx tsx scripts/verify_address_sync.ts
 
       - name: Run Daily Address Sync & Audit
         run: npm run sync:addresses
@@ -34,5 +37,25 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action [Address Sync]"
-          git add src/data/addresses/metadata.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(addresses): automated daily database sync & audit [skip ci]" && git push)
+          git add src/data/addresses/metadata.json src/data/addresses/osmApartments.json
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(addresses): sync public apartment addresses"
+            git push
+          fi
+
+      - name: Build Cloudflare Release
+        env:
+          VITE_ADSENSE_ID: ${{ secrets.VITE_ADSENSE_ID }}
+        run: |
+          test -n "$VITE_ADSENSE_ID" || { echo 'Set VITE_ADSENSE_ID repository secret for the Cloudflare build'; exit 1; }
+          npm run build
+
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets'; exit 1; }
+          test -n "$CF_PAGES_PROJECT" || { echo 'Set CF_PAGES_PROJECT repository variable'; exit 1; }
+          npx --yes wrangler@4 pages deploy dist --project-name "$CF_PAGES_PROJECT" --branch main

@@ -254,7 +254,7 @@ export function generateIdentity(countryCode: CountryCode, options?: FilterOptio
   if (/\b(Ste|Suite|Box\s*#)\b/i.test(addressLine2)) {
     addressLine2 = '';
   }
-  if (!addressLine2) {
+  if (!addressLine2 && rawAddress.source !== 'OpenStreetMap') {
     addressLine2 = generateResidentialAddressLine2(countryCode);
   }
 
@@ -380,7 +380,7 @@ export function generateIdentityFromAddress(
     addressLine2 = '';
   }
 
-  if (!addressLine2) {
+  if (!addressLine2 && customAddress.source !== 'OpenStreetMap') {
     addressLine2 = generateResidentialAddressLine2(countryCode);
   }
 

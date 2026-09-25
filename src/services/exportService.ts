@@ -346,8 +346,10 @@ Perfil 100% sintético generado por algoritmo para pruebas de software y validac
   // 2. 中文模式 (Chinese Format)
   const isZh = lang === 'zh';
   if (isZh) {
-    const avsTierZh = identity.address.addressMode === 'residential'
-      ? '住宅 AVS 认证 (独栋洋房)'
+    const avsTierZh = identity.address.source === 'OpenStreetMap'
+      ? 'OSM 公寓建筑门牌 · AVS 未验证 (© OpenStreetMap contributors, ODbL)'
+      : identity.address.addressMode === 'residential'
+      ? '住宅样本 · AVS 未核验'
       : (identity.address.addressMode === 'derivation' ? '市政合法门牌 · 独一无二' : '都会名苑公寓 · 100% 真实住宅');
 
     const taxRateZh = (identity.address.isTaxFree || (identity.address.taxRate && identity.address.taxRate.includes('No Sales Tax')))
@@ -411,8 +413,10 @@ ${identity.document.typeNameZh}：${identity.document.docNumber}
   }
 
   // 3. 英文模式 (English Format)
-  const avsTierEn = identity.address.addressMode === 'residential'
-    ? 'Residential AVS Pass'
+  const avsTierEn = identity.address.source === 'OpenStreetMap'
+    ? 'OSM Apartment Building · AVS Unverified (© OpenStreetMap contributors, ODbL)'
+    : identity.address.addressMode === 'residential'
+    ? 'Residential Sample · AVS Unverified'
     : (identity.address.addressMode === 'derivation' ? 'Residential Street (GIS Validated)' : 'Residential Condominium / Apartment');
 
   const taxRateEn = (identity.address.isTaxFree || (identity.address.taxRate && identity.address.taxRate.includes('免税')))
@@ -512,7 +516,9 @@ export function buildCSVContent(identities: GeneratedIdentity[]): string {
   const rows = identities.map(id => [
     id.address.country,
     id.address.derivationMeta?.modeLabelEn || id.address.addressMode || 'Scheme C: Condos',
-    id.address.derivationMeta?.avsTier || (id.address.addressMode === 'residential' ? 'Residential Single Family' : 'Residential Condominium / Apartment'),
+    id.address.source === 'OpenStreetMap'
+      ? 'Apartment Building (AVS unverified) © OpenStreetMap contributors (ODbL)'
+      : id.address.derivationMeta?.avsTier || (id.address.addressMode === 'residential' ? 'Residential Single Family' : 'Residential Condominium / Apartment'),
     id.basic.fullName,
     id.basic.localFullName || '',
     id.basic.gender,

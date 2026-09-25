@@ -56,6 +56,8 @@ export interface StreetDerivationRule {
 
 export interface RealAddress {
   street: string;
+  source?: 'OpenStreetMap';
+  sourceId?: string;
   addressLine1?: string;
   addressLine2?: string;
   city: string;
