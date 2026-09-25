@@ -294,7 +294,7 @@
             <span class="font-mono text-cyan-400 font-bold">{{ activeTooltipPin.schemeACapacity.toLocaleString() }} 门牌</span>
           </div>
           <div class="pt-1.5 mt-1 border-t border-slate-800 flex justify-between items-center font-bold text-white">
-            <span>物理实存总点位:</span>
+            <span>内置样本点位:</span>
             <span class="text-emerald-300">{{ activeTooltipPin.landmarkCount + activeTooltipPin.schemeBCount }} 处</span>
           </div>
         </div>
@@ -316,11 +316,11 @@
         <div class="text-base font-bold text-amber-400 font-mono">{{ totalLandmarks }} 处</div>
       </div>
       <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">
-        <div class="text-[11px] text-slate-400">真实居民住宅独栋</div>
+        <div class="text-[11px] text-slate-400">内置住宅样本</div>
         <div class="text-base font-bold text-emerald-300 font-mono">{{ totalResidential }} 处</div>
       </div>
       <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">
-        <div class="text-[11px] text-slate-400">方案A合法衍生空间</div>
+        <div class="text-[11px] text-slate-400">方案A插值容量</div>
         <div class="text-base font-bold text-cyan-400 font-mono">{{ totalDerivable.toLocaleString() }}+</div>
       </div>
     </div>

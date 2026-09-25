@@ -31,7 +31,7 @@
             <span class="text-xs font-medium text-slate-600 dark:text-slate-300">
               {{ t('batch.countLabel') }}:
             </span>
-            <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+            <div class="flex flex-wrap items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
               <button
                 v-for="count in [5, 10, 20, 50]"
                 :key="count"
@@ -49,7 +49,55 @@
             </div>
           </div>
 
-          <span class="text-xs text-slate-600 dark:text-slate-300">{{ t('addressMode.sourcedShort') }}</span>
+          <!-- Mode Picker -->
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-medium text-slate-600 dark:text-slate-300">
+              {{ t('batch.modeLabel') }}:
+            </span>
+            <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+              <button
+                type="button"
+                @click="selectedMode = 'landmark'"
+                :class="[
+                  'px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1',
+                  selectedMode === 'landmark'
+                    ? 'bg-blue-500 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ]"
+              >
+                <span>🏢 {{ t('addressMode.landmarkShort') }}</span>
+              </button>
+              <button
+                type="button"
+                @click="selectedMode = 'derivation'"
+                :class="[
+                  'px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1',
+                  selectedMode === 'derivation'
+                    ? 'bg-emerald-500 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ]"
+              >
+                <span>🛣️ {{ t('addressMode.derivationShort') }}</span>
+              </button>
+              <button
+                type="button"
+                @click="selectedMode = 'residential'"
+                :class="[
+                  'px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1',
+                  selectedMode === 'residential'
+                    ? 'bg-purple-500 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ]"
+              >
+                <span>🏡 {{ t('addressMode.residentialShort') }}</span>
+              </button>
+              <button type="button" @click="selectedMode = 'sourced'"
+                class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer"
+                :class="selectedMode === 'sourced' ? 'bg-amber-500 text-white' : 'text-slate-600 dark:text-slate-400'">
+                {{ t('addressMode.sourcedShort') }}
+              </button>
+            </div>
+          </div>
 
           <!-- Re-generate Button -->
           <button
@@ -94,7 +142,7 @@
           <span class="text-[11px] text-slate-400">
             {{ t('batch.currentModeLabel') }}:
             <span class="font-semibold text-slate-700 dark:text-slate-300">
-              {{ t('addressMode.sourcedShort') }}
+              {{ selectedMode === 'sourced' ? t('addressMode.sourcedShort') : selectedMode === 'residential' ? t('addressMode.residentialShort') : selectedMode === 'derivation' ? t('addressMode.derivationShort') : t('addressMode.landmarkShort') }}
             </span>
           </span>
         </div>
@@ -130,7 +178,7 @@
                             : 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
                       ]"
                     >
-                      {{ t('addressMode.sourcedShort') }}
+                      {{ item.address.addressMode === 'sourced' ? t('addressMode.sourcedShort') : item.address.addressMode === 'residential' ? t('addressMode.residentialShort') : item.address.addressMode === 'derivation' ? t('addressMode.derivationShort') : t('addressMode.landmarkShort') }}
                     </span>
                   </td>
                   <td class="p-3 font-medium text-slate-900 dark:text-white whitespace-nowrap">
@@ -190,7 +238,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { Layers, X, Download, Code2, RefreshCw } from 'lucide-vue-next';
-import type { CountryCode, GeneratedIdentity, FilterOptions } from '../types/identity';
+import type { CountryCode, GeneratedIdentity, FilterOptions, AddressMode } from '../types/identity';
 import { generateIdentity } from '../services/identityGenerator';
 import { exportToCSV, exportToJSON } from '../services/exportService';
 import { useI18n } from '../i18n';
@@ -227,6 +275,7 @@ function getBatchTaxRate(addr: any): string {
 }
 
 const selectedCount = ref(10);
+const selectedMode = ref<AddressMode>(props.filters.addressMode || 'residential');
 const batchList = ref<GeneratedIdentity[]>([]);
 const batchError = ref('');
 
@@ -238,7 +287,7 @@ function generateBatch() {
       result.push(generateIdentity(props.countryCode, {
         ...props.filters,
         state: stateToUse,
-        addressMode: 'sourced'
+        addressMode: selectedMode.value
       }));
     }
     batchError.value = '';
@@ -254,22 +303,25 @@ watch(
   () => props.isOpen,
   (open) => {
     if (open) {
+      if (props.filters.addressMode) {
+        selectedMode.value = props.filters.addressMode;
+      }
       generateBatch();
     }
   }
 );
 
-watch([selectedCount, () => props.countryCode, () => props.selectedState], () => {
+watch([selectedCount, selectedMode, () => props.countryCode, () => props.selectedState], () => {
   if (props.isOpen) {
     generateBatch();
   }
 });
 
 function handleExportCSV() {
-  exportToCSV(batchList.value, `identities_${props.countryCode}_sourced_${Date.now()}.csv`);
+  exportToCSV(batchList.value, `identities_${props.countryCode}_${selectedMode.value}_${Date.now()}.csv`);
 }
 
 function handleExportJSON() {
-  exportToJSON(batchList.value, `identities_${props.countryCode}_sourced_${Date.now()}.json`);
+  exportToJSON(batchList.value, `identities_${props.countryCode}_${selectedMode.value}_${Date.now()}.json`);
 }
 </script>

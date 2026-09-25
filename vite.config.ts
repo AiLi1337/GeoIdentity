@@ -64,9 +64,9 @@ export default defineConfig(({ mode }) => {
           'robots.txt'
         ],
       manifest: {
-        name: 'GeoIdentity - 全球真实地址与本土化测试身份生成器',
+        name: 'GeoIdentity - 多地区地址样本与合成测试身份',
         short_name: 'GeoIdentity',
-        description: '专业级全球真实物理地址检索、美国免税州真实门牌与本土化虚拟测试身份生成系统。100%纯前端离线运行，安全防送中。',
+        description: '21 国地址样本、街道门牌插值与可回溯 OSM 建筑门牌，仅供软件测试。投递与 AVS 未核验。',
         theme_color: '#f8fafc',
         background_color: '#ffffff',
         display: 'standalone',
@@ -94,16 +94,16 @@ export default defineConfig(({ mode }) => {
         ],
         shortcuts: [
           {
-            name: '立即生成真实地址',
+            name: '生成测试地址',
             short_name: '生成地址',
-            description: '快速生成真实物理地址与合成身份档案',
+            description: '生成地址样本与合成测试身份',
             url: '/?action=generate',
             icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }]
           },
           {
-            name: '全球地址库雷达监控',
+            name: '全球地址样本概览',
             short_name: '地址库监控',
-            description: '查看全球21国真实地址库收录明细与大盘',
+            description: '查看 21 国内置地址样本与 OSM 来源',
             url: '/?view=monitor',
             icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }]
           }

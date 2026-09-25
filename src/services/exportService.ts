@@ -369,8 +369,8 @@ Perfil 100% sintético generado por algoritmo para pruebas de software y validac
 星座：${identity.basic.zodiacSign}
 
 === 地址数据 (按来源核对) ===
-地址方案模式：${identity.address.derivationMeta?.modeLabelZh || (identity.address.addressMode === 'residential' ? '方案B·真实居民住宅/独栋' : identity.address.addressMode === 'derivation' ? '方案A·真实居住街区门牌衍生' : '方案C·真实都会公寓/名苑社区库')}
-AVS 风控评级：${avsTierZh}
+地址方案模式：${identity.address.source === 'OpenStreetMap' ? 'OSM 来源建筑门牌' : identity.address.addressMode === 'derivation' ? '方案A·插值门牌' : identity.address.addressMode === 'residential' ? '方案B·住宅样本' : '方案C·公寓样本'}
+地址核验状态：${avsTierZh}
 国家/地区：${identity.address.country} (${identity.address.countryCode})
 州/省：${identity.address.stateFull || identity.address.state}
 城市：${identity.address.city}
@@ -436,8 +436,8 @@ Blood Type: ${identity.basic.bloodType}
 Zodiac: ${identity.basic.zodiacSign}
 
 === Address Data (check source) ===
-Address Scheme Mode: ${identity.address.derivationMeta?.modeLabelEn || (identity.address.addressMode === 'residential' ? 'Scheme B: Real Residential Address' : identity.address.addressMode === 'derivation' ? 'Scheme A: Residential Street Derivation' : 'Scheme C: Real Residential Condos & Apartments')}
-AVS Verification Tier: ${avsTierEn}
+Address Scheme Mode: ${identity.address.source === 'OpenStreetMap' ? 'OSM-sourced building' : identity.address.addressMode === 'derivation' ? 'Scheme A: Interpolated Number' : identity.address.addressMode === 'residential' ? 'Scheme B: Residential Sample' : 'Scheme C: Apartment Sample'}
+Address Verification: ${avsTierEn}
 Country: ${localCountryName} (${identity.address.countryCode})
 State/Province: ${identity.address.stateFull || identity.address.state}
 City: ${identity.address.city}
@@ -483,7 +483,7 @@ export function buildCSVContent(identities: GeneratedIdentity[]): string {
   const headers = [
     'Country',
     'Address Mode',
-    'AVS / Building Tier',
+    'Address Verification',
     'Full Name',
     'Local Name',
     'Gender',
@@ -515,10 +515,10 @@ export function buildCSVContent(identities: GeneratedIdentity[]): string {
 
   const rows = identities.map(id => [
     id.address.country,
-    id.address.derivationMeta?.modeLabelEn || id.address.addressMode || 'Scheme C: Condos',
+    id.address.source === 'OpenStreetMap' ? 'OSM-sourced building' : id.address.addressMode === 'derivation' ? 'Scheme A: Interpolated Number' : id.address.addressMode === 'residential' ? 'Scheme B: Residential Sample' : 'Scheme C: Apartment Sample',
     id.address.source === 'OpenStreetMap'
       ? 'Apartment Building (AVS unverified) © OpenStreetMap contributors (ODbL)'
-      : id.address.derivationMeta?.avsTier || (id.address.addressMode === 'residential' ? 'Residential Single Family' : 'Residential Condominium / Apartment'),
+      : id.address.addressMode === 'derivation' ? 'Interpolated Number (unverified)' : id.address.addressMode === 'residential' ? 'Residential Sample (delivery and AVS unverified)' : 'Apartment Sample (delivery and AVS unverified)',
     id.basic.fullName,
     id.basic.localFullName || '',
     id.basic.gender,

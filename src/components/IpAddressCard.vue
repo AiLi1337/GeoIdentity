@@ -188,7 +188,7 @@ import {
 import type { IpConsensusResult } from '../types/ip';
 import type { GeneratedIdentity } from '../types/identity';
 import { detectClientIp, queryMultiSourceIp } from '../services/ipService';
-import { getSourcedAddress } from '../data/addresses';
+import { resolveAddressFromIp } from '../services/ipAddressResolver';
 import { generateIdentityFromAddress } from '../services/identityGenerator';
 import { useI18n } from '../i18n';
 
@@ -236,20 +236,10 @@ async function handleSearch() {
       ipInput.value = res.targetIp;
     }
     
-    try {
-      if (!res.winnerCity?.trim()) throw new Error('No sourced address for IP city');
-      const resolvedAddress = getSourcedAddress(res.winnerCountryCode, res.winnerRegion || undefined, res.winnerCity);
-      res.strategySummaryZh = '同城 OSM 公寓建筑门牌，房号与投递未核验';
-      res.strategySummaryEn = 'Same-city OSM apartment building; unit and delivery unverified';
-      addressError.value = '';
-      emit('identity-generated', generateIdentityFromAddress(resolvedAddress), res);
-    } catch (error) {
-      if (!(error instanceof Error) || !error.message.startsWith('No sourced address')) throw error;
-      addressError.value = t('addressMode.noSourcedAddress');
-      res.strategySummaryZh = addressError.value;
-      res.strategySummaryEn = t('addressMode.noSourcedAddress');
-      emit('no-address');
-    }
+    const resolvedAddress = resolveAddressFromIp(res);
+    res.strategySummaryZh = `匹配 ${resolvedAddress.city}, ${resolvedAddress.state} 的内置地址样本；可能并非 IP 同城，投递与 AVS 未核验`;
+    res.strategySummaryEn = `Bundled address sample in ${resolvedAddress.city}, ${resolvedAddress.state}; may differ from IP city. Delivery and AVS unverified.`;
+    emit('identity-generated', generateIdentityFromAddress(resolvedAddress), res);
   } catch (error) {
     console.error('IP lookup failed', error);
     addressError.value = t('ipGen.lookupFailed');

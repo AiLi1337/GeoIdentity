@@ -283,11 +283,11 @@ for (let i = 0; i < batchCount; i++) {
 console.log('\n--- 9. Testing Export Text & CSV contains mode info & formatting ---');
 const zhText = formatFullIdentityText(landmarkUS, 'zh');
 assert(zhText.includes('地址方案模式：'), 'Chinese text export includes address mode');
-assert(zhText.includes('AVS 风控评级：'), 'Chinese text export includes AVS tier');
+assert(zhText.includes('地址核验状态：') && /AVS 未(?:核验|验证)/.test(zhText), 'Chinese text export labels address verification accurately');
 
 const enText = formatFullIdentityText(landmarkUS, 'en');
 assert(enText.includes('Address Scheme Mode:'), 'English text export includes address mode');
-assert(enText.includes('AVS Verification Tier:'), 'English text export includes AVS tier');
+assert(enText.includes('Address Verification:') && /AVS unverified/i.test(enText), 'English text export labels address verification accurately');
 
 // Verify Residential single family export does not contain dirty line 2
 const sampleRes = generateIdentity('US', { state: 'DE', addressMode: 'residential' });
@@ -299,11 +299,11 @@ const mixedIdentities = [landmarkUS, ilBatch[0], qcBatch[0], sampleRes];
 const csvOutput = buildCSVContent(mixedIdentities);
 assert(csvOutput.startsWith('\uFEFF'), 'CSV output starts with UTF-8 BOM');
 assert(csvOutput.includes('"Address Mode"'), 'CSV header includes Address Mode');
-assert(csvOutput.includes('"AVS / Building Tier"'), 'CSV header includes AVS / Building Tier');
-assert(csvOutput.includes('Scheme C') || csvOutput.includes('Curated Real Landmark Seeds') || csvOutput.includes('Curated Landmark Seed'), 'CSV row includes Scheme C / Landmark mode label');
-assert(csvOutput.includes('Residential Street') || csvOutput.includes('Scheme A: Street Range Derivation') || csvOutput.includes('Scheme A: Street Derivation'), 'CSV row includes Derivation mode label');
-assert(csvOutput.includes('Scheme B: Real Residential Address'), 'CSV row includes Residential mode label');
-assert(csvOutput.includes('Residential Single Family') || csvOutput.includes('Residential Condominium'), 'CSV row includes Residential AVS Tier');
+assert(csvOutput.includes('"Address Verification"'), 'CSV header includes address verification');
+assert(csvOutput.includes('Scheme C: Apartment Sample') || csvOutput.includes('OSM-sourced building'), 'CSV row labels apartment sample source');
+assert(csvOutput.includes('Scheme A: Interpolated Number'), 'CSV row labels derivation as interpolation');
+assert(csvOutput.includes('Scheme B: Residential Sample'), 'CSV row labels residential samples');
+assert(csvOutput.includes('Residential Sample (delivery and AVS unverified)'), 'CSV row labels unverified delivery and AVS');
 
 // -----------------------------------------------------------------------------
 // 10. Normal Setback Algorithm Off-Road Verification (True Metric Projection)

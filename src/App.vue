@@ -269,7 +269,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
-import type { CountryCode, GeneratedIdentity, FilterOptions } from './types/identity';
+import type { CountryCode, GeneratedIdentity, FilterOptions, AddressMode } from './types/identity';
 import { COUNTRIES } from './data/countries';
 import { generateIdentity } from './services/identityGenerator';
 import {
@@ -311,10 +311,11 @@ const activeGeneratorTab = ref<'standard' | 'ip'>('standard');
 const selectedCountryCode = ref<CountryCode>('US');
 const selectedState = ref<string>('');
 
+const savedMode = localStorage.getItem('geo_address_mode') as AddressMode | null;
 const filters = ref<FilterOptions>({
   gender: 'random',
   ageRange: 'random',
-  addressMode: 'sourced'
+  addressMode: savedMode && ['landmark', 'derivation', 'residential'].includes(savedMode) ? savedMode : 'residential'
 });
 
 const currentIdentity = ref<GeneratedIdentity | null>(null);
@@ -384,12 +385,18 @@ function handleGenerate() {
   try {
     const newId = generateIdentity(selectedCountryCode.value, {
       ...filters.value,
-      addressMode: 'sourced',
       state: selectedState.value || undefined
     });
     currentIdentity.value = newId;
     saveToHistory(newId);
-    historyList.value = getHistory().filter(i => i.address.source === 'OpenStreetMap');
+    historyList.value = getHistory();
+    if (filters.value.addressMode) {
+      try {
+        localStorage.setItem('geo_address_mode', filters.value.addressMode);
+      } catch (error) {
+        console.warn('Could not save address mode preference', error);
+      }
+    }
   } catch (error) {
     if (!(error instanceof Error) || !error.message.startsWith('No sourced address')) throw error;
     addressError.value = t('addressMode.noSourcedAddress');
@@ -417,9 +424,9 @@ function handleIpIdentityGenerated(identity: GeneratedIdentity) {
   selectedCountryCode.value = identity.countryCode;
   selectedState.value = identity.address.state;
   saveToHistory(identity);
-  historyList.value = getHistory().filter(i => i.address.source === 'OpenStreetMap');
+  historyList.value = getHistory();
   if (toastRef.value) {
-    toastRef.value.show(locale.value === 'zh' ? '已找到同城 OSM 建筑门牌（房号与投递未核验）' : 'Found a same-city OSM building address (delivery unverified)');
+    toastRef.value.show(locale.value === 'zh' ? '已匹配地址样本（投递与 AVS 未核验）' : 'Matched an address sample (delivery and AVS unverified)');
   }
 }
 
@@ -427,9 +434,10 @@ function handleIpNoAddress() {
   if (activeGeneratorTab.value === 'ip') currentIdentity.value = null;
 }
 
-watch(activeGeneratorTab, () => {
+watch(activeGeneratorTab, tab => {
   currentIdentity.value = null;
   addressError.value = '';
+  if (tab === 'standard') handleGenerate();
 });
 
 function handleJumpToCountry(code: CountryCode) {
@@ -447,17 +455,13 @@ function handleJumpToCountry(code: CountryCode) {
 
 function handleToggleFav(identity: GeneratedIdentity) {
   const isNowFav = toggleFavorite(identity);
-  favoritesList.value = getFavorites().filter(i => i.address.source === 'OpenStreetMap');
+  favoritesList.value = getFavorites();
   if (toastRef.value) {
     toastRef.value.show(isNowFav ? t('card.favorite') : t('card.unfavorite'));
   }
 }
 
 function handleSelectIdentity(identity: GeneratedIdentity) {
-  if (identity.address.source !== 'OpenStreetMap') {
-    if (toastRef.value) toastRef.value.show(t('addressMode.noSourcedAddress'));
-    return;
-  }
   currentIdentity.value = identity;
   selectedCountryCode.value = identity.countryCode;
   selectedState.value = identity.address.state;
@@ -481,15 +485,21 @@ function handleCopyFeedback(_text: string, label: string) {
 }
 
 onMounted(() => {
-  historyList.value = getHistory().filter(i => i.address.source === 'OpenStreetMap');
-  favoritesList.value = getFavorites().filter(i => i.address.source === 'OpenStreetMap');
+  historyList.value = getHistory();
+  favoritesList.value = getFavorites();
 
   // URL Hash deep link check
   window.addEventListener('hashchange', handleHashChange);
   handleHashChange();
 
   // Load first identity
-  handleGenerate();
+  if (historyList.value.length > 0) {
+    currentIdentity.value = historyList.value[0];
+    selectedCountryCode.value = currentIdentity.value.countryCode;
+    selectedState.value = currentIdentity.value.address.state;
+  } else {
+    handleGenerate();
+  }
 });
 
 onUnmounted(() => {
