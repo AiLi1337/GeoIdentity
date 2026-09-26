@@ -1,6 +1,17 @@
 [
   {
+    "id": "way/104186213",
+    "building": "apartments",
+    "street": "1415 Southwest Alder Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97205",
+    "lat": 45.5222145,
+    "lng": -122.6864857
+  },
+  {
     "id": "way/1241865862",
+    "building": "apartments",
     "street": "101 Avenue of the Arts",
     "city": "Wilmington",
     "state": "DE",
@@ -10,6 +21,7 @@
   },
   {
     "id": "way/125820107",
+    "building": "apartments",
     "street": "709 Southwest 16th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -19,6 +31,7 @@
   },
   {
     "id": "way/152294634",
+    "building": "apartments",
     "street": "1300 Southwest Park Avenue",
     "city": "Portland",
     "state": "OR",
@@ -28,6 +41,7 @@
   },
   {
     "id": "way/152298036",
+    "building": "apartments",
     "street": "333 Northwest 9th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -37,6 +51,7 @@
   },
   {
     "id": "way/152298051",
+    "building": "apartments",
     "street": "622 Southwest 9th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -46,6 +61,7 @@
   },
   {
     "id": "way/152298052",
+    "building": "apartments",
     "street": "1117 Southwest Alder Street",
     "city": "Portland",
     "state": "OR",
@@ -55,6 +71,7 @@
   },
   {
     "id": "way/152298054",
+    "building": "apartments",
     "street": "929 Southwest Salmon Street",
     "city": "Portland",
     "state": "OR",
@@ -64,6 +81,7 @@
   },
   {
     "id": "way/152298056",
+    "building": "apartments",
     "street": "731 Southwest Salmon Street",
     "city": "Portland",
     "state": "OR",
@@ -73,6 +91,7 @@
   },
   {
     "id": "way/152299854",
+    "building": "apartments",
     "street": "1240 Southwest Columbia Street",
     "city": "Portland",
     "state": "OR",
@@ -82,6 +101,7 @@
   },
   {
     "id": "way/154251136",
+    "building": "apartments",
     "street": "523 Southwest 13th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -91,6 +111,7 @@
   },
   {
     "id": "way/156415915",
+    "building": "apartments",
     "street": "1410 Northwest Kearney Street",
     "city": "Portland",
     "state": "OR",
@@ -100,6 +121,7 @@
   },
   {
     "id": "way/156423759",
+    "building": "apartments",
     "street": "900 Northwest Lovejoy Street",
     "city": "Portland",
     "state": "OR",
@@ -109,6 +131,7 @@
   },
   {
     "id": "way/156423767",
+    "building": "apartments",
     "street": "930 Northwest 12th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -117,7 +140,48 @@
     "lng": -122.6828856
   },
   {
+    "id": "way/186059038",
+    "building": "apartments",
+    "street": "610 Northwest 17th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5273535,
+    "lng": -122.6881654
+  },
+  {
+    "id": "way/187307689",
+    "building": "apartments",
+    "street": "1731 Northwest Everett Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5251925,
+    "lng": -122.6890201
+  },
+  {
+    "id": "way/187307690",
+    "building": "apartments",
+    "street": "550 Northwest 19th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5267415,
+    "lng": -122.6901111
+  },
+  {
+    "id": "way/189781367",
+    "building": "apartments",
+    "street": "1709 Southwest Morrison Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97205",
+    "lat": 45.5221589,
+    "lng": -122.6893328
+  },
+  {
     "id": "way/207306154",
+    "building": "apartments",
     "street": "420 Northwest 11th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -127,6 +191,7 @@
   },
   {
     "id": "way/207427270",
+    "building": "apartments",
     "street": "1155 Northwest Everett Street",
     "city": "Portland",
     "state": "OR",
@@ -136,6 +201,7 @@
   },
   {
     "id": "way/207458966",
+    "building": "apartments",
     "street": "311 Northwest 12th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -145,6 +211,7 @@
   },
   {
     "id": "way/207496173",
+    "building": "apartments",
     "street": "123 Northwest 12th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -154,6 +221,7 @@
   },
   {
     "id": "way/220741023",
+    "building": "apartments",
     "street": "1515 Southwest 12th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -163,6 +231,7 @@
   },
   {
     "id": "way/220741024",
+    "building": "apartments",
     "street": "1530 Southwest 13th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -172,6 +241,7 @@
   },
   {
     "id": "way/220741025",
+    "building": "apartments",
     "street": "1508 Southwest 13th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -181,6 +251,7 @@
   },
   {
     "id": "way/243501533",
+    "building": "apartments",
     "street": "1731 West Burnside Street",
     "city": "Portland",
     "state": "OR",
@@ -190,6 +261,7 @@
   },
   {
     "id": "way/243501537",
+    "building": "apartments",
     "street": "1717 West Burnside Street",
     "city": "Portland",
     "state": "OR",
@@ -199,6 +271,7 @@
   },
   {
     "id": "way/285197119",
+    "building": "apartments",
     "street": "1515 Southwest Jefferson Street",
     "city": "Portland",
     "state": "OR",
@@ -208,6 +281,7 @@
   },
   {
     "id": "way/291657131",
+    "building": "apartments",
     "street": "1025 Southwest 11th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -217,6 +291,7 @@
   },
   {
     "id": "way/321480035",
+    "building": "apartments",
     "street": "1019 Southwest 10th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -226,6 +301,7 @@
   },
   {
     "id": "way/321534083",
+    "building": "apartments",
     "street": "909 Southwest 12th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -235,6 +311,7 @@
   },
   {
     "id": "way/321768750",
+    "building": "apartments",
     "street": "1129 Southwest Washington Street",
     "city": "Portland",
     "state": "OR",
@@ -243,7 +320,18 @@
     "lng": -122.6830025
   },
   {
+    "id": "way/322545218",
+    "building": "apartments",
+    "street": "1225 Southwest Alder Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97205",
+    "lat": 45.5215944,
+    "lng": -122.6842876
+  },
+  {
     "id": "way/32914953",
+    "building": "apartments",
     "street": "1417 Southwest 10th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -253,6 +341,7 @@
   },
   {
     "id": "way/353691837",
+    "building": "apartments",
     "street": "726 Southwest 11th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -262,6 +351,7 @@
   },
   {
     "id": "way/355832769",
+    "building": "apartments",
     "street": "20 Northwest 16th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -270,7 +360,48 @@
     "lng": -122.6870027
   },
   {
+    "id": "way/364597540",
+    "building": "apartments",
+    "street": "1730 Northwest Couch Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5234057,
+    "lng": -122.6889408
+  },
+  {
+    "id": "way/364597545",
+    "building": "apartments",
+    "street": "130 Northwest 19th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.524038,
+    "lng": -122.6899964
+  },
+  {
+    "id": "way/364597689",
+    "building": "apartments",
+    "street": "1810 Northwest Everett Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5248218,
+    "lng": -122.6896068
+  },
+  {
+    "id": "way/364816084",
+    "building": "apartments",
+    "street": "1607 Northwest Davis Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5245115,
+    "lng": -122.6875871
+  },
+  {
     "id": "way/365949577",
+    "building": "apartments",
     "street": "1117 Southwest Harvey Milk Street",
     "city": "Portland",
     "state": "OR",
@@ -280,6 +411,7 @@
   },
   {
     "id": "way/36742287",
+    "building": "apartments",
     "street": "1211 Southwest 11th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -289,6 +421,7 @@
   },
   {
     "id": "way/36742304",
+    "building": "apartments",
     "street": "1125 Southwest 12th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -298,6 +431,7 @@
   },
   {
     "id": "way/36742317",
+    "building": "apartments",
     "street": "1200 Southwest 12th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -307,6 +441,7 @@
   },
   {
     "id": "way/36742323",
+    "building": "apartments",
     "street": "1217 Southwest 11th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -316,6 +451,7 @@
   },
   {
     "id": "way/36742346",
+    "building": "apartments",
     "street": "1212 Southwest Clay Street",
     "city": "Portland",
     "state": "OR",
@@ -325,6 +461,7 @@
   },
   {
     "id": "way/36742347",
+    "building": "apartments",
     "street": "1030 Southwest Jefferson Street",
     "city": "Portland",
     "state": "OR",
@@ -333,7 +470,28 @@
     "lng": -122.6851595
   },
   {
+    "id": "way/36742362",
+    "building": "apartments",
+    "street": "1405 Southwest Park Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5150274,
+    "lng": -122.6840136
+  },
+  {
+    "id": "way/367748925",
+    "building": "apartments",
+    "street": "1731 Northwest Irving Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5280026,
+    "lng": -122.6891087
+  },
+  {
     "id": "way/367749267",
+    "building": "apartments",
     "street": "526 Northwest 18th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -342,7 +500,48 @@
     "lng": -122.6891345
   },
   {
+    "id": "way/367749271",
+    "building": "apartments",
+    "street": "607 Northwest 18th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5272591,
+    "lng": -122.6896294
+  },
+  {
+    "id": "way/367749284",
+    "building": "apartments",
+    "street": "708 Northwest 19th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5280186,
+    "lng": -122.6901256
+  },
+  {
+    "id": "way/367749290",
+    "building": "apartments",
+    "street": "718 Northwest 18th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5281409,
+    "lng": -122.6891888
+  },
+  {
+    "id": "way/367749301",
+    "building": "apartments",
+    "street": "808 Northwest 19th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5287388,
+    "lng": -122.6901683
+  },
+  {
     "id": "way/368223191",
+    "building": "apartments",
     "street": "902 North Market Street",
     "city": "Wilmington",
     "state": "DE",
@@ -351,7 +550,18 @@
     "lng": -75.5477405
   },
   {
+    "id": "way/368233224",
+    "building": "detached",
+    "street": "1429 Southwest College Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5120965,
+    "lng": -122.6919253
+  },
+  {
     "id": "way/368335848",
+    "building": "apartments",
     "street": "1124 Southwest Columbia Street",
     "city": "Portland",
     "state": "OR",
@@ -360,7 +570,18 @@
     "lng": -122.6863536
   },
   {
+    "id": "way/368335864",
+    "building": "apartments",
+    "street": "1329 Southwest 14th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5167053,
+    "lng": -122.6889375
+  },
+  {
     "id": "way/368335879",
+    "building": "apartments",
     "street": "1415 Southwest 11th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -369,14 +590,24 @@
     "lng": -122.6860995
   },
   {
+    "id": "way/368335881",
+    "building": "apartments",
+    "street": "1425 Southwest Clay Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5161333,
+    "lng": -122.689587
+  },
+  {
     "id": "way/368335887",
     "building": "detached",
     "street": "1441 Southwest College Street",
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5122227,
-    "lng": -122.6920283
+    "lat": 45.5122253,
+    "lng": -122.6920479
   },
   {
     "id": "way/368335907",
@@ -385,8 +616,18 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5125917,
-    "lng": -122.6920756
+    "lat": 45.5125838,
+    "lng": -122.6920641
+  },
+  {
+    "id": "way/368335911",
+    "building": "apartments",
+    "street": "1505 Southwest 14th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5157422,
+    "lng": -122.6895604
   },
   {
     "id": "way/368335917",
@@ -395,8 +636,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5123582,
-    "lng": -122.6922046
+    "lat": 45.5123494,
+    "lng": -122.6922383
   },
   {
     "id": "way/368335925",
@@ -405,8 +646,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5126274,
-    "lng": -122.6923295
+    "lat": 45.5125993,
+    "lng": -122.6923442
   },
   {
     "id": "way/368335931",
@@ -415,8 +656,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5131984,
-    "lng": -122.6925281
+    "lat": 45.5131693,
+    "lng": -122.6925188
   },
   {
     "id": "way/368335933",
@@ -425,8 +666,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5122948,
-    "lng": -122.6925201
+    "lat": 45.512289,
+    "lng": -122.692528
   },
   {
     "id": "way/368335937",
@@ -435,8 +676,18 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.513025,
-    "lng": -122.6926109
+    "lat": 45.5130245,
+    "lng": -122.6926345
+  },
+  {
+    "id": "way/368335939",
+    "building": "apartments",
+    "street": "1525 Southwest 14th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5155955,
+    "lng": -122.6900781
   },
   {
     "id": "way/368335940",
@@ -445,8 +696,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.512341,
-    "lng": -122.6927183
+    "lat": 45.5123381,
+    "lng": -122.6927364
   },
   {
     "id": "way/368335944",
@@ -455,8 +706,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5133984,
-    "lng": -122.6922155
+    "lat": 45.5133647,
+    "lng": -122.6922303
   },
   {
     "id": "way/368335947",
@@ -465,8 +716,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5134467,
-    "lng": -122.6928237
+    "lat": 45.5134374,
+    "lng": -122.6928207
   },
   {
     "id": "way/368335952",
@@ -475,8 +726,18 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5137671,
-    "lng": -122.6931084
+    "lat": 45.5137376,
+    "lng": -122.6931484
+  },
+  {
+    "id": "way/368335954",
+    "building": "house",
+    "street": "1551 Southwest Upper Hall Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5141195,
+    "lng": -122.6936854
   },
   {
     "id": "way/368335955",
@@ -485,8 +746,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5136936,
-    "lng": -122.6938154
+    "lat": 45.5136892,
+    "lng": -122.6938412
   },
   {
     "id": "way/368335956",
@@ -495,8 +756,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5134568,
-    "lng": -122.6933274
+    "lat": 45.5134398,
+    "lng": -122.6933253
   },
   {
     "id": "way/368335957",
@@ -505,8 +766,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5134352,
-    "lng": -122.693785
+    "lat": 45.5134184,
+    "lng": -122.6937909
   },
   {
     "id": "way/368335958",
@@ -515,8 +776,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5129733,
-    "lng": -122.6937041
+    "lat": 45.5129676,
+    "lng": -122.6937304
   },
   {
     "id": "way/368335959",
@@ -525,8 +786,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5125471,
-    "lng": -122.6934741
+    "lat": 45.5125413,
+    "lng": -122.6934744
   },
   {
     "id": "way/368335960",
@@ -535,8 +796,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5123729,
-    "lng": -122.6929362
+    "lat": 45.5123593,
+    "lng": -122.69296
   },
   {
     "id": "way/368335965",
@@ -545,8 +806,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5122554,
-    "lng": -122.6935844
+    "lat": 45.5122384,
+    "lng": -122.6935811
   },
   {
     "id": "way/368335966",
@@ -555,8 +816,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5123162,
-    "lng": -122.6938698
+    "lat": 45.5123303,
+    "lng": -122.6938911
   },
   {
     "id": "way/368335967",
@@ -565,8 +826,18 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5126772,
-    "lng": -122.6939298
+    "lat": 45.5126742,
+    "lng": -122.6939333
+  },
+  {
+    "id": "way/368336040",
+    "building": "apartments",
+    "street": "1812 Northwest Flanders Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.525531,
+    "lng": -122.689633
   },
   {
     "id": "way/368336053",
@@ -575,11 +846,22 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5137965,
-    "lng": -122.6927283
+    "lat": 45.5137917,
+    "lng": -122.6927245
+  },
+  {
+    "id": "way/368336133",
+    "building": "apartments",
+    "street": "325 Northwest 18th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5253846,
+    "lng": -122.6896227
   },
   {
     "id": "way/368336140",
+    "building": "apartments",
     "street": "730 Southwest 16th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -589,6 +871,7 @@
   },
   {
     "id": "way/368336153",
+    "building": "apartments",
     "street": "924 Southwest 16th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -597,17 +880,38 @@
     "lng": -122.6887898
   },
   {
+    "id": "way/368336155",
+    "building": "apartments",
+    "street": "513 Northwest 18th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5266854,
+    "lng": -122.6896191
+  },
+  {
+    "id": "way/368336763",
+    "building": "detached",
+    "street": "1960 Southwest 16th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.511889,
+    "lng": -122.6928397
+  },
+  {
     "id": "way/368336764",
     "building": "detached",
     "street": "1965 Southwest 16th Avenue",
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5120979,
-    "lng": -122.6935556
+    "lat": 45.5121042,
+    "lng": -122.6935912
   },
   {
     "id": "way/369721302",
+    "building": "apartments",
     "street": "127 Southwest Broadway",
     "city": "Portland",
     "state": "OR",
@@ -616,7 +920,18 @@
     "lng": -122.6780538
   },
   {
+    "id": "way/369769096",
+    "building": "apartments",
+    "street": "1631 Northwest Everett Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5251492,
+    "lng": -122.6879916
+  },
+  {
     "id": "way/371299263",
+    "building": "apartments",
     "street": "1312 Southwest 10th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -625,7 +940,18 @@
     "lng": -122.6840831
   },
   {
+    "id": "way/372088342",
+    "building": "apartments",
+    "street": "535 Northwest 18th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5269638,
+    "lng": -122.6896938
+  },
+  {
     "id": "way/372088343",
+    "building": "apartments",
     "street": "529 Northwest 18th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -634,7 +960,18 @@
     "lng": -122.6897363
   },
   {
+    "id": "way/372667646",
+    "building": "apartments",
+    "street": "515 Northwest 17th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5267277,
+    "lng": -122.6886151
+  },
+  {
     "id": "way/378869123",
+    "building": "apartments",
     "street": "1221 Southwest 11th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -649,8 +986,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.513816,
-    "lng": -122.6922066
+    "lat": 45.513788,
+    "lng": -122.6922048
   },
   {
     "id": "way/395143236",
@@ -659,8 +996,8 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5137214,
-    "lng": -122.6929441
+    "lat": 45.513711,
+    "lng": -122.6929347
   },
   {
     "id": "way/395143237",
@@ -669,11 +1006,12 @@
     "city": "Portland",
     "state": "OR",
     "postcode": "97201",
-    "lat": 45.5135893,
-    "lng": -122.6930296
+    "lat": 45.5135916,
+    "lng": -122.6930205
   },
   {
     "id": "way/39944841",
+    "building": "apartments",
     "street": "721 Southwest Oak Street",
     "city": "Portland",
     "state": "OR",
@@ -682,7 +1020,48 @@
     "lng": -122.6786595
   },
   {
+    "id": "way/40944374",
+    "building": "apartments",
+    "street": "341 Northwest 5th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5257151,
+    "lng": -122.6758321
+  },
+  {
+    "id": "way/41943623",
+    "building": "apartments",
+    "street": "945 Northwest Naito Parkway",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5299326,
+    "lng": -122.6760671
+  },
+  {
+    "id": "way/41944101",
+    "building": "apartments",
+    "street": "941 Northwest Naito Parkway",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5295223,
+    "lng": -122.6753552
+  },
+  {
+    "id": "way/41944103",
+    "building": "apartments",
+    "street": "815 Northwest Naito Parkway",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97209",
+    "lat": 45.5290855,
+    "lng": -122.6749266
+  },
+  {
     "id": "way/512075480",
+    "building": "apartments",
     "street": "1717 Delaware Avenue",
     "city": "Wilmington",
     "state": "DE",
@@ -692,6 +1071,7 @@
   },
   {
     "id": "way/52058496",
+    "building": "apartments",
     "street": "750 Southwest 9th Avenue",
     "city": "Portland",
     "state": "OR",
@@ -701,11 +1081,22 @@
   },
   {
     "id": "way/52059550",
+    "building": "apartments",
     "street": "33 Northwest Park Avenue",
     "city": "Portland",
     "state": "OR",
     "postcode": "97209",
     "lat": 45.5235099,
     "lng": -122.6794181
+  },
+  {
+    "id": "way/89155956",
+    "building": "apartments",
+    "street": "1531 Southwest Harrison Street",
+    "city": "Portland",
+    "state": "OR",
+    "postcode": "97201",
+    "lat": 45.5137904,
+    "lng": -122.6919672
   }
 ]
