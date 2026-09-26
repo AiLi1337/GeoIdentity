@@ -3,7 +3,12 @@ name: Daily Address Database Sync & Audit
 on:
   schedule:
     - cron: '0 0 * * *' # 每天 UTC 00:00 定时执行
-  workflow_dispatch: # 支持在 GitHub 控制台手动触发
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy current snapshot to Cloudflare Pages even if addresses are unchanged'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -52,7 +57,7 @@ jobs:
           git push
 
       - name: Check Cloudflare Deployment Configuration
-        if: steps.sync.outputs.has_updates == 'true'
+        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -64,13 +69,13 @@ jobs:
           test -n "$VITE_ADSENSE_ID" || { echo 'Set VITE_ADSENSE_ID repository secret for the Cloudflare build'; exit 1; }
 
       - name: Build Cloudflare Release
-        if: steps.sync.outputs.has_updates == 'true'
+        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true
         env:
           VITE_ADSENSE_ID: ${{ secrets.VITE_ADSENSE_ID }}
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
-        if: steps.sync.outputs.has_updates == 'true'
+        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
