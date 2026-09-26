@@ -57,7 +57,7 @@ jobs:
           git push
 
       - name: Check Cloudflare Deployment Configuration
-        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true
+        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true || github.event_name == 'schedule'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -69,13 +69,13 @@ jobs:
           test -n "$VITE_ADSENSE_ID" || { echo 'Set VITE_ADSENSE_ID repository secret for the Cloudflare build'; exit 1; }
 
       - name: Build Cloudflare Release
-        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true
+        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true || github.event_name == 'schedule'
         env:
           VITE_ADSENSE_ID: ${{ secrets.VITE_ADSENSE_ID }}
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
-        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true
+        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true || github.event_name == 'schedule'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

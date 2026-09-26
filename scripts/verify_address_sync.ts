@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { syncOsmApartments, syncOsmApartmentsIfAvailable } from './osmAddressSync';
+import { syncOsmApartments, syncOsmApartmentsIfAvailable, assertOsmSnapshotContinuity } from './osmAddressSync';
+import currentSnapshot from '../src/data/addresses/osmApartments.json';
 
 const valid = (id: number, tags: Record<string, string> = {}) => ({
   type: 'way', id, center: { lat: 39.7448, lon: -75.5477 },
@@ -24,6 +25,17 @@ const fetchOk = async (url: string) => ({
 });
 
 const result = await syncOsmApartments(fetchOk);
+assert.throws(() => assertOsmSnapshotContinuity(currentSnapshot, result),
+  /Incomplete OpenStreetMap snapshot/, 'a partial but valid Overpass response cannot replace the current snapshot');
+assert.doesNotThrow(() => assertOsmSnapshotContinuity(currentSnapshot, currentSnapshot.slice(1)),
+  'one retired OSM object does not prevent a normal update');
+const oregonSnapshot = currentSnapshot.filter(address => address.state === 'OR');
+const excessiveLoss = Math.max(1, Math.floor(oregonSnapshot.length * 0.1)) + 1;
+const snapshotWithLoss = currentSnapshot.filter(address => address.state !== 'OR').concat(
+  oregonSnapshot.slice(excessiveLoss)
+);
+assert.throws(() => assertOsmSnapshotContinuity(currentSnapshot, snapshotWithLoss),
+  /Incomplete OpenStreetMap snapshot for OR/, 'a drop above ten percent in one state requires review');
 assert.equal(result.length, 3);
 assert.equal(result[0].id, 'way/2');
 assert.equal(result[0].street, '902 North Market Street');

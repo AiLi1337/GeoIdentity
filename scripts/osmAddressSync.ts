@@ -118,3 +118,23 @@ export async function syncOsmApartmentsIfAvailable(fetcher?: OsmFetcher): Promis
     throw error;
   }
 }
+
+export function assertOsmSnapshotContinuity(
+  previous: Pick<OsmApartment, 'id' | 'state'>[],
+  next: Pick<OsmApartment, 'id' | 'state'>[]
+): void {
+  const nextIds = new Set(next.map(address => address.id));
+  const previousByState = new Map<string, string[]>();
+  for (const address of previous) {
+    const ids = previousByState.get(address.state) || [];
+    ids.push(address.id);
+    previousByState.set(address.state, ids);
+  }
+  for (const [state, ids] of previousByState) {
+    const retained = ids.filter(id => nextIds.has(id)).length;
+    const maxMissing = Math.max(1, Math.floor(ids.length * 0.1));
+    if (ids.length - retained > maxMissing) {
+      throw new Error(`Incomplete OpenStreetMap snapshot for ${state}: retained ${retained}/${ids.length} existing buildings`);
+    }
+  }
+}

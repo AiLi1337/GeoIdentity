@@ -5,7 +5,7 @@ import { COUNTRIES } from '../src/data/countries';
 import { ADDRESS_MAP } from '../src/data/addresses/index';
 import { STREET_DERIVATION_RULES } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES } from '../src/data/addresses/schemes/residentialAddresses';
-import { syncOsmApartmentsIfAvailable } from './osmAddressSync';
+import { syncOsmApartmentsIfAvailable, assertOsmSnapshotContinuity, type OsmApartment } from './osmAddressSync';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +18,8 @@ if (osmApartments === null) {
   console.warn('OpenStreetMap 接口暂不可用；跳过本次同步，保留上次成功的数据与时间戳。');
   process.exit(0);
 }
+const previousSnapshot = JSON.parse(fs.readFileSync(osmPath, 'utf-8')) as OsmApartment[];
+assertOsmSnapshotContinuity(previousSnapshot, osmApartments);
 const osmSnapshot = JSON.stringify(osmApartments, null, 2) + '\n';
 if (fs.readFileSync(osmPath, 'utf-8').trim() === osmSnapshot.trim()) {
   console.log('OpenStreetMap 地址快照无变化；保留数据版本与获取时间。');
