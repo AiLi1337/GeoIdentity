@@ -20,6 +20,18 @@ interface OsmElement {
   tags?: Record<string, string>;
 }
 
+type OsmFetcher = (url: string, options: { headers: Record<string, string>; signal: AbortSignal }) => Promise<{
+  ok: boolean;
+  status?: number;
+  json: () => Promise<unknown>;
+}>;
+
+export class OsmQueryUnavailableError extends Error {
+  constructor(city: string, cause: unknown) {
+    super(`OpenStreetMap query for ${city} failed`, { cause });
+  }
+}
+
 const AREAS = [
   { city: 'Wilmington', state: 'DE', bbox: '39.73,-75.57,39.76,-75.53', buildings: 'apartments' },
   { city: 'Portland', state: 'OR', bbox: '45.515,-122.69,45.53,-122.675', buildings: 'apartments' },
@@ -31,7 +43,7 @@ const key = (street: string, city: string, state: string) =>
 
 // The OSM object must itself be tagged as a residential building with a street address.
 export async function syncOsmApartments(
-  fetcher: (url: string, options: { headers: Record<string, string>; signal: AbortSignal }) => Promise<{ ok: boolean; status?: number; json: () => Promise<unknown> }> = fetch
+  fetcher: OsmFetcher = fetch
 ): Promise<OsmApartment[]> {
   const result: OsmApartment[] = [];
   const ids = new Set<string>();
@@ -46,19 +58,27 @@ export async function syncOsmApartments(
     let body: { elements?: OsmElement[] } | undefined;
     let lastError: unknown;
     for (const endpoint of ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter']) {
+      let response: Awaited<ReturnType<OsmFetcher>>;
       try {
-        const response = await fetcher(`${endpoint}?data=${encodeURIComponent(query)}`, {
+        response = await fetcher(`${endpoint}?data=${encodeURIComponent(query)}`, {
           headers: { 'User-Agent': 'GeoIdentity/1.0 (https://github.com/AiLi1337/GeoIdentity)' },
           signal: AbortSignal.timeout(45000)
         });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        body = await response.json() as { elements?: OsmElement[] };
-        break;
       } catch (error) {
         lastError = error;
+        continue;
       }
+      if (!response.ok) {
+        if (response.status && response.status >= 400 && response.status < 500 && response.status !== 406 && response.status !== 429) {
+          throw new Error(`OpenStreetMap query for ${area.city} returned HTTP ${response.status}`);
+        }
+        lastError = new Error(`HTTP ${response.status}`);
+        continue;
+      }
+      body = await response.json() as { elements?: OsmElement[] };
+      break;
     }
-    if (!body) throw new Error(`OpenStreetMap query for ${area.city} failed`, { cause: lastError });
+    if (!body) throw new OsmQueryUnavailableError(area.city, lastError);
     if (!Array.isArray(body?.elements)) throw new Error(`Invalid OpenStreetMap response for ${area.city}`);
 
     for (const element of body.elements) {
@@ -88,4 +108,13 @@ export async function syncOsmApartments(
     if (result.length === beforeArea) throw new Error(`OpenStreetMap returned no valid residential building addresses for ${area.city}`);
   }
   return result.sort((a, b) => a.id.localeCompare(b.id));
+}
+
+export async function syncOsmApartmentsIfAvailable(fetcher?: OsmFetcher): Promise<OsmApartment[] | null> {
+  try {
+    return await syncOsmApartments(fetcher);
+  } catch (error) {
+    if (error instanceof OsmQueryUnavailableError) return null;
+    throw error;
+  }
 }

@@ -30,22 +30,29 @@ jobs:
           npx tsx scripts/verify_sourced_addresses.ts
 
       - name: Run Daily Address Sync & Audit
-        run: npm run sync:addresses
+        id: sync
+        run: |
+          npm run sync:addresses
+          if git diff --quiet -- src/data/addresses/metadata.json src/data/addresses/osmApartments.json; then
+            echo 'has_updates=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'has_updates=true' >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Run Build Verification
         run: npm run build
 
       - name: Commit & Push Daily Updates
+        if: steps.sync.outputs.has_updates == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action [Address Sync]"
           git add src/data/addresses/metadata.json src/data/addresses/osmApartments.json
-          if ! git diff --staged --quiet; then
-            git commit -m "chore(addresses): sync public apartment addresses"
-            git push
-          fi
+          git commit -m "chore(addresses): sync mapped residential buildings"
+          git push
 
       - name: Check Cloudflare Deployment Configuration
+        if: steps.sync.outputs.has_updates == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -57,11 +64,13 @@ jobs:
           test -n "$VITE_ADSENSE_ID" || { echo 'Set VITE_ADSENSE_ID repository secret for the Cloudflare build'; exit 1; }
 
       - name: Build Cloudflare Release
+        if: steps.sync.outputs.has_updates == 'true'
         env:
           VITE_ADSENSE_ID: ${{ secrets.VITE_ADSENSE_ID }}
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
+        if: steps.sync.outputs.has_updates == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -5,7 +5,7 @@ import { COUNTRIES } from '../src/data/countries';
 import { ADDRESS_MAP } from '../src/data/addresses/index';
 import { STREET_DERIVATION_RULES } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES } from '../src/data/addresses/schemes/residentialAddresses';
-import { syncOsmApartments } from './osmAddressSync';
+import { syncOsmApartmentsIfAvailable } from './osmAddressSync';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,12 +13,10 @@ const __dirname = path.dirname(__filename);
 console.log('🔄 开始执行每日地址库自动化扫描与同步校验...');
 
 const osmPath = path.resolve(__dirname, '../src/data/addresses/osmApartments.json');
-let osmApartments;
-try {
-  osmApartments = await syncOsmApartments();
-} catch (error) {
-  console.error('OpenStreetMap 同步失败；保留上次成功的数据与时间戳。', error);
-  throw error;
+const osmApartments = await syncOsmApartmentsIfAvailable();
+if (osmApartments === null) {
+  console.warn('OpenStreetMap 接口暂不可用；跳过本次同步，保留上次成功的数据与时间戳。');
+  process.exit(0);
 }
 
 // 1. 基础校验
