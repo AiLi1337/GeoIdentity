@@ -18,6 +18,11 @@ if (osmApartments === null) {
   console.warn('OpenStreetMap 接口暂不可用；跳过本次同步，保留上次成功的数据与时间戳。');
   process.exit(0);
 }
+const osmSnapshot = JSON.stringify(osmApartments, null, 2) + '\n';
+if (fs.readFileSync(osmPath, 'utf-8').trim() === osmSnapshot.trim()) {
+  console.log('OpenStreetMap 地址快照无变化；保留数据版本与获取时间。');
+  process.exit(0);
+}
 
 // 1. 基础校验
 let totalLandmarks = 0;
@@ -104,7 +109,7 @@ const metadata = {
 
 const targetPath = path.resolve(__dirname, '../src/data/addresses/metadata.json');
 if (coordinateErrors > 0) throw new Error(`${coordinateErrors} invalid address coordinates; refusing to publish`);
-fs.writeFileSync(osmPath, JSON.stringify(osmApartments, null, 2) + '\n', 'utf-8');
+fs.writeFileSync(osmPath, osmSnapshot, 'utf-8');
 fs.writeFileSync(targetPath, JSON.stringify(metadata, null, 2), 'utf-8');
 
 console.log(`✅ 每日地址库同步与健康校验成功！`);

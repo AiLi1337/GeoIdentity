@@ -4,8 +4,9 @@ import { generateIdentity, generateIdentityFromAddress } from '../src/services/i
 import { buildCSVContent } from '../src/services/exportService';
 
 assert(OSM_APARTMENTS.length > 0, 'the sourced address pool must not be empty');
-const detached = OSM_APARTMENTS.find(a => a.sourceBuildingType === 'detached');
+const detached = OSM_APARTMENTS.find(a => a.sourceId === 'way/368335887');
 assert(detached?.sourceId, 'a mapped detached home must have an OSM object link');
+assert.equal(detached.sourceBuildingType, 'detached');
 assert.equal(detached.addressMode, undefined);
 const detachedIdentity = generateIdentityFromAddress(getSourcedAddress('US', 'OR', 'Portland'));
 assert.equal(detachedIdentity.address.source, 'OpenStreetMap');
