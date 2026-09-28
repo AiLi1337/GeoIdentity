@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>隐私与第三方服务说明 | GeoIdentity</title>
+    <meta name="description" content="了解 GeoIdentity 的浏览器本地存储、第三方地图和头像请求、Cloudflare 托管及 AdSense 广告服务。" />
+    <link rel="canonical" href="https://vllme.com/privacy.html" />
+    <link rel="stylesheet" href="/info.css" />
+  </head>
+  <body>
+    <header><nav class="wrap" aria-label="主导航"><strong>GeoIdentity</strong><a href="/">地址生成器</a><a href="/methodology.html">数据方法</a><a href="/privacy.html" aria-current="page">隐私说明</a></nav></header>
+    <main class="wrap">
+      <h1>隐私与第三方服务说明</h1>
+      <p class="intro">GeoIdentity 的身份生成在浏览器内运行。我们不设账号，也不把生成的档案、收藏和历史记录上传到自有应用服务器；但这不等于使用网站时没有第三方网络请求。</p>
+
+      <h2>浏览器内的数据</h2>
+      <p>生成器把所选地址模式、语言与主题设置，以及历史记录和收藏保存在浏览器的本地存储中。你可以在浏览器设置中清除该站点数据。导出文件由你的浏览器生成；分享或上传导出文件由你自行决定。</p>
+
+      <h2>外部资源与 IP 查询</h2>
+      <p>网站通过 Cloudflare Pages 分发，网络访问会经过 Cloudflare。身份卡头像由 DiceBear 提供，头像 URL 可能包含合成姓名等生成参数；首页的地图组件会加载所选地图服务，该服务可能接收坐标及常见网络请求信息。打开“基于 IP”页签时，浏览器会自动向外部 IP 检测服务请求当前 IP；提交查询后还会请求多个外部定位服务。它们可能接收你输入的 IP 或你的网络 IP。不要把敏感个人数据输入第三方服务。</p>
+
+      <h2>广告与 Cookie</h2>
+      <p>Cloudflare 发布版本会加载 Google AdSense 脚本；Google 可能使用 Cookie 或类似技术处理访问和广告相关数据，具体取决于浏览器、地区和广告设置。网站上的提示按钮只记录你是否关闭了本地提示，不会阻止或延后 AdSense 脚本加载，也不能代替适用地区所要求的广告同意管理。你可以查看 <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">Google 如何使用合作网站的数据</a>，并在 <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google 广告设置</a>管理个性化选项。</p>
+
+      <h2>本页适用范围</h2>
+      <p>以上描述的是本网站的实际技术行为，不代表第三方服务的完整隐私政策。站点没有验证生成的身份与地图地址之间的真实关系；关于地址来源与核对限制，请参阅<a href="/methodology.html">数据方法</a>。</p>
+    </main>
+    <footer><div class="wrap"><a href="/">返回地址生成器</a> · <a href="/methodology.html">数据方法</a></div></footer>
+  </body>
+</html>

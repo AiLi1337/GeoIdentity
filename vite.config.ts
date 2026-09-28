@@ -111,6 +111,7 @@ export default defineConfig(({ mode }) => {
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff,woff2}'],
+        navigateFallbackAllowlist: [/^\/$/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,

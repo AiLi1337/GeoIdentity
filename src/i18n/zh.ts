@@ -208,10 +208,10 @@ export const zh = {
     syntheticBadgeTip: '纯前端算法生成的虚拟测试档案，非真实自然人，点击查看免责声明',
     luhnPassed: '(Luhn 模10 校验通过)',
     realPhysicalBadge: '地址样本 · 测试用途',
-    complianceSafetyBadge: '合规与安全认证',
+    complianceSafetyBadge: '测试用途声明',
     legalVersion: 'v2.4 法律免责与合规',
     legalSubtitle: 'GeoIdentity · 服务条款、反欺诈声明与 AdSense 政策规范',
-    privacyComplianceBadge: '隐私与合规认证'
+    privacyComplianceBadge: '数据使用说明'
   },
   batch: {
     modalTitle: '批量生成合成测试资料',
@@ -255,9 +255,10 @@ export const zh = {
     financeTitle: '虚拟卡无金融价值',
     financeDesc: '财务卡号仅满足国际 Luhn 模 10 算法校验位，无任何发卡银行账户与资金余额，无法用于真实支付。',
     privacyTitle: '纯前端运算与 Cookie 声明',
-    privacyDesc: '数据纯本地前端离线运算，零服务器回传。第三方广告商（Google AdSense）可能通过 Cookie 提供展示。',
+    privacyDesc: '生成记录存于浏览器本地；广告、地图和头像服务可能收到网络请求信息。',
     viewFullBtn: '查看完整法律免责声明',
     privacyPolicy: '隐私政策与 Cookie 声明',
+    methodology: '地址数据方法',
     termsOfService: '服务条款 (严禁非法使用)',
     disclaimer: '免责声明',
     cloudflareNotice: '纯静态安全架构 · 零服务器依赖 · 支持 Cloudflare Pages',
@@ -268,7 +269,7 @@ export const zh = {
     subtitle: '请在使用本站（GeoIdentity）服务前仔细阅读并充分理解本声明。使用本工具即代表您完全理解、认可并无条件接受以下全部条款。',
     summaryAlert: '本站所生成的一切姓名、证件号码、电话及卡号均为算法随机生成的【纯虚拟测试数据】。实体地址源自公开地图地标，仅供软件开发、UI排版与表单校验等合法合规测试。严禁用于任何形式的欺诈、伪造及违法犯罪活动。',
     criticalNotice: '核心合规与测试声明',
-    sandboxBadge: '纯前端本地离线沙盒运行 · 零数据留存',
+    sandboxBadge: '生成记录保存在浏览器本地；第三方服务可能发起网络请求',
     tabAll: '全部条款',
     tabDisclaimer: '核心免责',
     tabTerms: '禁止非法用途',
@@ -291,13 +292,13 @@ export const zh = {
     section3P1: '3.1 本站“虚拟财务卡片”功能所生成的卡号，仅严格按照国际标准化组织（ISO/IEC 7812）公开的银行识别码（BIN）及 Luhn 模 10 算法生成，其唯一技术功能是供前端工程师测试信用卡输入框的格式校验正则表达式（Regex）与校验位算法。',
     section3P2: '3.2 此类卡号【不存在任何真实银行发卡账户、无信用额度、无资金余额、无透支借贷功能】，绝对无法通过银行清算网络完成任何结算扣款。请绝对不要在任何真实商业场景下尝试绑定或交易，否则可能被金融反欺诈风控系统拦截并面临法律追责。',
     section4Title: '四、 公开地理数据与外部地图服务说明',
-    section4P1: '4.1 本站所展示的地址、邮政编码及经纬度坐标均检索自公开的地理空间信息服务（如 Google Maps、OpenStreetMap 等实体地标）。该数据仅用于模拟跨境电商物流收货地址排版及地理编码有效性校验。',
+    section4P1: '4.1 地址包含可核对 OSM 建筑门牌、内置静态样本与街道区间插值。只有 OSM 条目附原始对象链接；内置与插值条目未逐条验证建筑，均不保证邮政投递。',
     section4P2: '4.2 地理地址与本站生成的虚拟人物之间不存在任何现实居住、所有权、租赁或雇佣关系。如通过本站跳转至第三方地图外部服务，相关外部服务的隐私政策及条款由该第三方平台独立负责。',
     section5Title: '五、 广告投放与第三方 Cookie 隐私披露 (Google AdSense 合规)',
-    section5P1: '5.1 为维持本开源与免费工具的服务器与 CDN 运营成本，本站集成了第三方广告服务商（包括 Google AdSense 等）提供的广告展示。',
+    section5P1: '5.1 Cloudflare 发布版本会加载 Google AdSense 脚本；实际广告展示取决于 Google 审核与设置。',
     section5P2: '5.2 第三方供应商（包括 Google）会根据用户此前访问本网站或其他网站的记录，使用 Cookie（如 DoubleClick Cookie 等）向用户投放个性化或非个性化广告。',
     section5P3: '5.3 用户有权随时管理或选择停用个性化广告：您可以访问 Google 广告设置（Google Ads Settings：https://adssettings.google.com）停用个性化广告投放，或访问 www.aboutads.info 停用第三方供应商为个性化广告所使用的 Cookie。',
-    section5P4: '5.4 本站核心业务逻辑采用 100% 浏览器客户端（Client-side）离线计算，本站服务器不收集、不回传、不储存任何由用户生成的身份记录或本地历史数据。',
+    section5P4: '5.4 生成档案与历史记录保存在浏览器本地，本站不将它们上传至自有应用服务器；广告、地图、头像及主动使用的 IP 定位服务可能处理网络请求信息。详见独立隐私说明。',
     partnerSitesLinkText: 'Google 如何使用来自采用 Google 服务的网站或应用的信息',
     optOutGoogleText: 'Google 广告个性化设置 (Google Ads Settings)',
     optOutAboutAdsText: 'AboutAds 行业第三方 Cookie 停用选项 (www.aboutads.info)',
@@ -309,9 +310,9 @@ export const zh = {
     closeLabel: '关闭'
   },
   cookieBanner: {
-    text: '【合规提醒】本站所生成的一切姓名、证件与卡号均为纯前端算法生成的虚拟测试数据，严禁用于任何非法用途。本站为纯静态离线架构，零服务器依赖，不收集任何隐私输入。继续浏览即代表您认可并同意我们的免责声明与服务条款。',
-    acceptBtn: '同意并继续使用',
-    learnMore: '查看免责声明与隐私政策'
+    text: '生成记录保存在浏览器本地；广告、地图和头像等第三方服务可能接收网络请求信息。此按钮只关闭提示，不控制广告 Cookie。',
+    acceptBtn: '我已了解',
+    learnMore: '查看隐私说明'
   },
   ipGen: {
     tabTitle: '🌐 基于 IP 地址生成',

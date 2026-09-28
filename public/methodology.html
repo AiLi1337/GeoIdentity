@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>地址数据来源与核对方法 | GeoIdentity</title>
+    <meta name="description" content="了解 GeoIdentity 的 OSM 建筑门牌、内置住宅样本和街道插值的来源、核对步骤及不能验证的事项。" />
+    <link rel="canonical" href="https://vllme.com/methodology.html" />
+    <link rel="stylesheet" href="/info.css" />
+  </head>
+  <body>
+    <header><nav class="wrap" aria-label="主导航"><strong>GeoIdentity</strong><a href="/">地址生成器</a><a href="/methodology.html" aria-current="page">数据方法</a><a href="/privacy.html">隐私说明</a></nav></header>
+    <main class="wrap">
+      <h1>地址样本的来源与核对方法</h1>
+      <p class="intro">地址格式测试需要把“地图上有建筑”和“这个地址可用于收件”分开。本站提供可回溯的建筑门牌，也保留内置样本和用于批量测试的插值结果；三者的证据等级不同。</p>
+
+      <h2>三类地址，不同的验证范围</h2>
+      <ol>
+        <li><strong>OSM 住宅建筑门牌：</strong>目前覆盖美国特拉华州 Wilmington 和俄勒冈州 Portland 的部分区域。每条记录保留 OSM way 对象 ID、建筑类型、街道门牌、城市、邮编与坐标，可打开对象链接核对公开标签。它只证明导入时 OSM 有相应标注，无法证明标签持续正确。</li>
+        <li><strong>内置住宅与公寓样本：</strong>项目随代码提供多地区静态样本，可用于地区选择、地址格式、地图定位和排版测试。它们不由每日 OSM 同步任务逐条验证；没有来源对象链接的条目不能视为已核对建筑。</li>
+        <li><strong>街道区间插值：</strong>程序在预设街道和门牌范围内选取号码，并根据道路端点计算近似坐标。这只是构造测试输入，不能据此推断该号码有实际房屋，更不能用于投递或 AVS。</li>
+      </ol>
+
+      <h2>OSM 数据如何进入网站</h2>
+      <p>同步程序查询限定区域内带 <code>building</code>、<code>addr:housenumber</code>、<code>addr:street</code>、<code>addr:postcode</code> 等标签的住宅建筑 way；还要求城市匹配、门牌与五位邮编格式有效、中心坐标有效，并按 OSM ID 和门牌去重。上游超时、无有效结果或新快照异常丢失旧建筑时，不覆盖上一份成功快照。网站只读取部署时打包的快照，首页的统计与时间不能当作实时查询结果。</p>
+      <p>举例：当前快照中的 <a href="https://www.openstreetmap.org/way/104186213" target="_blank" rel="noopener noreferrer">OSM way/104186213</a> 标为公寓建筑，地址字段是 1415 Southwest Alder Street、Portland、OR 97205。打开对象可检查 <code>building=apartments</code>、门牌、街道与邮编标签，再对照本站展示的字段。它没有证明某一单元号、住户或投递状态。若 OSM 后续修订标签，应以最新公开对象和实际权威地址信息为准，而不是旧快照。</p>
+
+      <h2>适合怎样使用</h2>
+      <p>开发者可以分别测试街道字段的长度和字符、城市/州/邮编布局，以及“无匹配地址”时的表单提示；用 OSM 模式时可以点击对象链接人工核对地图标签。生成的姓名、电话、电子邮箱、证件和支付卡为独立的合成测试字段，与建筑地址没有住户关联。请勿把任何结果作为真实收件人、实际房号、居住证明、可投递性或账单地址验证的依据。</p>
+      <p class="note">地图标签与坐标可能有误或过时；住宅单元号不会从 OSM 建筑外推。若需要真实业务地址，应向当事人或邮政/地址核验服务取得授权并独立核对。</p>
+      <p class="muted">来源：<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors (ODbL)</a>。项目的同步实现和静态样本可在 <a href="https://github.com/AiLi1337/GeoIdentity" target="_blank" rel="noopener noreferrer">GitHub 源码</a>核查。</p>
+    </main>
+    <footer><div class="wrap"><a href="/">返回地址生成器</a> · <a href="/privacy.html">隐私说明</a></div></footer>
+  </body>
+</html>

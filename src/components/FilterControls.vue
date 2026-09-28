@@ -13,15 +13,18 @@
       </div>
 
       <!-- Mode Comparison Toggle -->
-      <button
-        type="button"
-        @click="showModeGuide = !showModeGuide"
-        class="text-xs text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1 cursor-pointer self-start sm:self-auto font-medium"
-      >
-        <HelpCircle class="w-3.5 h-3.5" />
-        <span>{{ t('addressMode.modeComparison') }}</span>
-        <ChevronDown class="w-3 h-3 transition-transform" :class="{ 'rotate-180': showModeGuide }" />
-      </button>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <a href="/methodology.html" class="text-xs text-primary-600 dark:text-primary-400 hover:underline font-medium">{{ t('footer.methodology') }}</a>
+        <button
+          type="button"
+          @click="showModeGuide = !showModeGuide"
+          class="text-xs text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1 cursor-pointer self-start sm:self-auto font-medium"
+        >
+          <HelpCircle class="w-3.5 h-3.5" />
+          <span>{{ t('addressMode.modeComparison') }}</span>
+          <ChevronDown class="w-3 h-3 transition-transform" :class="{ 'rotate-180': showModeGuide }" />
+        </button>
+      </div>
     </div>
 
     <!-- 3 Distinct Address Mode Cards -->

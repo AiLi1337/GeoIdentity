@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://vllme.com/</loc>
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-28</lastmod>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://vllme.com/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://vllme.com/?lang=en" />
+  </url>
+  <url>
+    <loc>https://vllme.com/methodology.html</loc>
+    <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://vllme.com/privacy.html</loc>
+    <lastmod>2026-09-28</lastmod>
   </url>
 </urlset>
