@@ -23,7 +23,7 @@ lerna-debug.log*
 .env.*
 !.env.example
 
-# Personal / Third-party AdSense Credentials (EXCLUDED FROM OPEN SOURCE)
+# Prevent legacy ad files from being committed by accident
 public/ads.txt
 ads.txt
 

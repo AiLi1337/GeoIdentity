@@ -67,9 +67,9 @@
 
 ### Cloudflare Pages 直接部署
 
-`address.vllme.com` 绑定到 `geo-identity` Pages 项目。该项目当前未连接 Git 提供商：只推送 GitHub 不会自动更新网站，必须运行下方的每日任务或手动上传构建产物。普通 GitHub 构建不带广告；Cloudflare 发布构建从私有环境变量注入 AdSense 脚本和 `ads.txt`。
+`address.vllme.com` 绑定到 `geo-identity` Pages 项目。该项目当前未连接 Git 提供商：只推送 GitHub 不会自动更新网站，必须运行下方的每日任务或手动上传构建产物。
 
-手动发布（在本地私有环境中设置 `VITE_ADSENSE_ID`，不要提交 `.env` 或 `dist`）：
+手动发布（不要提交 `.env` 或 `dist`）：
 
 ```bash
 # 1. 在本地克隆并进入项目目录
@@ -79,7 +79,7 @@ cd GeoIdentity
 # 2. 安装项目依赖
 npm install
 
-# 3. 从私有环境提供 VITE_ADSENSE_ID 后打包生成 dist
+# 3. 打包生成 dist
 npm run build
 
 # 4. 首次使用请登录 Cloudflare 账户 (会弹出浏览器授权)
@@ -110,7 +110,7 @@ npx wrangler pages deploy dist --project-name geo-identity --branch main
 * **定时运行**：计划每天 UTC 00:00（北京时间 08:00）运行；GitHub 的定时任务可能延迟。
 * **公开数据采样**：从 [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL) 获取特拉华州 Wilmington 与俄勒冈州 Portland 的公开住宅建筑门牌、邮编、城市和坐标，过滤无效或重复记录，写入 `osmApartments.json`。只代表 OSM 有建筑门牌，**不保证可投递或通过 AVS**，不关联住户。
 * **失败处理**：上游暂不可用时跳过本次同步，保留仓库数据和上次成功时间；响应格式错误或旧地址异常大量消失时任务失败，不覆盖快照。页面显示的是已部署包的数据快照，并非实时查询；页面按钮只校验本地字段和数量。
-* **部署设置**：在 GitHub 仓库 Secrets 设置 `CLOUDFLARE_API_TOKEN`（对目标 Pages 项目有部署权限）、`CLOUDFLARE_ACCOUNT_ID` 与 `VITE_ADSENSE_ID`，在 Variables 设置 `CF_PAGES_PROJECT`（当前为 `geo-identity`）。任务先校验并同步数据，有变化才提交 GitHub；定时运行每次都尝试部署已验证的快照，以便重试此前失败的发布。手动运行可通过 `deploy` 开关在地址无变化时部署。带广告的 `dist` 只上传 Cloudflare，不推送 GitHub；缺少部署配置时会在发布前失败。
+* **部署设置**：在 GitHub 仓库 Secrets 设置 `CLOUDFLARE_API_TOKEN`（对目标 Pages 项目有部署权限）与 `CLOUDFLARE_ACCOUNT_ID`，在 Variables 设置 `CF_PAGES_PROJECT`（当前为 `geo-identity`）。任务先校验并同步数据，有变化才提交 GitHub；定时运行每次都尝试部署已验证的快照，以便重试此前失败的发布。手动运行可通过 `deploy` 开关在地址无变化时部署。缺少部署配置时会在发布前失败。
 * **许可**：新增 OSM 数据受 [Open Database License](https://opendatacommons.org/licenses/odbl/) 约束，使用或再分发时保留归属与许可要求。原有静态地址库不由 OSM 同步验证。
 
 ---

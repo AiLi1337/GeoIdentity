@@ -44,8 +44,14 @@ jobs:
             echo 'has_updates=true' >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Run Build Verification
-        run: npm run build
+      - name: Build Site
+        run: |
+          npm run build
+          test ! -e dist/ads.txt
+          if grep -Eriq 'adsbygoogle|googlesyndication|ca-pub-[0-9]+' dist; then
+            echo 'Unexpected advertising code in build output'
+            exit 1
+          fi
 
       - name: Commit & Push Daily Updates
         if: steps.sync.outputs.has_updates == 'true'
@@ -62,17 +68,9 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT }}
-          VITE_ADSENSE_ID: ${{ secrets.VITE_ADSENSE_ID }}
         run: |
           test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets'; exit 1; }
           test -n "$CF_PAGES_PROJECT" || { echo 'Set CF_PAGES_PROJECT repository variable'; exit 1; }
-          test -n "$VITE_ADSENSE_ID" || { echo 'Set VITE_ADSENSE_ID repository secret for the Cloudflare build'; exit 1; }
-
-      - name: Build Cloudflare Release
-        if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true || github.event_name == 'schedule'
-        env:
-          VITE_ADSENSE_ID: ${{ secrets.VITE_ADSENSE_ID }}
-        run: npm run build
 
       - name: Deploy to Cloudflare Pages
         if: steps.sync.outputs.has_updates == 'true' || inputs.deploy == true || github.event_name == 'schedule'

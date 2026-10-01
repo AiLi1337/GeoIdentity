@@ -1,57 +1,12 @@
-import { defineConfig, loadEnv, type Plugin } from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import { VitePWA } from 'vite-plugin-pwa'
 
-/**
- * Clean Open-Source AdSense Injection Plugin:
- * - When VITE_ADSENSE_ID is NOT set: 100% clean, zero ads, zero script, no ads.txt in build.
- * - When VITE_ADSENSE_ID is set (e.g. in Cloudflare Pages build environment variables):
- *   Automatically injects the AdSense script tag into <head> and emits ads.txt to the build root.
- */
-function adsensePlugin(adsenseId?: string): Plugin {
-  return {
-    name: 'vite-plugin-adsense',
-    transformIndexHtml(html) {
-      if (!adsenseId) return html;
-      const cleanId = adsenseId.trim();
-      return {
-        html,
-        tags: [
-          {
-            tag: 'script',
-            attrs: {
-              async: true,
-              src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${cleanId}`,
-              crossorigin: 'anonymous'
-            },
-            injectTo: 'head'
-          }
-        ]
-      };
-    },
-    generateBundle() {
-      if (!adsenseId) return;
-      const pubNumber = adsenseId.trim().replace(/^(ca-)?pub-/, '');
-      const adsTxtContent = `google.com, pub-${pubNumber}, DIRECT, f08c47fec0942fa0\n`;
-      this.emitFile({
-        type: 'asset',
-        fileName: 'ads.txt',
-        source: adsTxtContent
-      });
-    }
-  };
-}
-
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-  const adsenseId = env.VITE_ADSENSE_ID || process.env.VITE_ADSENSE_ID;
-
-  return {
+export default defineConfig({
     plugins: [
       vue(),
-      adsensePlugin(adsenseId),
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'auto',
@@ -135,6 +90,5 @@ export default defineConfig(({ mode }) => {
     alias: {
       '@': path.resolve(__dirname, './src')
     }
-  }
   }
 })

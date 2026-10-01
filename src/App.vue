@@ -276,9 +276,6 @@
       @close="closeDisclaimer"
     />
 
-    <!-- Data use notice -->
-    <CookieBanner />
-
     <!-- Toast Component -->
     <Toast ref="toastRef" />
   </div>
@@ -306,7 +303,6 @@ import IdentityCard from './components/IdentityCard.vue';
 import BatchModal from './components/BatchModal.vue';
 import HistoryDrawer from './components/HistoryDrawer.vue';
 import DisclaimerModal from './components/DisclaimerModal.vue';
-import CookieBanner from './components/CookieBanner.vue';
 import Toast from './components/Toast.vue';
 import IpAddressCard from './components/IpAddressCard.vue';
 import AddressMonitorDashboard from './components/AddressMonitor/AddressMonitorDashboard.vue';

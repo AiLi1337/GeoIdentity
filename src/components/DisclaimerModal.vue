@@ -133,7 +133,7 @@
           </div>
         </div>
 
-        <!-- Section 5: Google AdSense & Cookies Compliance -->
+        <!-- Section 5: Data and privacy -->
         <div v-show="activeTab === 'all' || activeTab === 'privacy'" class="space-y-2">
           <h3 class="text-sm sm:text-base font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-amber-500"></span>
@@ -142,60 +142,6 @@
           <div class="space-y-2.5 pl-4 border-l-2 border-amber-200 dark:border-amber-900/60">
             <p>{{ t('disclaimerModal.section5P1') }}</p>
             <p>{{ t('disclaimerModal.section5P2') }}</p>
-
-            <!-- External Official Compliance Links for AdSense / GDPR / CCPA -->
-            <div class="p-3 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/40 space-y-2">
-              <div class="text-xs font-semibold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
-                <ShieldCheck class="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                <span>{{ locale === 'zh' ? 'Google 官方数据合规与广告设置指引' : 'Google Official Policy & Opt-Out Links' }}:</span>
-              </div>
-              <ul class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-                <li class="flex items-center gap-1.5">
-                  <ExternalLink class="w-3.5 h-3.5 text-primary-500 flex-shrink-0" />
-                  <a
-                    href="https://policies.google.com/technologies/partner-sites"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary-600 dark:text-primary-400 hover:underline font-medium break-all"
-                  >
-                    {{ t('disclaimerModal.partnerSitesLinkText') }}
-                  </a>
-                </li>
-                <li class="flex items-center gap-1.5">
-                  <ExternalLink class="w-3.5 h-3.5 text-primary-500 flex-shrink-0" />
-                  <a
-                    href="https://adssettings.google.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary-600 dark:text-primary-400 hover:underline font-medium break-all"
-                  >
-                    {{ t('disclaimerModal.optOutGoogleText') }}
-                  </a>
-                </li>
-                <li class="flex items-center gap-1.5">
-                  <ExternalLink class="w-3.5 h-3.5 text-primary-500 flex-shrink-0" />
-                  <a
-                    href="https://www.aboutads.info/choices/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary-600 dark:text-primary-400 hover:underline font-medium break-all"
-                  >
-                    {{ t('disclaimerModal.optOutAboutAdsText') }}
-                  </a>
-                </li>
-                <li class="flex items-center gap-1.5">
-                  <ExternalLink class="w-3.5 h-3.5 text-primary-500 flex-shrink-0" />
-                  <a
-                    href="https://policies.google.com/technologies/ads"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary-600 dark:text-primary-400 hover:underline font-medium break-all"
-                  >
-                    {{ t('disclaimerModal.adsPolicyText') }}
-                  </a>
-                </li>
-              </ul>
-            </div>
 
             <p class="font-medium text-emerald-600 dark:text-emerald-400">{{ t('disclaimerModal.section5P4') }}</p>
           </div>
@@ -235,7 +181,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
-import { Scale, X, ShieldAlert, ShieldCheck, ExternalLink } from 'lucide-vue-next';
+import { Scale, X, ShieldAlert, ShieldCheck } from 'lucide-vue-next';
 import { useI18n } from '../i18n';
 
 const props = withDefaults(
@@ -252,7 +198,7 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>();
 
-const { locale, t } = useI18n();
+const { t } = useI18n();
 
 const activeTab = ref('all');
 
