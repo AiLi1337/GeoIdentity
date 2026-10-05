@@ -100,6 +100,8 @@ export const en = {
     addressTitle: 'OSM Building Address (delivery unverified)',
     street: 'Street Address (Line 1)',
     addressLine2: 'Unit / Suite (Line 2)',
+    city: 'City',
+    state: 'State / Province',
     cityState: 'City / State',
     postcode: 'Postal Code',
     country: 'Country',

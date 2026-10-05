@@ -159,7 +159,7 @@
 
     <!-- Main Content Sections Grid -->
     <div class="p-4 sm:p-8 space-y-6 sm:space-y-8">
-      <!-- Section 1: Real Address on Google Maps -->
+      <!-- Section 1: Address Details -->
       <div class="min-w-0 max-w-full">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div class="flex items-center gap-2">
@@ -222,12 +222,13 @@
           </span>
         </div>
 
-        <!-- Address Cards 4-Column Grid (Line 1, Line 2, City/State, Postcode) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <!-- Address Cards 5-Column Grid (Line 1, Line 2, City, State, Postcode) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
           <!-- Street Address (Line 1) -->
           <div
-            @click="copyField(identity.address.addressLine1 || identity.address.street, 'street')"
-            class="group p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary-400 dark:hover:border-primary-500 bg-slate-50/60 dark:bg-slate-800/40 cursor-pointer transition-all hover:shadow-sm"
+            @click="copyField(identity.address.addressLine1 || identity.address.street || '', 'street')"
+            class="group p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary-400 dark:hover:border-primary-500 bg-slate-50/60 dark:bg-slate-800/40 cursor-pointer transition-all hover:shadow-sm sm:col-span-2 lg:col-span-1"
+            :title="identity.address.addressLine1 || identity.address.street"
           >
             <div class="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 mb-1">
               <span>{{ labels.street }}</span>
@@ -235,7 +236,7 @@
               <Copy v-else class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
             </div>
             <div class="text-sm font-semibold text-slate-800 dark:text-slate-200 break-words">
-              {{ identity.address.addressLine1 || identity.address.street }}
+              {{ identity.address.addressLine1 || identity.address.street || 'N/A' }}
             </div>
           </div>
 
@@ -243,50 +244,69 @@
           <div
             @click="copyField(identity.address.addressLine2 || '', 'suite')"
             class="group p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary-400 dark:hover:border-primary-500 bg-slate-50/60 dark:bg-slate-800/40 cursor-pointer transition-all hover:shadow-sm"
+            :title="identity.address.addressLine2 || 'N/A'"
           >
             <div class="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 mb-1">
               <span>{{ labels.addressLine2 }}</span>
               <Check v-if="copiedKey === 'suite'" class="w-3.5 h-3.5 text-emerald-500" />
               <Copy v-else class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
             </div>
-            <div class="text-sm font-semibold text-primary-600 dark:text-primary-400 font-mono">
+            <div class="text-sm font-semibold text-primary-600 dark:text-primary-400 font-mono break-words">
               {{ identity.address.addressLine2 || 'N/A' }}
             </div>
           </div>
 
-          <!-- City & State -->
+          <!-- City -->
           <div
-            @click="copyField(`${identity.address.city}, ${identity.address.stateFull || identity.address.state}`, 'city')"
+            @click="copyField(identity.address.city || '', 'city')"
             class="group p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary-400 dark:hover:border-primary-500 bg-slate-50/60 dark:bg-slate-800/40 cursor-pointer transition-all hover:shadow-sm"
+            :title="identity.address.city || 'N/A'"
           >
             <div class="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 mb-1">
-              <span>{{ labels.cityState }}</span>
+              <span>{{ labels.city }}</span>
               <Check v-if="copiedKey === 'city'" class="w-3.5 h-3.5 text-emerald-500" />
               <Copy v-else class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
             </div>
-            <div class="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
-              {{ identity.address.city }}, {{ identity.address.stateFull || identity.address.state }}
+            <div class="text-sm font-semibold text-slate-800 dark:text-slate-200 break-words">
+              {{ identity.address.city || 'N/A' }}
+            </div>
+          </div>
+
+          <!-- State / Province -->
+          <div
+            @click="copyField(identity.address.stateFull || identity.address.state || '', 'state')"
+            class="group p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary-400 dark:hover:border-primary-500 bg-slate-50/60 dark:bg-slate-800/40 cursor-pointer transition-all hover:shadow-sm"
+            :title="identity.address.stateFull || identity.address.state || 'N/A'"
+          >
+            <div class="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 mb-1">
+              <span>{{ labels.state }}</span>
+              <Check v-if="copiedKey === 'state'" class="w-3.5 h-3.5 text-emerald-500" />
+              <Copy v-else class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
+            </div>
+            <div class="text-sm font-semibold text-slate-800 dark:text-slate-200 break-words">
+              {{ identity.address.stateFull || identity.address.state || 'N/A' }}
             </div>
           </div>
 
           <!-- Postcode & Country -->
           <div
-            @click="copyField(identity.address.postcode, 'postcode')"
+            @click="copyField(identity.address.postcode || '', 'postcode')"
             class="group p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary-400 dark:hover:border-primary-500 bg-slate-50/60 dark:bg-slate-800/40 cursor-pointer transition-all hover:shadow-sm"
+            :title="identity.address.postcode || 'N/A'"
           >
             <div class="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 mb-1">
               <span>{{ labels.postcode }}</span>
               <Check v-if="copiedKey === 'postcode'" class="w-3.5 h-3.5 text-emerald-500" />
               <Copy v-else class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
             </div>
-            <div class="text-sm font-semibold text-slate-800 dark:text-slate-200 font-mono">
-              {{ identity.address.postcode }}
+            <div class="text-sm font-semibold text-slate-800 dark:text-slate-200 font-mono break-words">
+              {{ identity.address.postcode || 'N/A' }}
             </div>
           </div>
         </div>
 
         <!-- Dedicated eCommerce / Forwarder Standard Format Card -->
-        <div class="mb-4 p-4 rounded-2xl bg-amber-50/40 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="p-4 rounded-2xl bg-amber-50/40 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="space-y-1">
             <div class="flex items-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300">
               <PackageCheck class="w-4 h-4" />
@@ -305,11 +325,6 @@
             <Copy v-else class="w-3.5 h-3.5" />
             <span>{{ copiedKey === 'forwarder' ? t('card.copiedField') : t('card.copyForwarder') }}</span>
           </button>
-        </div>
-
-        <!-- Google Maps Live Embed Viewer -->
-        <div class="min-w-0 max-w-full overflow-hidden">
-          <GoogleMapEmbed :address="identity.address" />
         </div>
       </div>
 
@@ -423,7 +438,12 @@
         </div>
       </div>
 
-      <!-- Section 3: Occupation & Higher Education -->
+      <!-- Section 3: Interactive Map (OSM / Bing / Google) -->
+      <div class="min-w-0 max-w-full overflow-hidden">
+        <GoogleMapEmbed :address="identity.address" />
+      </div>
+
+      <!-- Section 4: Occupation & Higher Education -->
       <div class="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-4">
         <div class="flex items-center gap-2 mb-2">
           <div class="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
@@ -482,7 +502,7 @@
         </div>
       </div>
 
-      <!-- Section 4: Finance Virtual Card (Luhn Validated) -->
+      <!-- Section 5: Finance Virtual Card (Luhn Validated) -->
       <div class="p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white shadow-xl relative overflow-hidden">
         <!-- Ambient Card Graphic -->
         <div class="absolute -top-12 right-0 w-48 h-48 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"></div>

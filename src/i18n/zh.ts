@@ -100,6 +100,8 @@ export const zh = {
     addressTitle: 'OSM 公开建筑门牌（收件未核验）',
     street: '街道地址 (Line 1)',
     addressLine2: '转运/单元号 (Line 2)',
+    city: '城市',
+    state: '省 / 州',
     cityState: '城市 / 州省',
     postcode: '邮政编码',
     country: '所属国家',

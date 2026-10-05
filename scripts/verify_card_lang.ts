@@ -1,4 +1,4 @@
-﻿import { generateIdentity } from '../src/services/identityGenerator';
+import { generateIdentity } from '../src/services/identityGenerator';
 import { formatFullIdentityText } from '../src/services/exportService';
 import { COUNTRY_LOCAL_META } from '../src/data/names';
 import type { CountryCode } from '../src/types/identity';
@@ -56,5 +56,31 @@ if (!usEnText.includes('=== Basic Information ===')) {
   throw new Error('US en format missing English header');
 }
 console.log('✓ US en format verified successfully.');
+
+console.log('\n=== 4. Validating Separate City and State Labels for All 21 Countries ===');
+import { COUNTRIES } from '../src/data/countries';
+import { getCardLabels } from '../src/data/cardLabels';
+import type { CardLanguage } from '../src/types/identity';
+
+const cardLangs: CardLanguage[] = ['zh', 'en', 'local'];
+let labelChecks = 0;
+for (const country of COUNTRIES) {
+  for (const cLang of cardLangs) {
+    for (const uiLoc of ['zh', 'en']) {
+      const labels = getCardLabels(country.code, cLang, uiLoc);
+      if (!labels.city || typeof labels.city !== 'string') {
+        throw new Error(`Missing city label for ${country.code} with lang=${cLang}, uiLocale=${uiLoc}`);
+      }
+      if (!labels.state || typeof labels.state !== 'string') {
+        throw new Error(`Missing state label for ${country.code} with lang=${cLang}, uiLocale=${uiLoc}`);
+      }
+      if (!labels.cityState || typeof labels.cityState !== 'string') {
+        throw new Error(`Missing backward-compatible cityState label for ${country.code}`);
+      }
+      labelChecks++;
+    }
+  }
+}
+console.log(`✓ Validated ${labelChecks} label combinations: all contain independent city and state labels!`);
 
 console.log('\nAll card language verification checks passed with flying colors! 🚀');
