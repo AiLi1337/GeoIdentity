@@ -86,16 +86,8 @@
         />
       </div>
 
-      <section aria-labelledby="data-method-heading" class="pt-8 border-t border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 leading-relaxed">
-        <div class="max-w-4xl space-y-4">
-          <h2 id="data-method-heading" class="text-lg font-semibold text-slate-900 dark:text-white">{{ locale === 'zh' ? '这些地址样本能证明什么？' : 'What do these address samples establish?' }}</h2>
-          <p v-if="locale === 'zh'">GeoIdentity 有三类不同的地址数据：带 OpenStreetMap 对象链接的建筑门牌、仓库内置的多地区住宅及公寓样本，以及按街道区间计算的插值门牌。只有第一类可以直接查看对应的 OSM 建筑对象；地图上的建筑门牌不等于有效房号、住户身份、可投递地址或账单地址验证（AVS）。插值门牌甚至不代表该号码存在建筑。</p>
-          <p v-else>GeoIdentity includes three distinct types of address data: building addresses with OpenStreetMap object links, bundled residential and apartment samples, and interpolated street numbers. Only the first type links to an OSM building object. A mapped building does not establish a valid unit, resident, delivery address, or address verification (AVS). An interpolated number does not even establish that a building exists.</p>
-          <p v-if="locale === 'zh'">例如，公开的 <a class="underline text-teal-700 dark:text-teal-300" href="https://www.openstreetmap.org/way/104186213" target="_blank" rel="noopener noreferrer">Portland 公寓建筑 OSM 对象</a>包含建筑类型和门牌标签，适合核对表单的街道、城市、州和邮编格式；不能拿它验证某个人是否居住在该处。地址快照按日尝试从 OSM 更新，网页显示的是最近一次成功部署的数据，并非实时地图查询。</p>
-          <p v-else>For example, the public <a class="underline text-teal-700 dark:text-teal-300" href="https://www.openstreetmap.org/way/104186213" target="_blank" rel="noopener noreferrer">Portland apartment building object</a> lists a building type and address tags suitable for checking form layouts. It says nothing about who lives there. The OSM snapshot is refreshed when the scheduled import succeeds and a new release is deployed; the site is not a live map query.</p>
-          <p><a class="underline font-medium text-teal-700 dark:text-teal-300" href="/methodology.html">{{ locale === 'zh' ? '阅读数据来源、筛选条件与测试示例' : 'Read about sources, filters and test cases' }}</a> <span aria-hidden="true">·</span> <a class="underline font-medium text-teal-700 dark:text-teal-300" href="/privacy.html">{{ locale === 'zh' ? '隐私与第三方服务说明' : 'Privacy and third-party services' }}</a></p>
-        </div>
-      </section>
+      <!-- Address Proof & Methodology Guide Section -->
+      <AddressProofNotice />
 
       <!-- Comprehensive Legal Disclaimer & Policy Footer -->
       <footer class="pt-8 pb-16 space-y-6 border-t border-slate-200/80 dark:border-slate-800/80">
@@ -306,6 +298,7 @@ import DisclaimerModal from './components/DisclaimerModal.vue';
 import Toast from './components/Toast.vue';
 import IpAddressCard from './components/IpAddressCard.vue';
 import AddressMonitorDashboard from './components/AddressMonitor/AddressMonitorDashboard.vue';
+import AddressProofNotice from './components/AddressProofNotice.vue';
 import {
   ShieldAlert,
   Scale,
