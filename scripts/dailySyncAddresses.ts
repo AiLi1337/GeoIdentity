@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { isDeepStrictEqual } from 'node:util';
 import { COUNTRIES } from '../src/data/countries';
 import { ADDRESS_MAP } from '../src/data/addresses/index';
 import { STREET_DERIVATION_RULES } from '../src/data/addresses/schemes/derivationRules';
@@ -96,20 +97,15 @@ export function buildRefreshedMetadata(
   const dateStr = now.toISOString().slice(0, 10);
   const timeStr = now.toISOString().slice(11, 19);
 
-  const previousStats = previousMetadata?.stats as Record<string, unknown> | undefined;
   const previousLogs = Array.isArray(previousMetadata?.syncLogs) ? previousMetadata.syncLogs : [];
   const latestLog = previousLogs.at(-1);
   const logMatchesCurrentStats = typeof latestLog?.message === 'string' &&
     latestLog.status === 'SUCCESS' &&
     new RegExp(`OpenStreetMap[^。]*${osmApartments.length} 处`).test(latestLog.message) &&
     latestLog.message.includes(`检查 ${computed.stats.totalPhysicalVerifiedAddresses} 处`);
-  const metadataMatchesCurrentStats = previousStats?.totalOsmBuildings === computed.stats.totalOsmBuildings &&
-    previousStats.totalPhysicalVerifiedAddresses === computed.stats.totalPhysicalVerifiedAddresses &&
-    previousStats.totalPhysicalLandmarks === computed.stats.totalPhysicalLandmarks &&
-    previousStats.totalSchemeACorridors === computed.stats.totalSchemeACorridors &&
-    previousStats.totalSchemeACapacity === computed.stats.totalSchemeACapacity &&
-    previousStats.totalSchemeBResidential === computed.stats.totalSchemeBResidential &&
-    previousStats.totalReachableAddresses === computed.stats.totalReachableAddresses;
+  const metadataMatchesCurrentStats = previousMetadata?.totalCountries === computed.totalCountries &&
+    isDeepStrictEqual(previousMetadata?.stats, computed.stats) &&
+    isDeepStrictEqual(previousMetadata?.countryBreakdown, computed.countryBreakdown);
   const shouldPublishCurrentStats = osmChanged ||
     !previousMetadata?.version ||
     !previousMetadata?.lastUpdated ||
@@ -137,7 +133,7 @@ export function buildRefreshedMetadata(
     ? `${dateStr} ${timeStr} UTC`
     : previousMetadata.metadataUpdatedFormattedEn;
   const version = shouldPublishCurrentStats || !previousMetadata?.version
-    ? `v${dateStr.replace(/-/g, '.')}.${Math.floor(now.getTime() / 86400000) % 100}`
+    ? `v${dateStr.replace(/-/g, '.')}.${now.toISOString().slice(11, 23).replace(/[:.]/g, '')}`
     : previousMetadata.version;
   const currentLog = {
     timestamp: metadataUpdatedAt,
@@ -200,6 +196,8 @@ export function writeJsonFilesAtomically(
   }));
 
   let committed = 0;
+  const errors: unknown[] = [];
+  const retainedBackups = new Set<string>();
   try {
     for (const file of staged) ops.writeFileSync(file.tempPath, file.contents);
     for (const file of staged) {
@@ -210,17 +208,46 @@ export function writeJsonFilesAtomically(
       committed++;
     }
   } catch (error) {
-    for (let index = 0; index < committed; index++) {
+    errors.push(error);
+    for (let index = committed - 1; index >= 0; index--) {
       const file = staged[index];
-      if (ops.existsSync(file.path)) ops.unlinkSync(file.path);
-      if (file.hadOriginal) ops.renameSync(file.backupPath, file.path);
+      try {
+        if (file.hadOriginal) {
+          // Rename over the published file so a failed restore leaves both copies intact.
+          ops.renameSync(file.backupPath, file.path);
+        } else if (ops.existsSync(file.path)) {
+          ops.unlinkSync(file.path);
+        }
+      } catch (restoreError) {
+        if (file.hadOriginal) retainedBackups.add(file.backupPath);
+        errors.push(new Error(
+          file.hadOriginal
+            ? `Rollback failed for ${file.path}; recovery backup retained at ${file.backupPath}`
+            : `Rollback failed to remove newly published file ${file.path}`,
+          { cause: restoreError }
+        ));
+      }
     }
-    throw error;
-  } finally {
-    for (const file of staged) {
-      if (ops.existsSync(file.tempPath)) ops.unlinkSync(file.tempPath);
-      if (ops.existsSync(file.backupPath)) ops.unlinkSync(file.backupPath);
+  }
+
+  for (const file of staged) {
+    const cleanupPaths = retainedBackups.has(file.backupPath)
+      ? [file.tempPath]
+      : [file.tempPath, file.backupPath];
+    for (const cleanupPath of cleanupPaths) {
+      try {
+        if (ops.existsSync(cleanupPath)) ops.unlinkSync(cleanupPath);
+      } catch (cleanupError) {
+        errors.push(new Error(`Failed to clean staging file ${cleanupPath}`, { cause: cleanupError }));
+      }
     }
+  }
+
+  if (errors.length === 1) throw errors[0];
+  if (errors.length > 1) {
+    throw new AggregateError(errors, errors.map(error =>
+      error instanceof Error ? error.message : String(error)
+    ).join('; '));
   }
 }
 

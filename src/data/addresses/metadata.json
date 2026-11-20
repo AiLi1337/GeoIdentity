@@ -1,22 +1,22 @@
 {
-  "version": "v2026.11.20.77",
+  "version": "v2026.11.20.065103396",
   "lastUpdated": "2026-09-26T02:44:08.191Z",
   "lastUpdatedFormattedZh": "2026-09-26 02:44:08 (UTC)",
   "lastUpdatedFormattedEn": "2026-09-26 02:44:08 UTC",
-  "metadataUpdatedAt": "2026-11-20T03:38:31.080Z",
-  "metadataUpdatedFormattedZh": "2026-11-20 03:38:31 (UTC)",
-  "metadataUpdatedFormattedEn": "2026-11-20 03:38:31 UTC",
+  "metadataUpdatedAt": "2026-11-20T06:51:03.396Z",
+  "metadataUpdatedFormattedZh": "2026-11-20 06:51:03 (UTC)",
+  "metadataUpdatedFormattedEn": "2026-11-20 06:51:03 UTC",
   "healthStatus": "HEALTHY",
   "syncSchedule": "Scheduled daily at 00:00 UTC; GitHub Actions may start later",
   "totalCountries": 21,
   "stats": {
-    "totalPhysicalLandmarks": 318,
-    "totalOsmBuildings": 180,
+    "totalPhysicalLandmarks": 316,
+    "totalOsmBuildings": 178,
     "totalSchemeACorridors": 126,
     "totalSchemeACapacity": 100182,
     "totalSchemeBResidential": 386,
-    "totalPhysicalVerifiedAddresses": 704,
-    "totalReachableAddresses": 100886
+    "totalPhysicalVerifiedAddresses": 702,
+    "totalReachableAddresses": 100884
   },
   "countryBreakdown": {
     "US": {
@@ -221,13 +221,13 @@
       "flag": "🇭🇰",
       "continent": "asia_pacific",
       "isTaxFreeZone": true,
-      "landmarkCount": 30,
-      "osmCount": 20,
+      "landmarkCount": 29,
+      "osmCount": 19,
       "schemeACorridorCount": 8,
       "schemeACapacity": 975,
       "schemeBResidentialCount": 14,
-      "totalPhysicalPoints": 44,
-      "totalDerivableCapacity": 1019
+      "totalPhysicalPoints": 43,
+      "totalDerivableCapacity": 1018
     },
     "TW": {
       "code": "TW",
@@ -236,13 +236,13 @@
       "flag": "🇹🇼",
       "continent": "asia_pacific",
       "isTaxFreeZone": false,
-      "landmarkCount": 32,
-      "osmCount": 23,
+      "landmarkCount": 31,
+      "osmCount": 22,
       "schemeACorridorCount": 11,
       "schemeACapacity": 2793,
       "schemeBResidentialCount": 14,
-      "totalPhysicalPoints": 46,
-      "totalDerivableCapacity": 2839
+      "totalPhysicalPoints": 45,
+      "totalDerivableCapacity": 2838
     },
     "SG": {
       "code": "SG",
@@ -347,6 +347,12 @@
       "action": "SNAPSHOT_STATISTICS_RECONCILED",
       "status": "SUCCESS",
       "message": "已核对当前 OpenStreetMap 快照：公开住宅建筑门牌 180 处。本次未替换 OSM 快照；已检查 704 处地址坐标与字段格式，未核验 AVS 或邮政投递。"
+    },
+    {
+      "timestamp": "2026-11-20T06:51:03.396Z",
+      "action": "SNAPSHOT_STATISTICS_RECONCILED",
+      "status": "SUCCESS",
+      "message": "已核对当前 OpenStreetMap 快照：公开住宅建筑门牌 178 处。本次未替换 OSM 快照；已检查 702 处地址坐标与字段格式，未核验 AVS 或邮政投递。"
     }
   ]
 }

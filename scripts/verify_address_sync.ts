@@ -106,6 +106,19 @@ const invalidCoordinateResult = await syncOsmApartments(
 assert.equal(invalidCoordinateResult.length, 1, 'global coordinates outside latitude/longitude bounds are rejected');
 assert.equal(invalidCoordinateResult[0].id, 'way/22');
 
+const sourceUseResult = await syncOsmApartments(
+  async () => ({ ok: true, json: async () => ({ elements: [
+    valid(30, { 'addr:housenumber': '930' }),
+    valid(31, { 'addr:housenumber': '931', tourism: 'hotel' }),
+    valid(32, { 'addr:housenumber': '932', amenity: 'bank' }),
+    valid(33, { 'addr:housenumber': '933', 'addr:country': 'CA' }),
+    valid(34, { 'addr:housenumber': '934', 'addr:country': ' us ' })
+  ] }) }),
+  outsideCenterArea
+);
+assert.deepEqual(sourceUseResult.map(address => address.id), ['way/30', 'way/34'],
+  'residential building tags do not override hotel/bank use or an explicit foreign country');
+
 assert.deepEqual(await syncOsmApartments(fetchOk, testAreas), result);
 assert.deepEqual(await syncOsmApartments(async (url, opts) => {
   if (url.startsWith('https://overpass-api.de/')) return { ok: false, status: 504, json: async () => ({}) };
@@ -132,15 +145,36 @@ assert.equal(alreadyReconciled.lastUpdated, offlineRefreshed.lastUpdated, 'consi
 assert.equal(alreadyReconciled.metadataUpdatedAt, offlineRefreshed.metadataUpdatedAt, 'consistent metadata keeps its reconciliation timestamp');
 assert.equal(alreadyReconciled.syncLogs.length, offlineRefreshed.syncLogs.length, 'consistent metadata does not append duplicate logs');
 
+const staleCountryMetadata = structuredClone(offlineRefreshed);
+staleCountryMetadata.countryBreakdown.HK.landmarkCount--;
+staleCountryMetadata.countryBreakdown.TW.landmarkCount++;
+const correctedCountryMetadata = buildRefreshedMetadata(
+  currentSnapshot as any, staleCountryMetadata, false, new Date('2026-11-21T00:00:00Z')
+);
+assert.deepEqual(correctedCountryMetadata.stats, staleCountryMetadata.stats,
+  'country distribution can change without changing the global totals');
+assert.equal(correctedCountryMetadata.metadataUpdatedAt, '2026-11-21T00:00:00.000Z',
+  'corrected country distribution gets a new publication timestamp');
+assert.notEqual(correctedCountryMetadata.version, staleCountryMetadata.version);
+assert.equal(correctedCountryMetadata.lastUpdated, staleCountryMetadata.lastUpdated,
+  'country statistics refresh does not invent an OSM fetch');
+assert.equal(correctedCountryMetadata.syncLogs.length, staleCountryMetadata.syncLogs.length + 1);
+const sameDayCorrection = buildRefreshedMetadata(
+  currentSnapshot as any, staleCountryMetadata, false, new Date('2026-11-20T01:00:00Z')
+);
+assert.notEqual(sameDayCorrection.version, staleCountryMetadata.version,
+  'a second statistics publication on the same day receives a new version');
+
 const currentReconciled = buildRefreshedMetadata(currentSnapshot as any, currentMetadata as any, false, new Date('2026-11-20T03:00:00Z'));
-assert.equal(currentReconciled.stats.totalOsmBuildings, 180);
+assert.equal(currentReconciled.stats.totalOsmBuildings, currentSnapshot.length);
 assert.equal(currentReconciled.lastUpdated, currentMetadata.lastUpdated, 'published metadata preserves the OSM fetch timestamp');
 assert.equal(currentReconciled.metadataUpdatedAt, currentMetadata.metadataUpdatedAt, 'published metadata preserves its reconciliation timestamp');
-assert.match(currentReconciled.syncLogs.at(-1)?.message || '', /OpenStreetMap[^。]*180 处/);
+assert.match(currentReconciled.syncLogs.at(-1)?.message || '',
+  new RegExp(`OpenStreetMap[^。]*${currentSnapshot.length} 处`));
 
 const invalidHkSnapshot = [
   ...(currentSnapshot as any[]),
-  { ...(currentSnapshot as any[]).find(address => address.countryCode === 'HK'), id: 'way/999077', postcode: '999077' }
+  { ...(currentSnapshot as any[]).find(address => address.countryCode === 'HK'), id: 'way/900000001', postcode: '123456' }
 ];
 assert.equal(computeAddressMetadataStats(invalidHkSnapshot as any).coordinateErrors, 1,
   'Hong Kong must keep an empty postcode rather than exempting any non-empty value');
@@ -166,6 +200,13 @@ for (const address of currentSnapshot as any[]) {
 const atomicDir = fs.mkdtempSync(path.join(os.tmpdir(), 'geo-address-atomic-'));
 const firstPath = path.join(atomicDir, 'first.json');
 const secondPath = path.join(atomicDir, 'second.json');
+const atomicFileOps = {
+  existsSync: fs.existsSync,
+  writeFileSync: (filePath: string, contents: string) => fs.writeFileSync(filePath, contents, 'utf-8'),
+  copyFileSync: fs.copyFileSync,
+  renameSync: fs.renameSync,
+  unlinkSync: fs.unlinkSync
+};
 try {
   fs.writeFileSync(firstPath, '{"old":1}\n');
   fs.writeFileSync(secondPath, '{"old":2}\n');
@@ -183,21 +224,64 @@ try {
     { path: firstPath, contents: '{"changed":1}\n' },
     { path: secondPath, contents: '{"changed":2}\n' }
   ], {
-    existsSync: fs.existsSync,
-    writeFileSync: (filePath, contents) => fs.writeFileSync(filePath, contents, 'utf-8'),
-    copyFileSync: fs.copyFileSync,
+    ...atomicFileOps,
     renameSync: (sourcePath, targetPath) => {
       renameCalls++;
       if (renameCalls === 2) throw new Error('simulated second-file failure');
       fs.renameSync(sourcePath, targetPath);
-    },
-    unlinkSync: fs.unlinkSync
+    }
   }), /simulated second-file failure/);
   assert.equal(fs.readFileSync(firstPath, 'utf-8'), '{"stable":1}\n', 'failed pair publication restores the first file');
   assert.equal(fs.readFileSync(secondPath, 'utf-8'), '{"stable":2}\n', 'failed pair publication leaves the second file unchanged');
   assert.equal(fs.readdirSync(atomicDir).filter(name => /\.(tmp|bak)-/.test(name)).length, 0);
+
+  let failedRestoreBackup = '';
+  assert.throws(() => writeJsonFilesAtomically([
+    { path: firstPath, contents: '{"changed":1}\n' },
+    { path: secondPath, contents: '{"changed":2}\n' }
+  ], {
+    ...atomicFileOps,
+    renameSync: (sourcePath, targetPath) => {
+      if (sourcePath.startsWith(`${secondPath}.tmp-`)) throw new Error('publication denied');
+      if (sourcePath.startsWith(`${firstPath}.bak-`)) {
+        failedRestoreBackup = sourcePath;
+        throw new Error('backup temporarily locked');
+      }
+      fs.renameSync(sourcePath, targetPath);
+    }
+  }), (error: unknown) => {
+    assert(error instanceof AggregateError, 'publish and restore errors are both observable');
+    assert.match(error.errors[0].message, /publication denied/);
+    assert.match(error.errors[1].cause.message, /backup temporarily locked/);
+    return true;
+  });
+  assert.equal(fs.readFileSync(firstPath, 'utf-8'), '{"changed":1}\n',
+    'failed restore does not delete the currently published file');
+  assert.equal(fs.readFileSync(failedRestoreBackup, 'utf-8'), '{"stable":1}\n',
+    'failed restore keeps the original snapshot in its backup');
+  assert.equal(fs.readFileSync(secondPath, 'utf-8'), '{"stable":2}\n');
+
+  assert.throws(() => writeJsonFilesAtomically([
+    { path: firstPath, contents: '{"next":1}\n' },
+    { path: secondPath, contents: '{"next":2}\n' }
+  ], {
+    ...atomicFileOps,
+    copyFileSync: () => { throw new Error('backup write denied'); },
+    unlinkSync: filePath => {
+      if (filePath.startsWith(`${secondPath}.tmp-`)) throw new Error('staging file locked');
+      fs.unlinkSync(filePath);
+    }
+  }), (error: unknown) => {
+    assert(error instanceof AggregateError, 'cleanup failure does not mask the publication error');
+    assert.match(error.errors[0].message, /backup write denied/);
+    assert.match(error.errors[1].cause.message, /staging file locked/);
+    return true;
+  });
 } finally {
-  fs.rmSync(atomicDir, { recursive: true, force: true });
+  const resolvedAtomicDir = fs.realpathSync(atomicDir);
+  assert.equal(path.dirname(resolvedAtomicDir), fs.realpathSync(os.tmpdir()));
+  assert(path.basename(resolvedAtomicDir).startsWith('geo-address-atomic-'));
+  fs.rmSync(resolvedAtomicDir, { recursive: true, force: true });
 }
 
 await assert.rejects(

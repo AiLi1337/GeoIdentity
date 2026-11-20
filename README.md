@@ -42,7 +42,7 @@
 ## 🌟 核心特性
 
 - **恢复多地区地址选择**：21 国内置住宅与公寓样本、街道门牌区间插值可在网页及批量生成中选择。插值门牌并非逐条核验的真实建筑，内置样本不保证投递或 AVS。
-- **可核对来源模式**：另收录美国 Wilmington（DE）和 Portland（OR）的 OSM 住宅建筑门牌，每条附原始对象链接；当前数量以地址库监控页的数据快照为准。此模式无匹配时不跨地区兜底。
+- **可核对来源模式**：收录美国多座城市、香港多个行政区及台湾多个城市的 OSM 住宅建筑门牌，每条附原始对象链接；当前数量和覆盖以地址库监控页的数据快照为准。此模式无匹配时不跨地区兜底。
 - **边界**：OSM 是众包数据；仅说明建筑门牌有来源对象，不代表房号、住户、产权、邮政投递或 AVS 认证。合成身份与建筑没有任何居住关联。
 - 🗺️ **三地图引擎与防“IP 送中”安全沙箱**：
   - 默认首选 **OpenStreetMap (OSM)**：国内 100% 免翻直连秒开，真实建筑门牌无偏移，零送中风险；
@@ -108,7 +108,7 @@ npx wrangler pages deploy dist --project-name geo-identity --branch main
 
 项目仓库内已内置每日自动化调度工作流 [`.github/workflows/daily-address-sync.yml`](.github/workflows/daily-address-sync.yml)：
 * **定时运行**：计划每天 UTC 00:00（北京时间 08:00）运行；GitHub 的定时任务可能延迟。
-* **公开数据采样**：从 [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL) 获取特拉华州 Wilmington 与俄勒冈州 Portland 的公开住宅建筑门牌、邮编、城市和坐标，过滤无效或重复记录，写入 `osmApartments.json`。只代表 OSM 有建筑门牌，**不保证可投递或通过 AVS**，不关联住户。
+* **公开数据采样**：从 [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL) 获取美国、香港和台湾限定区域的公开住宅建筑门牌、邮编（香港为空）、城市和坐标，过滤无效、重复、明确国家/美国州冲突及酒店、银行等已支持的用途冲突，写入 `osmApartments.json`。只代表 OSM 有建筑门牌，**不保证可投递或通过 AVS**，不关联住户。
 * **失败处理**：上游暂不可用时跳过本次同步，保留仓库数据和上次成功时间；响应格式错误或旧地址异常大量消失时任务失败，不覆盖快照。页面显示的是已部署包的数据快照，并非实时查询；页面按钮只校验本地字段和数量。
 * **部署设置**：在 GitHub 仓库 Secrets 设置 `CLOUDFLARE_API_TOKEN`（对目标 Pages 项目有部署权限）与 `CLOUDFLARE_ACCOUNT_ID`，在 Variables 设置 `CF_PAGES_PROJECT`（当前为 `geo-identity`）。任务先校验并同步数据，有变化才提交 GitHub；定时运行每次都尝试部署已验证的快照，以便重试此前失败的发布。手动运行可通过 `deploy` 开关在地址无变化时部署。缺少部署配置时会在发布前失败。
 * **许可**：新增 OSM 数据受 [Open Database License](https://opendatacommons.org/licenses/odbl/) 约束，使用或再分发时保留归属与许可要求。原有静态地址库不由 OSM 同步验证。

@@ -7,6 +7,7 @@ import { FR_ADDRESSES } from '../src/data/addresses/fr';
 import { generateIdentity, generateIdentityFromAddress } from '../src/services/identityGenerator';
 import { buildCSVContent } from '../src/services/exportService';
 import { formatTaxRate } from '../src/services/taxRateDisplay';
+import metadata from '../src/data/addresses/metadata.json';
 
 assert(OSM_APARTMENTS.length > 0, 'the sourced address pool must not be empty');
 const detached = OSM_APARTMENTS.find(a => a.sourceBuildingType === 'detached');
@@ -29,7 +30,8 @@ for (let i = 0; i < 100; i++) {
   assert.match(identity.address.sourceId || '', /^(node|way|relation)\/\d+$/);
   assert.equal(identity.address.addressLine2, undefined, 'a building address has no proven unit');
 }
-assert.equal(OSM_APARTMENTS.length, 180, `expected exactly 180 OSM apartments, got ${OSM_APARTMENTS.length}`);
+assert(OSM_APARTMENTS.length > 110, 'the sourced pool retains the expanded multi-country coverage');
+assert.equal(OSM_APARTMENTS.length, metadata.stats.totalOsmBuildings, 'published source count matches the actual pool');
 const usSourcedCities = new Set(OSM_APARTMENTS.filter(a => a.countryCode === 'US').map(a => a.city));
 assert(usSourcedCities.size >= 5, `US sourced addresses should cover >= 5 cities, got ${usSourcedCities.size}`);
 const hkSourced = OSM_APARTMENTS.filter(a => a.countryCode === 'HK');

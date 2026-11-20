@@ -1,16 +1,5 @@
 [
   {
-    "id": "way/1040316042",
-    "building": "apartments",
-    "street": "光復路一段579號",
-    "city": "東區 (East Dist)",
-    "state": "HSZ",
-    "postcode": "300065",
-    "countryCode": "TW",
-    "lat": 24.7854833,
-    "lng": 121.0117013
-  },
-  {
     "id": "way/104186213",
     "building": "apartments",
     "street": "1415 Southwest Alder Street",
@@ -420,17 +409,6 @@
     "countryCode": "US",
     "lat": 41.922256,
     "lng": -87.6439806
-  },
-  {
-    "id": "way/201413475",
-    "building": "residential",
-    "street": "246 皇后大道東 Queen's Road East",
-    "city": "灣仔區 (Wan Chai)",
-    "state": "WC",
-    "postcode": "",
-    "countryCode": "HK",
-    "lat": 22.2748398,
-    "lng": 114.1732487
   },
   {
     "id": "way/202169002",

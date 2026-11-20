@@ -78,6 +78,11 @@ function validPostcode(postcode: string, format: OsmSyncArea['postcodeFormat']):
   return /^\d{5}$/.test(postcode);
 }
 
+function hasNonResidentialUse(tags: Record<string, string> | undefined): boolean {
+  return /^(hotel|motel|hostel|guest_house)$/.test(tags?.tourism?.trim().toLowerCase() || '') ||
+    tags?.amenity?.trim().toLowerCase() === 'bank';
+}
+
 // The OSM object must itself be tagged as a residential building with a street address.
 export async function syncOsmApartments(
   fetcher: OsmFetcher = fetch,
@@ -131,6 +136,8 @@ export async function syncOsmApartments(
       const rawCity = tags?.['addr:city']?.trim() || '';
       const rawPostcode = tags?.['addr:postcode']?.trim() || '';
       if (!area.buildings.split('|').includes(tags?.building || '') ||
+          hasNonResidentialUse(tags) ||
+          (tags?.['addr:country'] && tags['addr:country'].trim().toUpperCase() !== area.countryCode) ||
           (area.requireCityTag !== false && rawCity.toLowerCase() !== area.city.toLowerCase()) ||
           (area.countryCode === 'US' && tags?.['addr:state'] && tags['addr:state'].trim().toUpperCase() !== area.state) ||
           !/^\d+[A-Za-z]?$/.test(tags?.['addr:housenumber']?.trim() || '') ||
