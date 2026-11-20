@@ -1,5 +1,16 @@
 [
   {
+    "id": "way/1040316042",
+    "building": "apartments",
+    "street": "光復路一段579號",
+    "city": "東區 (East Dist)",
+    "state": "HSZ",
+    "postcode": "300065",
+    "countryCode": "TW",
+    "lat": 24.7854833,
+    "lng": 121.0117013
+  },
+  {
     "id": "way/104186213",
     "building": "apartments",
     "street": "1415 Southwest Alder Street",
@@ -28,6 +39,28 @@
     "postcode": "97205",
     "lat": 45.5215087,
     "lng": -122.6885813
+  },
+  {
+    "id": "way/138259004",
+    "building": "apartments",
+    "street": "信義路五段111號",
+    "city": "信義區 (Xinyi Dist)",
+    "state": "TPE",
+    "postcode": "110",
+    "countryCode": "TW",
+    "lat": 25.0333651,
+    "lng": 121.5731723
+  },
+  {
+    "id": "way/148228835",
+    "building": "apartments",
+    "street": "3 居賢坊 Kui In Fong",
+    "city": "中西區 (Central & Western)",
+    "state": "CW",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.2838027,
+    "lng": 114.1486952
   },
   {
     "id": "way/152294634",
@@ -100,6 +133,28 @@
     "lng": -122.6874763
   },
   {
+    "id": "way/152618952",
+    "building": "apartments",
+    "street": "6 沙角街 Sha Kok Street",
+    "city": "沙田區 (Sha Tin)",
+    "state": "ST",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3768396,
+    "lng": 114.1958357
+  },
+  {
+    "id": "way/153997571",
+    "building": "apartments",
+    "street": "3 學餘里 Hok Yu Lane",
+    "city": "九龍城區 (Kowloon City)",
+    "state": "KC",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3204007,
+    "lng": 114.1781719
+  },
+  {
     "id": "way/154251136",
     "building": "apartments",
     "street": "523 Southwest 13th Avenue",
@@ -138,6 +193,182 @@
     "postcode": "97209",
     "lat": 45.5296861,
     "lng": -122.6828856
+  },
+  {
+    "id": "way/159012263",
+    "building": "apartments",
+    "street": "9 協欣街 Hip Yan Street",
+    "city": "沙田區 (Sha Tin)",
+    "state": "ST",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3901137,
+    "lng": 114.1967825
+  },
+  {
+    "id": "way/159479529",
+    "building": "apartments",
+    "street": "3 乙明邨街 Jat Min Chuen Street",
+    "city": "沙田區 (Sha Tin)",
+    "state": "ST",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3763663,
+    "lng": 114.190692
+  },
+  {
+    "id": "way/159479530",
+    "building": "apartments",
+    "street": "11 乙明邨街 Jat Min Chuen Street",
+    "city": "沙田區 (Sha Tin)",
+    "state": "ST",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3772215,
+    "lng": 114.1916117
+  },
+  {
+    "id": "way/160192147",
+    "building": "apartments",
+    "street": "1305 East Denny Way",
+    "city": "Seattle",
+    "state": "WA",
+    "postcode": "98122",
+    "countryCode": "US",
+    "lat": 47.6186539,
+    "lng": -122.315156
+  },
+  {
+    "id": "way/160192929",
+    "building": "apartments",
+    "street": "121 14th Avenue East",
+    "city": "Seattle",
+    "state": "WA",
+    "postcode": "98112",
+    "countryCode": "US",
+    "lat": 47.6195164,
+    "lng": -122.3147457
+  },
+  {
+    "id": "way/160192931",
+    "building": "apartments",
+    "street": "1405 East John Street",
+    "city": "Seattle",
+    "state": "WA",
+    "postcode": "98112",
+    "countryCode": "US",
+    "lat": 47.6198305,
+    "lng": -122.313982
+  },
+  {
+    "id": "way/160192936",
+    "building": "apartments",
+    "street": "1803 14th Avenue",
+    "city": "Seattle",
+    "state": "WA",
+    "postcode": "98122",
+    "countryCode": "US",
+    "lat": 47.6178388,
+    "lng": -122.3146064
+  },
+  {
+    "id": "way/160192954",
+    "building": "apartments",
+    "street": "1414 East Harrison Street",
+    "city": "Seattle",
+    "state": "WA",
+    "postcode": "98112",
+    "countryCode": "US",
+    "lat": 47.6220984,
+    "lng": -122.3139971
+  },
+  {
+    "id": "way/160193249",
+    "building": "apartments",
+    "street": "230 11th Avenue East",
+    "city": "Seattle",
+    "state": "WA",
+    "postcode": "98102",
+    "countryCode": "US",
+    "lat": 47.6209259,
+    "lng": -122.318045
+  },
+  {
+    "id": "way/166562300",
+    "building": "apartments",
+    "street": "82 堅尼地道 Kennedy Road",
+    "city": "灣仔區 (Wan Chai)",
+    "state": "WC",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.2732629,
+    "lng": 114.1729299
+  },
+  {
+    "id": "way/175870547",
+    "building": "house",
+    "street": "2 施他佛道 Stafford Road",
+    "city": "九龍城區 (Kowloon City)",
+    "state": "KC",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3306586,
+    "lng": 114.1781121
+  },
+  {
+    "id": "way/182173956",
+    "building": "apartments",
+    "street": "88 般咸道 Bonham Road",
+    "city": "中西區 (Central & Western)",
+    "state": "CW",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.2838376,
+    "lng": 114.1403274
+  },
+  {
+    "id": "way/183152349",
+    "building": "apartments",
+    "street": "71 薄扶林道 Pok Fu Lam Road",
+    "city": "中西區 (Central & Western)",
+    "state": "CW",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.2841562,
+    "lng": 114.1366264
+  },
+  {
+    "id": "way/183152351",
+    "building": "apartments",
+    "street": "73 薄扶林道 Pok Fu Lam Road",
+    "city": "中西區 (Central & Western)",
+    "state": "CW",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.2840556,
+    "lng": 114.1365564
+  },
+  {
+    "id": "way/185027541",
+    "building": "apartments",
+    "street": "51 富寧街 Fu Ning Street",
+    "city": "九龍城區 (Kowloon City)",
+    "state": "KC",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3251761,
+    "lng": 114.187859
+  },
+  {
+    "id": "way/185093223",
+    "building": "apartments",
+    "street": "53 富寧街 Fu Ning Street",
+    "city": "九龍城區 (Kowloon City)",
+    "state": "KC",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3256278,
+    "lng": 114.1879944
   },
   {
     "id": "way/186059038",
@@ -180,6 +411,50 @@
     "lng": -122.6893328
   },
   {
+    "id": "way/200654157",
+    "building": "residential",
+    "street": "2201 North Lincoln Avenue",
+    "city": "Chicago",
+    "state": "IL",
+    "postcode": "60614",
+    "countryCode": "US",
+    "lat": 41.922256,
+    "lng": -87.6439806
+  },
+  {
+    "id": "way/201413475",
+    "building": "residential",
+    "street": "246 皇后大道東 Queen's Road East",
+    "city": "灣仔區 (Wan Chai)",
+    "state": "WC",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.2748398,
+    "lng": 114.1732487
+  },
+  {
+    "id": "way/202169002",
+    "building": "apartments",
+    "street": "28 灣仔道 Wan Chai Road",
+    "city": "灣仔區 (Wan Chai)",
+    "state": "WC",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.2752154,
+    "lng": 114.1738473
+  },
+  {
+    "id": "way/202175127",
+    "building": "apartments",
+    "street": "258 皇后大道東 Queen's Road East",
+    "city": "灣仔區 (Wan Chai)",
+    "state": "WC",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.2746946,
+    "lng": 114.1738892
+  },
+  {
     "id": "way/207306154",
     "building": "apartments",
     "street": "420 Northwest 11th Avenue",
@@ -220,6 +495,28 @@
     "lng": -122.6836921
   },
   {
+    "id": "way/210317441",
+    "building": "apartments",
+    "street": "2110 North Seminary Avenue",
+    "city": "Chicago",
+    "state": "IL",
+    "postcode": "60614",
+    "countryCode": "US",
+    "lat": 41.9203045,
+    "lng": -87.6561735
+  },
+  {
+    "id": "way/210318664",
+    "building": "apartments",
+    "street": "2111 North Halsted Street",
+    "city": "Chicago",
+    "state": "IL",
+    "postcode": "60614",
+    "countryCode": "US",
+    "lat": 41.9204617,
+    "lng": -87.6477908
+  },
+  {
     "id": "way/220741023",
     "building": "apartments",
     "street": "1515 Southwest 12th Avenue",
@@ -250,6 +547,50 @@
     "lng": -122.6879516
   },
   {
+    "id": "way/226430925",
+    "building": "apartments",
+    "street": "2200 Market Street",
+    "city": "San Francisco",
+    "state": "CA",
+    "postcode": "94114",
+    "countryCode": "US",
+    "lat": 37.7658512,
+    "lng": -122.4315965
+  },
+  {
+    "id": "way/233076408",
+    "building": "apartments",
+    "street": "漢生東路178號",
+    "city": "板橋區 (Banqiao Dist)",
+    "state": "NTP",
+    "postcode": "220",
+    "countryCode": "TW",
+    "lat": 25.0144616,
+    "lng": 121.4669548
+  },
+  {
+    "id": "way/241837627",
+    "building": "apartments",
+    "street": "497 3rd Street",
+    "city": "Brooklyn",
+    "state": "NY",
+    "postcode": "11215",
+    "countryCode": "US",
+    "lat": 40.670787,
+    "lng": -73.9786332
+  },
+  {
+    "id": "way/241842844",
+    "building": "apartments",
+    "street": "267 1st Street",
+    "city": "Brooklyn",
+    "state": "NY",
+    "postcode": "11215",
+    "countryCode": "US",
+    "lat": 40.6748229,
+    "lng": -73.9835964
+  },
+  {
     "id": "way/243501533",
     "building": "apartments",
     "street": "1731 West Burnside Street",
@@ -270,6 +611,171 @@
     "lng": -122.6885275
   },
   {
+    "id": "way/248158321",
+    "building": "apartments",
+    "street": "221 5th Avenue",
+    "city": "Brooklyn",
+    "state": "NY",
+    "postcode": "11215",
+    "countryCode": "US",
+    "lat": 40.6758413,
+    "lng": -73.980545
+  },
+  {
+    "id": "way/248166967",
+    "building": "apartments",
+    "street": "105 8th Avenue",
+    "city": "Brooklyn",
+    "state": "NY",
+    "postcode": "11215",
+    "countryCode": "US",
+    "lat": 40.6725145,
+    "lng": -73.973336
+  },
+  {
+    "id": "way/250014478",
+    "building": "apartments",
+    "street": "11 Berkeley Place",
+    "city": "Brooklyn",
+    "state": "NY",
+    "postcode": "11217",
+    "countryCode": "US",
+    "lat": 40.6770025,
+    "lng": -73.9795005
+  },
+  {
+    "id": "way/250014483",
+    "building": "apartments",
+    "street": "15 Berkeley Place",
+    "city": "Brooklyn",
+    "state": "NY",
+    "postcode": "11217",
+    "countryCode": "US",
+    "lat": 40.676996,
+    "lng": -73.9794228
+  },
+  {
+    "id": "way/256091562",
+    "building": "apartments",
+    "street": "埔頂三路162號",
+    "city": "東區 (East Dist)",
+    "state": "HSZ",
+    "postcode": "30072",
+    "countryCode": "TW",
+    "lat": 24.7927989,
+    "lng": 121.0088564
+  },
+  {
+    "id": "way/260107784",
+    "building": "apartments",
+    "street": "市政北一路265號",
+    "city": "西屯區 (Xitun Dist)",
+    "state": "TXG",
+    "postcode": "40756",
+    "countryCode": "TW",
+    "lat": 24.1604913,
+    "lng": 120.6389517
+  },
+  {
+    "id": "way/260491323",
+    "building": "house",
+    "street": "237 Sanchez Street",
+    "city": "San Francisco",
+    "state": "CA",
+    "postcode": "94114",
+    "countryCode": "US",
+    "lat": 37.7652497,
+    "lng": -122.4307265
+  },
+  {
+    "id": "way/260524467",
+    "building": "apartments",
+    "street": "198 Dolores Street",
+    "city": "San Francisco",
+    "state": "CA",
+    "postcode": "94103",
+    "countryCode": "US",
+    "lat": 37.7664442,
+    "lng": -122.4268161
+  },
+  {
+    "id": "way/260524476",
+    "building": "apartments",
+    "street": "1942 15th Street",
+    "city": "San Francisco",
+    "state": "CA",
+    "postcode": "94114",
+    "countryCode": "US",
+    "lat": 37.7663979,
+    "lng": -122.4275779
+  },
+  {
+    "id": "way/263771729",
+    "building": "apartments",
+    "street": "富農路158號",
+    "city": "鼓山區 (Gushan Dist)",
+    "state": "KHH",
+    "postcode": "804",
+    "countryCode": "TW",
+    "lat": 22.6569154,
+    "lng": 120.2973658
+  },
+  {
+    "id": "way/264520017",
+    "building": "apartments",
+    "street": "643 Castro Street",
+    "city": "San Francisco",
+    "state": "CA",
+    "postcode": "94114",
+    "countryCode": "US",
+    "lat": 37.7585956,
+    "lng": -122.4345136
+  },
+  {
+    "id": "way/265415494",
+    "building": "apartments",
+    "street": "龍德路389號",
+    "city": "鼓山區 (Gushan Dist)",
+    "state": "KHH",
+    "postcode": "804",
+    "countryCode": "TW",
+    "lat": 22.6571445,
+    "lng": 120.2966499
+  },
+  {
+    "id": "way/265415498",
+    "building": "apartments",
+    "street": "龍勝路148號",
+    "city": "鼓山區 (Gushan Dist)",
+    "state": "KHH",
+    "postcode": "804",
+    "countryCode": "TW",
+    "lat": 22.6570784,
+    "lng": 120.2961987
+  },
+  {
+    "id": "way/265415500",
+    "building": "apartments",
+    "street": "神農路197號",
+    "city": "鼓山區 (Gushan Dist)",
+    "state": "KHH",
+    "postcode": "804",
+    "countryCode": "TW",
+    "lat": 22.6575108,
+    "lng": 120.2962434
+  },
+  {
+    "id": "way/272221608",
+    "building": "residential",
+    "street": "新民街45號",
+    "city": "板橋區 (Banqiao Dist)",
+    "state": "NTP",
+    "postcode": "22065",
+    "countryCode": "TW",
+    "lat": 25.0107864,
+    "lng": 121.4637894
+  },
+  {
     "id": "way/285197119",
     "building": "apartments",
     "street": "1515 Southwest Jefferson Street",
@@ -288,6 +794,94 @@
     "postcode": "97205",
     "lat": 45.5179789,
     "lng": -122.6847562
+  },
+  {
+    "id": "way/292201566",
+    "building": "apartments",
+    "street": "中山路一段1號",
+    "city": "板橋區 (Banqiao Dist)",
+    "state": "NTP",
+    "postcode": "22063",
+    "countryCode": "TW",
+    "lat": 25.0075868,
+    "lng": 121.4594364
+  },
+  {
+    "id": "way/316843071",
+    "building": "apartments",
+    "street": "3 花園街 Fa Yuen Street",
+    "city": "油尖旺區 (Yau Tsim Mong)",
+    "state": "YTM",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3162268,
+    "lng": 114.171574
+  },
+  {
+    "id": "way/316843172",
+    "building": "apartments",
+    "street": "5 博學里 Pok Hok Lane",
+    "city": "油尖旺區 (Yau Tsim Mong)",
+    "state": "YTM",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3193087,
+    "lng": 114.1631827
+  },
+  {
+    "id": "way/316843173",
+    "building": "apartments",
+    "street": "66 櫸樹街 Beech Street",
+    "city": "油尖旺區 (Yau Tsim Mong)",
+    "state": "YTM",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3200985,
+    "lng": 114.1632212
+  },
+  {
+    "id": "way/316843174",
+    "building": "apartments",
+    "street": "8 櫸樹街 Beech Street",
+    "city": "油尖旺區 (Yau Tsim Mong)",
+    "state": "YTM",
+    "postcode": "",
+    "countryCode": "HK",
+    "lat": 22.3191792,
+    "lng": 114.1630319
+  },
+  {
+    "id": "way/319270548",
+    "building": "apartments",
+    "street": "市政北三路113號",
+    "city": "西屯區 (Xitun Dist)",
+    "state": "TXG",
+    "postcode": "40756",
+    "countryCode": "TW",
+    "lat": 24.1598567,
+    "lng": 120.6446506
+  },
+  {
+    "id": "way/319270549",
+    "building": "apartments",
+    "street": "市政北五路66號",
+    "city": "西屯區 (Xitun Dist)",
+    "state": "TXG",
+    "postcode": "40756",
+    "countryCode": "TW",
+    "lat": 24.1609198,
+    "lng": 120.6453149
+  },
+  {
+    "id": "way/319270553",
+    "building": "apartments",
+    "street": "市政北五路8號",
+    "city": "西屯區 (Xitun Dist)",
+    "state": "TXG",
+    "postcode": "40756",
+    "countryCode": "TW",
+    "lat": 24.1600796,
+    "lng": 120.6467166
   },
   {
     "id": "way/321480035",
@@ -340,6 +934,61 @@
     "lng": -122.6850737
   },
   {
+    "id": "way/342879350",
+    "building": "house",
+    "street": "630 Maple Street",
+    "city": "Manchester",
+    "state": "NH",
+    "postcode": "03104",
+    "countryCode": "US",
+    "lat": 42.998668,
+    "lng": -71.4545546
+  },
+  {
+    "id": "way/342880127",
+    "building": "house",
+    "street": "254 Myrtle Street",
+    "city": "Manchester",
+    "state": "NH",
+    "postcode": "03104",
+    "countryCode": "US",
+    "lat": 42.9984973,
+    "lng": -71.4526572
+  },
+  {
+    "id": "way/342880896",
+    "building": "apartments",
+    "street": "616 Union Street",
+    "city": "Manchester",
+    "state": "NH",
+    "postcode": "03104",
+    "countryCode": "US",
+    "lat": 42.995508,
+    "lng": -71.4580374
+  },
+  {
+    "id": "way/342883907",
+    "building": "house",
+    "street": "55 High Street",
+    "city": "Manchester",
+    "state": "NH",
+    "postcode": "03104",
+    "countryCode": "US",
+    "lat": 42.9943363,
+    "lng": -71.4580664
+  },
+  {
+    "id": "way/344689942",
+    "building": "apartments",
+    "street": "松德路132號",
+    "city": "信義區 (Xinyi Dist)",
+    "state": "TPE",
+    "postcode": "11075",
+    "countryCode": "TW",
+    "lat": 25.0373144,
+    "lng": 121.5739264
+  },
+  {
     "id": "way/353691837",
     "building": "apartments",
     "street": "726 Southwest 11th Avenue",
@@ -348,6 +997,17 @@
     "postcode": "97205",
     "lat": 45.5198196,
     "lng": -122.6830162
+  },
+  {
+    "id": "way/355706228",
+    "building": "apartments",
+    "street": "民生東路二段168號",
+    "city": "中山區 (Zhongshan Dist)",
+    "state": "TPE",
+    "postcode": "104",
+    "countryCode": "TW",
+    "lat": 25.0576533,
+    "lng": 121.5346762
   },
   {
     "id": "way/355832769",
@@ -930,6 +1590,28 @@
     "lng": -122.6879916
   },
   {
+    "id": "way/370145087",
+    "building": "apartments",
+    "street": "松勇路47號",
+    "city": "信義區 (Xinyi Dist)",
+    "state": "TPE",
+    "postcode": "110",
+    "countryCode": "TW",
+    "lat": 25.0346578,
+    "lng": 121.5699028
+  },
+  {
+    "id": "way/370145091",
+    "building": "apartments",
+    "street": "松勇路53巷8號",
+    "city": "信義區 (Xinyi Dist)",
+    "state": "TPE",
+    "postcode": "110",
+    "countryCode": "TW",
+    "lat": 25.0340556,
+    "lng": 121.5704613
+  },
+  {
     "id": "way/371299263",
     "building": "apartments",
     "street": "1312 Southwest 10th Avenue",
@@ -970,6 +1652,17 @@
     "lng": -122.6886151
   },
   {
+    "id": "way/378327273",
+    "building": "house",
+    "street": "和平東路二段76巷4號",
+    "city": "大安區 (Da'an Dist)",
+    "state": "TPE",
+    "postcode": "106",
+    "countryCode": "TW",
+    "lat": 25.0242658,
+    "lng": 121.5391695
+  },
+  {
     "id": "way/378869123",
     "building": "apartments",
     "street": "1221 Southwest 11th Avenue",
@@ -978,6 +1671,39 @@
     "postcode": "97205",
     "lat": 45.516616,
     "lng": -122.6857086
+  },
+  {
+    "id": "way/385949404",
+    "building": "apartments",
+    "street": "68 Walnut Street",
+    "city": "Manchester",
+    "state": "NH",
+    "postcode": "03104",
+    "countryCode": "US",
+    "lat": 42.9942898,
+    "lng": -71.4567787
+  },
+  {
+    "id": "way/385949410",
+    "building": "apartments",
+    "street": "74 Walnut Street",
+    "city": "Manchester",
+    "state": "NH",
+    "postcode": "03104",
+    "countryCode": "US",
+    "lat": 42.9946263,
+    "lng": -71.4568857
+  },
+  {
+    "id": "way/390780632",
+    "building": "apartments",
+    "street": "建國南路二段201號",
+    "city": "大安區 (Da'an Dist)",
+    "state": "TPE",
+    "postcode": "106",
+    "countryCode": "TW",
+    "lat": 25.0269334,
+    "lng": 121.5381119
   },
   {
     "id": "way/395138393",
@@ -1020,6 +1746,17 @@
     "lng": -122.6786595
   },
   {
+    "id": "way/409264189",
+    "building": "apartments",
+    "street": "和平東路一段183巷9號",
+    "city": "大安區 (Da'an Dist)",
+    "state": "TPE",
+    "postcode": "106",
+    "countryCode": "TW",
+    "lat": 25.0276822,
+    "lng": 121.5328565
+  },
+  {
     "id": "way/40944374",
     "building": "apartments",
     "street": "341 Northwest 5th Avenue",
@@ -1028,6 +1765,17 @@
     "postcode": "97209",
     "lat": 45.5257151,
     "lng": -122.6758321
+  },
+  {
+    "id": "way/413684317",
+    "building": "apartments",
+    "street": "溫州街14號",
+    "city": "大安區 (Da'an Dist)",
+    "state": "TPE",
+    "postcode": "106",
+    "countryCode": "TW",
+    "lat": 25.0255877,
+    "lng": 121.5333994
   },
   {
     "id": "way/41943623",
@@ -1088,6 +1836,28 @@
     "postcode": "97209",
     "lat": 45.5235099,
     "lng": -122.6794181
+  },
+  {
+    "id": "way/590821758",
+    "building": "apartments",
+    "street": "2350 North Orchard Street",
+    "city": "Chicago",
+    "state": "IL",
+    "postcode": "60614",
+    "countryCode": "US",
+    "lat": 41.9251502,
+    "lng": -87.6465889
+  },
+  {
+    "id": "way/674150418",
+    "building": "apartments",
+    "street": "府後街2號",
+    "city": "板橋區 (Banqiao Dist)",
+    "state": "NTP",
+    "postcode": "220",
+    "countryCode": "TW",
+    "lat": 25.010136,
+    "lng": 121.4593168
   },
   {
     "id": "way/89155956",

@@ -473,8 +473,10 @@ for (const cc of allSupportedCountries) {
   }
 }
 
+import { COUNTRIES } from '../src/data/countries';
+
 for (const [country, state, mode] of [
-  ['JP', '01', 'landmark'], ['CH', 'BE', 'landmark'], ['US', 'WY', 'residential']
+  ['JP', '02', 'landmark'], ['CH', 'TI', 'landmark'], ['US', 'WY', 'residential']
 ] as [CountryCode, string, AddressMode][]) {
   let rejected = false;
   try {
@@ -690,6 +692,84 @@ for (let i = 0; i < 150; i++) {
   assert(typeof identity.address.lng === 'number' && !isNaN(identity.address.lng), `Trial #${i} has valid lng: ${identity.address.lng}`);
 }
 console.log('   Stress-tested 150 identities across all 3 modes and 21 countries: 100% residential, 0% Ste/Suite pollution!');
+
+// -----------------------------------------------------------------------------
+// 15. Multi-Region Coverage, Strict Mode/Country/State/TaxFree Isolation, & HK/TW Diversity
+// -----------------------------------------------------------------------------
+console.log('\n--- 15. Testing 21-Country Multi-Geography Diversity & Strict Filter Isolation ---');
+
+// 15.1 All 21 countries must produce >= 2 distinct geographies in derivation, residential, and landmark modes
+for (const country of COUNTRIES) {
+  for (const mode of ['derivation', 'residential', 'landmark'] as AddressMode[]) {
+    const geographies = new Set<string>();
+    for (let i = 0; i < 64; i++) {
+      const id = generateIdentity(country.code, { addressMode: mode });
+      assert(id.address.countryCode === country.code, `[${country.code}/${mode}] preserves countryCode`);
+      assert(id.address.addressMode === mode, `[${country.code}/${mode}] preserves requested addressMode`);
+      geographies.add(`${id.address.state}|${id.address.city}`);
+    }
+    assert(geographies.size >= 2, `[${country.code}/${mode}] produces >= 2 distinct geographies (observed ${geographies.size})`);
+  }
+}
+
+// 15.2 HK & TW derivation diversity regressions (formerly pinned to CW/Mid-Levels and TPE/Da'an)
+const hkStates = new Set<string>();
+const twCities = new Set<string>();
+const twTaipeiDists = new Set<string>();
+for (let i = 0; i < 96; i++) {
+  const hk = generateIdentity('HK', { addressMode: 'derivation' });
+  hkStates.add(hk.address.state);
+  const tw = generateIdentity('TW', { addressMode: 'derivation' });
+  twCities.add(tw.address.state);
+  if (tw.address.state === 'TPE') twTaipeiDists.add(tw.address.city);
+}
+assert(hkStates.size >= 6, `HK derivation covers >= 6 districts (observed ${hkStates.size}: ${[...hkStates].join(',')})`);
+assert(twCities.size >= 5, `TW derivation covers >= 5 cities (observed ${twCities.size}: ${[...twCities].join(',')})`);
+assert(twTaipeiDists.size >= 3, `TW TPE derivation covers >= 3 Taipei districts (observed ${twTaipeiDists.size})`);
+
+// 15.2b HK empty postcode across all modes (standard, residential, derivation, landmark, sourced, tax-free, with/without explicit state)
+for (const mode of ['landmark', 'derivation', 'residential', 'sourced'] as AddressMode[]) {
+  for (const taxFree of [false, true]) {
+    for (const stateOpt of [undefined, 'CW', 'WC']) {
+      const hk = generateIdentity('HK', { addressMode: mode, isTaxFreeOnly: taxFree, state: stateOpt });
+      assert(hk.address.countryCode === 'HK', `HK (${mode}, taxFree=${taxFree}, state=${stateOpt || 'all'}) keeps HK countryCode`);
+      assert(hk.address.postcode === '', `HK (${mode}, taxFree=${taxFree}, state=${stateOpt || 'all'}) keeps empty postcode, got "${hk.address.postcode}"`);
+    }
+  }
+}
+
+// 15.3 Every popularState across all 21 countries is selectable in A, B, and C
+for (const country of COUNTRIES) {
+  for (const st of country.popularStates) {
+    for (const mode of ['derivation', 'residential', 'landmark'] as AddressMode[]) {
+      const id = generateIdentity(country.code, { state: st.code, addressMode: mode });
+      assert(id.address.countryCode === country.code, `${country.code}/${st.code} (${mode}) keeps countryCode`);
+      assert(id.address.addressMode === mode, `${country.code}/${st.code} (${mode}) keeps mode`);
+      assert(matchesState(id.address.state, id.address.stateFull, st.code), `${country.code}/${st.code} (${mode}) keeps state`);
+    }
+  }
+}
+
+// 15.4 Tax-free filter strict isolation: never cross to US or ignore tax-free constraint
+for (const nonTaxCountry of ['GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'JP', 'KR', 'TW', 'SG', 'AU', 'MY', 'TH', 'VN', 'PH'] as CountryCode[]) {
+  for (const mode of ['derivation', 'residential', 'landmark', 'sourced'] as AddressMode[]) {
+    let threw = false;
+    try {
+      generateIdentity(nonTaxCountry, { addressMode: mode, isTaxFreeOnly: true });
+    } catch (error) {
+      threw = error instanceof Error && (error.message.startsWith('No matching address') || error.message.startsWith('No sourced address'));
+    }
+    assert(threw, `${nonTaxCountry} in ${mode} with isTaxFreeOnly=true errors explicitly instead of falling back`);
+  }
+}
+
+let caStateTaxFreeRejected = false;
+try {
+  generateIdentity('US', { state: 'CA', addressMode: 'derivation', isTaxFreeOnly: true });
+} catch (error) {
+  caStateTaxFreeRejected = error instanceof Error && error.message.startsWith('No matching address');
+}
+assert(caStateTaxFreeRejected, 'US/CA with isTaxFreeOnly=true errors explicitly');
 
 console.log('\n================================================================');
 console.log(`🎉 SUCCESS: All ${assertionCount} assertions passed cleanly!`);

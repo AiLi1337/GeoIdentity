@@ -65,6 +65,10 @@ export const CA_ADDRESSES: RealAddress[] = [
     country: 'Canada',
     countryCode: 'CA',
     lat: 51.0425,
-    lng: -114.0375
+    lng: -114.0375,
+    isTaxFree: true,
+    taxRate: '5.00% GST (No Provincial Sales Tax)',
+    timezone: 'America/Edmonton (MST/MDT)',
+    timezoneCode: 'MST'
   }
 ];

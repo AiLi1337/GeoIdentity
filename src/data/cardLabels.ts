@@ -48,7 +48,7 @@ export interface CardLabels {
 
 export const CARD_LABELS_ZH: CardLabels = {
   addressTitle: '实体物理地址 (真实可达)',
-  taxFreeTag: '免消费税',
+  taxFreeTag: '免税 / 低税区',
   street: '街道地址 (Line 1)',
   addressLine2: '门牌 / 单元 (Line 2)',
   city: '城市',
@@ -88,7 +88,7 @@ export const CARD_LABELS_ZH: CardLabels = {
 
 export const CARD_LABELS_EN: CardLabels = {
   addressTitle: 'Physical Address (Authentic)',
-  taxFreeTag: 'Tax Free',
+  taxFreeTag: 'Tax-Free / Low Tax',
   street: 'Street Address (Line 1)',
   addressLine2: 'Unit / Suite (Line 2)',
   city: 'City',
@@ -130,7 +130,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
   // 🇮🇹 Italiano (IT)
   IT: {
     addressTitle: 'Indirizzo di Residenza Ufficiale',
-    taxFreeTag: 'Zero Imposte',
+    taxFreeTag: 'Regime fiscale agevolato',
     street: 'Indirizzo (Via / Corso)',
     addressLine2: 'Interno / Scala (Line 2)',
     city: 'Città',
@@ -171,7 +171,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
   // 🇪🇸 Español (ES)
   ES: {
     addressTitle: 'Dirección Residencial Verificable',
-    taxFreeTag: 'Sin Impuestos',
+    taxFreeTag: 'Beneficio fiscal',
     street: 'Dirección (Línea 1)',
     addressLine2: 'Piso / Puerta (Línea 2)',
     city: 'Ciudad',
@@ -212,7 +212,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
   // 🇩🇪 Deutsch (DE / CH)
   DE: {
     addressTitle: 'Offizielle Wohnadresse',
-    taxFreeTag: 'Steuerfrei',
+    taxFreeTag: 'Steuerbegünstigt',
     street: 'Straße & Hausnummer (Zeile 1)',
     addressLine2: 'Zusatz / Etage (Zeile 2)',
     city: 'Stadt',
@@ -252,7 +252,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
 
   CH: {
     addressTitle: 'Offizielle Wohnadresse',
-    taxFreeTag: 'Steuerfrei',
+    taxFreeTag: 'Steuerbegünstigt',
     street: 'Strasse & Hausnummer (Zeile 1)',
     addressLine2: 'Zusatz / Etage (Zeile 2)',
     city: 'Ort',
@@ -293,7 +293,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
   // 🇫🇷 Français (FR / LU)
   FR: {
     addressTitle: 'Adresse Postale Authentique',
-    taxFreeTag: 'Exonéré de Taxe',
+    taxFreeTag: 'Régime fiscal avantageux',
     street: 'Adresse (Ligne 1)',
     addressLine2: 'Complément / Étage (Ligne 2)',
     city: 'Ville',
@@ -333,7 +333,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
 
   LU: {
     addressTitle: 'Adresse Postale Authentique',
-    taxFreeTag: 'Exonéré de Taxe',
+    taxFreeTag: 'Régime fiscal avantageux',
     street: 'Adresse (Ligne 1)',
     addressLine2: 'Complément / Étage (Ligne 2)',
     city: 'Ville',
@@ -374,7 +374,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
   // 🇯🇵 日本語 (JP)
   JP: {
     addressTitle: '実体居住地住所 (公的表記)',
-    taxFreeTag: '免税対象',
+    taxFreeTag: '税制優遇',
     street: '番地・丁目 (Line 1)',
     addressLine2: '建物名・部屋番号 (Line 2)',
     city: '市区町村',
@@ -415,7 +415,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
   // 🇰🇷 한국어 (KR)
   KR: {
     addressTitle: '거주지 도로명 주소 (표준)',
-    taxFreeTag: '비과세 대상',
+    taxFreeTag: '조세 우대',
     street: '도로명 주소 (Line 1)',
     addressLine2: '상세 주소 / 동·호수 (Line 2)',
     city: '시·군·구',
@@ -456,7 +456,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
   // 🇭🇰 / 🇹🇼 繁體中文 (HK / TW)
   HK: {
     addressTitle: '實體物理地址 (真實地標定位)',
-    taxFreeTag: '免消費稅',
+    taxFreeTag: '免稅 / 低稅區',
     street: '街道地址 (Line 1)',
     addressLine2: '單位 / 樓層 (Line 2)',
     city: '地區',
@@ -496,7 +496,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
 
   TW: {
     addressTitle: '實體物理地址 (真實地標定位)',
-    taxFreeTag: '免消費稅',
+    taxFreeTag: '免稅 / 低稅區',
     street: '街道地址 (Line 1)',
     addressLine2: '門牌 / 樓層 (Line 2)',
     city: '行政區',
@@ -537,7 +537,7 @@ export const CARD_LABELS_BY_COUNTRY: Partial<Record<CountryCode, CardLabels>> = 
   // 🇳🇱 Nederlands (NL)
   NL: {
     addressTitle: 'Officieel Woonadres',
-    taxFreeTag: 'Belastingvrij',
+    taxFreeTag: 'Gunstig belastingtarief',
     street: 'Straat & Huisnummer (Regel 1)',
     addressLine2: 'Toevoeging (Regel 2)',
     city: 'Plaats',

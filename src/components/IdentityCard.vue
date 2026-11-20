@@ -1,5 +1,8 @@
 <template>
-  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden transition-colors duration-200">
+  <div
+    data-testid="identity-card"
+    class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden transition-colors duration-200"
+  >
     <!-- Top Identity Hero Header -->
     <div class="p-4 sm:p-8 bg-gradient-to-b from-slate-50/90 to-white dark:from-slate-800/40 dark:to-slate-900 border-b border-slate-200/80 dark:border-slate-800">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
@@ -194,7 +197,9 @@
         <div
           class="mb-4 px-4 py-2.5 rounded-2xl border flex flex-wrap items-center justify-between gap-2 text-xs"
           :class="[
-            identity.address.addressMode === 'residential'
+            identity.address.addressMode === 'sourced' || identity.address.source === 'OpenStreetMap'
+              ? 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-200/80 dark:border-amber-800/50 text-amber-900 dark:text-amber-200'
+              : identity.address.addressMode === 'residential'
               ? 'bg-purple-50/70 dark:bg-purple-950/30 border-purple-200/80 dark:border-purple-800/50 text-purple-900 dark:text-purple-200'
               : identity.address.addressMode === 'derivation'
                 ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200/80 dark:border-emerald-800/50 text-emerald-900 dark:text-emerald-200'
@@ -211,7 +216,9 @@
           <span
             class="text-[10px] font-bold px-2.5 py-0.5 rounded-md tracking-wide shrink-0 whitespace-nowrap"
             :class="[
-              identity.address.addressMode === 'residential'
+              identity.address.addressMode === 'sourced' || identity.address.source === 'OpenStreetMap'
+                ? 'bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200'
+                : identity.address.addressMode === 'residential'
                 ? 'bg-purple-200/80 dark:bg-purple-900/60 text-purple-900 dark:text-purple-200'
                 : identity.address.addressMode === 'derivation'
                   ? 'bg-emerald-200/80 dark:bg-emerald-900/60 text-emerald-900 dark:text-emerald-200'
@@ -646,6 +653,7 @@ import { getCardLabels, formatForwarderShippingText } from '../data/cardLabels';
 import GoogleMapEmbed from './GoogleMapEmbed.vue';
 import { useI18n } from '../i18n';
 import { formatFullIdentityText } from '../services/exportService';
+import { formatTaxRate } from '../services/taxRateDisplay';
 
 const props = defineProps<{
   identity: GeneratedIdentity;
@@ -766,25 +774,11 @@ const modeBadgeText = computed(() => {
 });
 
 const displayTaxRate = computed(() => {
-  const raw = props.identity.address.taxRate;
-  const isTaxFree = props.identity.address.isTaxFree;
-  if (locale.value === 'zh') {
-    if (isTaxFree || (raw && raw.includes('No Sales Tax'))) {
-      return '0.00% (免消费税)';
-    }
-    if (raw && raw.includes('Standard Tax')) {
-      return '标准消费税率';
-    }
-    return raw || '0.00% (免消费税)';
-  } else {
-    if (isTaxFree || (raw && raw.includes('免税'))) {
-      return '0.00% (No Sales Tax)';
-    }
-    if (raw && raw.includes('标准')) {
-      return 'Standard Tax';
-    }
-    return raw || '0.00% (No Sales Tax)';
-  }
+  return formatTaxRate(
+    props.identity.address.taxRate,
+    props.identity.address.isTaxFree,
+    locale.value === 'zh' ? 'zh' : 'en'
+  );
 });
 
 const localizedAvsTier = computed(() => {

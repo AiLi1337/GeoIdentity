@@ -1,5 +1,6 @@
 import type { GeneratedIdentity, CardLanguage } from '../types/identity';
 import { COUNTRY_LOCAL_META } from '../data/names';
+import { formatTaxRate } from './taxRateDisplay';
 
 export function formatFullIdentityText(identity: GeneratedIdentity, lang: CardLanguage | string = 'zh'): string {
   const cCode = identity.countryCode;
@@ -352,9 +353,7 @@ Perfil 100% sintético generado por algoritmo para pruebas de software y validac
       ? '住宅样本 · AVS 未核验'
       : (identity.address.addressMode === 'derivation' ? '插值门牌 · 未逐条核验' : '内置公寓样本 · AVS 未核验');
 
-    const taxRateZh = (identity.address.isTaxFree || (identity.address.taxRate && identity.address.taxRate.includes('No Sales Tax')))
-      ? '0.00% (免消费税)'
-      : (identity.address.taxRate || '0.00% (免消费税)');
+    const taxRateZh = formatTaxRate(identity.address.taxRate, identity.address.isTaxFree, 'zh');
 
     const displayName = identity.basic.zhFullName || identity.basic.localFullName || identity.basic.fullName;
     const subName = identity.basic.fullName !== displayName ? identity.basic.fullName : (identity.basic.phoneticName || '');
@@ -419,9 +418,7 @@ ${identity.document.typeNameZh}：${identity.document.docNumber}
     ? 'Residential Sample · AVS Unverified'
     : (identity.address.addressMode === 'derivation' ? 'Interpolated Number (unverified)' : 'Bundled Apartment Sample (AVS unverified)');
 
-  const taxRateEn = (identity.address.isTaxFree || (identity.address.taxRate && identity.address.taxRate.includes('免税')))
-    ? '0.00% (No Sales Tax)'
-    : (identity.address.taxRate || '0.00% (No Sales Tax)');
+  const taxRateEn = formatTaxRate(identity.address.taxRate, identity.address.isTaxFree, 'en');
 
   const localMeta = COUNTRY_LOCAL_META[cCode];
   const localCountryName = localMeta?.countryLocalName || identity.address.country;

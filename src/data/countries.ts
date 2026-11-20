@@ -233,7 +233,9 @@ export const COUNTRIES: CountryInfo[] = [
       { code: 'YTM', nameZh: '油尖旺区(尖沙咀/旺角)', nameEn: 'Yau Tsim Mong', isTaxFree: true },
       { code: 'KC', nameZh: '九龙城区', nameEn: 'Kowloon City', isTaxFree: true },
       { code: 'ST', nameZh: '沙田区', nameEn: 'Sha Tin', isTaxFree: true },
-      { code: 'IS', nameZh: '离岛区(东涌/赤鱲角)', nameEn: 'Islands', isTaxFree: true }
+      { code: 'IS', nameZh: '离岛区(东涌/赤鱲角)', nameEn: 'Islands', isTaxFree: true },
+      { code: 'EA', nameZh: '东区(太古/北角)', nameEn: 'Eastern (Taikoo Shing)', isTaxFree: true },
+      { code: 'KT', nameZh: '观塘区(九龙湾/观塘)', nameEn: 'Kwun Tong', isTaxFree: true }
     ]
   },
   {
@@ -249,7 +251,9 @@ export const COUNTRIES: CountryInfo[] = [
       { code: 'NTP', nameZh: '新北市(板桥/中和)', nameEn: 'New Taipei City' },
       { code: 'TXG', nameZh: '台中市(西屯)', nameEn: 'Taichung City' },
       { code: 'KHH', nameZh: '高雄市(左营/苓雅)', nameEn: 'Kaohsiung City' },
-      { code: 'HSZ', nameZh: '新竹市(科学园区)', nameEn: 'Hsinchu City' }
+      { code: 'HSZ', nameZh: '新竹市(科学园区)', nameEn: 'Hsinchu City' },
+      { code: 'TYN', nameZh: '桃园市(中坜/桃园)', nameEn: 'Taoyuan City' },
+      { code: 'TNN', nameZh: '台南市(东区/安平)', nameEn: 'Tainan City' }
     ]
   },
   {

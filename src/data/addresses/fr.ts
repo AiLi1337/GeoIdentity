@@ -10,7 +10,9 @@ export const FR_ADDRESSES: RealAddress[] = [
     country: 'France',
     countryCode: 'FR',
     lat: 48.8590,
-    lng: 2.2785
+    lng: 2.2785,
+    timezone: 'Europe/Paris (CET/CEST)',
+    timezoneCode: 'CET'
   },
   {
     street: '24 Rue de Courcelles, Apt 12',
@@ -21,7 +23,9 @@ export const FR_ADDRESSES: RealAddress[] = [
     country: 'France',
     countryCode: 'FR',
     lat: 48.8745,
-    lng: 2.3085
+    lng: 2.3085,
+    timezone: 'Europe/Paris (CET/CEST)',
+    timezoneCode: 'CET'
   },
   {
     street: '45 Rue de Tocqueville, Apt 18',
@@ -32,7 +36,9 @@ export const FR_ADDRESSES: RealAddress[] = [
     country: 'France',
     countryCode: 'FR',
     lat: 48.8850,
-    lng: 2.3090
+    lng: 2.3090,
+    timezone: 'Europe/Paris (CET/CEST)',
+    timezoneCode: 'CET'
   },
   {
     street: '32 Boulevard des Belges, Apt 6',
@@ -43,7 +49,9 @@ export const FR_ADDRESSES: RealAddress[] = [
     country: 'France',
     countryCode: 'FR',
     lat: 45.7720,
-    lng: 4.8510
+    lng: 4.8510,
+    timezone: 'Europe/Paris (CET/CEST)',
+    timezoneCode: 'CET'
   },
   {
     street: '156 Rue du Commandant Rolland, Apt 14',
@@ -54,7 +62,9 @@ export const FR_ADDRESSES: RealAddress[] = [
     country: 'France',
     countryCode: 'FR',
     lat: 43.2680,
-    lng: 5.3850
+    lng: 5.3850,
+    timezone: 'Europe/Paris (CET/CEST)',
+    timezoneCode: 'CET'
   },
   {
     street: '48 Boulevard de Cimiez, Apt 8',
@@ -65,6 +75,21 @@ export const FR_ADDRESSES: RealAddress[] = [
     country: 'France',
     countryCode: 'FR',
     lat: 43.7170,
-    lng: 7.2740
+    lng: 7.2740,
+    timezone: 'Europe/Paris (CET/CEST)',
+    timezoneCode: 'CET'
+  },
+  {
+    street: '18 Allée Jean Jaurès, Apt 5A',
+    city: 'Toulouse',
+    state: 'OCC',
+    stateFull: 'Occitanie',
+    postcode: '31000',
+    country: 'France',
+    countryCode: 'FR',
+    lat: 43.6065,
+    lng: 1.4495,
+    timezone: 'Europe/Paris (CET/CEST)',
+    timezoneCode: 'CET'
   }
 ];

@@ -160,44 +160,101 @@
           {{ t('addressMode.residentialDesc') }}
         </p>
       </button>
-      <button type="button" @click="updateMode('sourced')"
-        class="text-left p-4 rounded-2xl border transition-all"
-        :class="currentMode === 'sourced' ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 text-amber-900 dark:text-amber-100' : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200'">
-        <span class="flex items-center gap-2 text-xs font-bold"><MapPin class="w-4 h-4" />{{ t('addressMode.sourcedShort') }}</span>
-        <span class="block text-[11px] leading-relaxed mt-2">{{ t('addressMode.sourcedDesc') }}</span>
+      <!-- 4. OSM 住宅建筑门牌 (OSM Sourced Building) -->
+      <button
+        type="button"
+        @click="updateMode('sourced')"
+        :class="[
+          'relative text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group',
+          currentMode === 'sourced'
+            ? 'bg-amber-50/70 dark:bg-amber-950/40 border-amber-500/80 shadow-xs ring-1 ring-amber-500/30'
+            : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-700'
+        ]"
+      >
+        <div class="flex items-start justify-between gap-1.5 sm:gap-2 mb-2">
+          <div class="flex items-center gap-2 min-w-0 flex-1">
+            <div
+              :class="[
+                'p-1.5 rounded-lg shrink-0',
+                currentMode === 'sourced' ? 'bg-amber-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+              ]"
+            >
+              <MapPin class="w-4 h-4" />
+            </div>
+            <span
+              class="text-xs font-bold tracking-tight truncate"
+              :class="currentMode === 'sourced' ? 'text-amber-950 dark:text-amber-100' : 'text-slate-800 dark:text-slate-200'"
+            >
+              {{ t('addressMode.sourcedShort') }}
+            </span>
+          </div>
+          <span
+            v-if="currentMode === 'sourced'"
+            class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500 text-white shadow-xs shrink-0 whitespace-nowrap mt-0.5"
+          >
+            {{ t('addressMode.active') }}
+          </span>
+        </div>
+        <p
+          class="text-[11px] leading-relaxed"
+          :class="currentMode === 'sourced' ? 'text-amber-900/80 dark:text-amber-200/75' : 'text-slate-500 dark:text-slate-400'"
+        >
+          {{ sourcedSummaryDesc }}
+        </p>
       </button>
     </div>
 
-    <!-- Collapsible Comparison Guide -->
+    <!-- Collapsible Comparison Guide (All 4 Modes) -->
     <div
       v-if="showModeGuide"
-      class="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-xs space-y-2.5 transition-all"
+      class="p-3.5 sm:p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-xs space-y-2.5 transition-all"
     >
       <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-        <Info class="w-4 h-4 text-primary-500" />
+        <Info class="w-4 h-4 text-primary-500 shrink-0" />
         <span>{{ t('addressMode.guideTitle') }}</span>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
-        <div class="p-3 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60 space-y-1">
-          <span class="font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1">
-            <Building2 class="w-3.5 h-3.5" />
-            <span>{{ t('addressMode.landmarkShort') }}</span>
-          </span>
-          <p>{{ t('addressMode.landmarkTarget') }}</p>
-        </div>
-        <div class="p-3 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-            <Route class="w-3.5 h-3.5" />
-            <span>{{ t('addressMode.derivationShort') }}</span>
-          </span>
-          <p>{{ t('addressMode.derivationTarget') }}</p>
-        </div>
-        <div class="p-3 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60 space-y-1">
-          <span class="font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1">
-            <Home class="w-3.5 h-3.5" />
-            <span>{{ t('addressMode.residentialShort') }}</span>
-          </span>
-          <p>{{ t('addressMode.residentialTarget') }}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
+        <div
+          v-for="item in modeComparisonItems"
+          :key="item.mode"
+          class="p-3 rounded-xl bg-white/90 dark:bg-slate-800/90 border space-y-1.5 transition-all"
+          :class="currentMode === item.mode ? item.activeBorder : 'border-slate-200/60 dark:border-slate-700/60'"
+        >
+          <div class="flex items-center justify-between gap-1.5">
+            <span class="font-bold flex items-center gap-1 min-w-0 truncate" :class="item.titleColor">
+              <component :is="item.icon" class="w-3.5 h-3.5 shrink-0" />
+              <span class="truncate">{{ item.title }}</span>
+            </span>
+            <span
+              v-if="currentMode === item.mode"
+              class="px-1.5 py-0.5 text-[9px] font-bold rounded-full text-white shrink-0 whitespace-nowrap"
+              :class="item.badgeBg"
+            >
+              {{ t('addressMode.active') }}
+            </span>
+          </div>
+          <dl class="space-y-1 text-[11px]">
+            <div>
+              <dt class="inline font-semibold text-slate-700 dark:text-slate-200">{{ t('addressMode.compLabelSource') }}：</dt>
+              <dd class="inline">{{ item.source }}</dd>
+            </div>
+            <div>
+              <dt class="inline font-semibold text-slate-700 dark:text-slate-200">{{ t('addressMode.compLabelInterp') }}：</dt>
+              <dd class="inline">{{ item.interpolation }}</dd>
+            </div>
+            <div>
+              <dt class="inline font-semibold text-slate-700 dark:text-slate-200">{{ t('addressMode.compLabelCoverage') }}：</dt>
+              <dd class="inline">{{ item.coverage }}</dd>
+            </div>
+            <div>
+              <dt class="inline font-semibold text-slate-700 dark:text-slate-200">{{ t('addressMode.compLabelTarget') }}：</dt>
+              <dd class="inline">{{ item.target }}</dd>
+            </div>
+            <div>
+              <dt class="inline font-semibold text-slate-700 dark:text-slate-200">{{ t('addressMode.compLabelNoMatch') }}：</dt>
+              <dd class="inline">{{ item.noMatch }}</dd>
+            </div>
+          </dl>
         </div>
       </div>
     </div>
@@ -310,6 +367,7 @@ import {
   Info
 } from 'lucide-vue-next';
 import type { FilterOptions, AddressMode } from '../types/identity';
+import { getAddressCoverageStats } from '../data/addresses';
 import { useI18n } from '../i18n';
 
 const props = defineProps<{
@@ -322,11 +380,90 @@ const emit = defineEmits<{
   (e: 'generate'): void;
 }>();
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 
 const showModeGuide = ref(false);
 
 const currentMode = computed<AddressMode>(() => props.filters.addressMode || 'residential');
+
+const poolStats = getAddressCoverageStats();
+
+const sourcedCountriesSummary = computed(() => {
+  const counts = poolStats.sourcedCountryCounts;
+  const labels: Record<string, string> = locale.value === 'zh'
+    ? { US: '美国', HK: '香港', TW: '台湾' }
+    : { US: 'US', HK: 'HK', TW: 'TW' };
+  return poolStats.sourcedCountries
+    .map(code => `${labels[code] || code} ${counts[code] || 0}`)
+    .join(' · ');
+});
+
+const sourcedSummaryDesc = computed(() => {
+  return `${t('addressMode.sourcedDesc')} (${sourcedCountriesSummary.value})`;
+});
+
+const modeComparisonItems = computed(() => [
+  {
+    mode: 'landmark' as AddressMode,
+    icon: Building2,
+    title: t('addressMode.landmarkShort'),
+    titleColor: 'text-blue-600 dark:text-blue-400',
+    activeBorder: 'border-blue-500/80 ring-1 ring-blue-500/30',
+    badgeBg: 'bg-blue-500',
+    source: t('addressMode.landmarkSource'),
+    interpolation: t('addressMode.landmarkInterp'),
+    coverage: t('addressMode.landmarkCoverage', { countries: poolStats.totalCountries, count: poolStats.landmarkCount }),
+    target: t('addressMode.landmarkTarget'),
+    noMatch: t('addressMode.landmarkNoMatch')
+  },
+  {
+    mode: 'derivation' as AddressMode,
+    icon: Route,
+    title: t('addressMode.derivationShort'),
+    titleColor: 'text-emerald-600 dark:text-emerald-400',
+    activeBorder: 'border-emerald-500/80 ring-1 ring-emerald-500/30',
+    badgeBg: 'bg-emerald-500',
+    source: t('addressMode.derivationSource'),
+    interpolation: t('addressMode.derivationInterp'),
+    coverage: t('addressMode.derivationCoverage', {
+      countries: poolStats.totalCountries,
+      rules: poolStats.derivationRulesCount,
+      capacity: poolStats.derivationCapacity.toLocaleString()
+    }),
+    target: t('addressMode.derivationTarget'),
+    noMatch: t('addressMode.derivationNoMatch')
+  },
+  {
+    mode: 'residential' as AddressMode,
+    icon: Home,
+    title: t('addressMode.residentialShort'),
+    titleColor: 'text-purple-600 dark:text-purple-400',
+    activeBorder: 'border-purple-500/80 ring-1 ring-purple-500/30',
+    badgeBg: 'bg-purple-500',
+    source: t('addressMode.residentialSource'),
+    interpolation: t('addressMode.residentialInterp'),
+    coverage: t('addressMode.residentialCoverage', { countries: poolStats.totalCountries, count: poolStats.residentialCount }),
+    target: t('addressMode.residentialTarget'),
+    noMatch: t('addressMode.residentialNoMatch')
+  },
+  {
+    mode: 'sourced' as AddressMode,
+    icon: MapPin,
+    title: t('addressMode.sourcedShort'),
+    titleColor: 'text-amber-600 dark:text-amber-400',
+    activeBorder: 'border-amber-500/80 ring-1 ring-amber-500/30',
+    badgeBg: 'bg-amber-500',
+    source: t('addressMode.sourcedSource'),
+    interpolation: t('addressMode.sourcedInterp'),
+    coverage: t('addressMode.sourcedCoverage', {
+      countries: sourcedCountriesSummary.value,
+      regions: poolStats.sourcedRegionCount,
+      count: poolStats.sourcedCount
+    }),
+    target: t('addressMode.sourcedTarget'),
+    noMatch: t('addressMode.sourcedNoMatch')
+  }
+]);
 
 function updateMode(mode: AddressMode) {
   emit('update:filters', { ...props.filters, addressMode: mode });

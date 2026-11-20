@@ -1,4 +1,7 @@
 import { US_ADDRESSES } from '../src/data/addresses/us';
+import { HK_ADDRESSES } from '../src/data/addresses/hk';
+import { TW_ADDRESSES } from '../src/data/addresses/tw';
+import type { CountryCode } from '../src/types/identity';
 
 export interface OsmApartment {
   id: string;
@@ -7,8 +10,19 @@ export interface OsmApartment {
   city: string;
   state: string;
   postcode: string;
+  countryCode?: CountryCode;
   lat: number;
   lng: number;
+}
+
+export interface OsmSyncArea {
+  countryCode: CountryCode;
+  city: string;
+  state: string;
+  bbox: string;
+  buildings: string;
+  requireCityTag?: boolean;
+  postcodeFormat?: 'us5' | 'tw3to6' | 'none';
 }
 
 interface OsmElement {
@@ -32,29 +46,58 @@ export class OsmQueryUnavailableError extends Error {
   }
 }
 
-const AREAS = [
-  { city: 'Wilmington', state: 'DE', bbox: '39.73,-75.57,39.76,-75.53', buildings: 'apartments' },
-  { city: 'Portland', state: 'OR', bbox: '45.515,-122.69,45.53,-122.675', buildings: 'apartments' },
-  { city: 'Portland', state: 'OR', bbox: '45.512,-122.694,45.514,-122.692', buildings: 'apartments|residential|house|detached|semidetached_house|terrace' }
-] as const;
+export const AREAS: readonly OsmSyncArea[] = [
+  { countryCode: 'US', city: 'Wilmington', state: 'DE', bbox: '39.73,-75.57,39.76,-75.53', buildings: 'apartments', requireCityTag: true, postcodeFormat: 'us5' },
+  { countryCode: 'US', city: 'Portland', state: 'OR', bbox: '45.515,-122.69,45.53,-122.675', buildings: 'apartments', requireCityTag: true, postcodeFormat: 'us5' },
+  { countryCode: 'US', city: 'Portland', state: 'OR', bbox: '45.512,-122.694,45.514,-122.692', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: true, postcodeFormat: 'us5' },
+  { countryCode: 'US', city: 'Seattle', state: 'WA', bbox: '47.616,-122.326,47.625,-122.314', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'us5' },
+  { countryCode: 'US', city: 'Brooklyn', state: 'NY', bbox: '40.669,-73.984,40.678,-73.972', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'us5' },
+  { countryCode: 'US', city: 'Chicago', state: 'IL', bbox: '41.919,-87.656,41.929,-87.644', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'us5' },
+  { countryCode: 'US', city: 'San Francisco', state: 'CA', bbox: '37.758,-122.438,37.767,-122.426', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'us5' },
+  { countryCode: 'US', city: 'Manchester', state: 'NH', bbox: '42.989,-71.460,43.000,-71.446', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'us5' },
+  { countryCode: 'HK', city: '中西區 (Central & Western)', state: 'CW', bbox: '22.280,114.136,22.288,114.152', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'none' },
+  { countryCode: 'HK', city: '灣仔區 (Wan Chai)', state: 'WC', bbox: '22.270,114.171,22.280,114.185', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'none' },
+  { countryCode: 'HK', city: '油尖旺區 (Yau Tsim Mong)', state: 'YTM', bbox: '22.312,114.162,22.323,114.174', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'none' },
+  { countryCode: 'HK', city: '九龍城區 (Kowloon City)', state: 'KC', bbox: '22.318,114.176,22.331,114.189', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'none' },
+  { countryCode: 'HK', city: '沙田區 (Sha Tin)', state: 'ST', bbox: '22.377,114.185,22.390,114.202', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'none' },
+  { countryCode: 'TW', city: "大安區 (Da'an Dist)", state: 'TPE', bbox: '25.024,121.531,25.031,121.539', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
+  { countryCode: 'TW', city: '信義區 (Xinyi Dist)', state: 'TPE', bbox: '25.029,121.564,25.039,121.578', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
+  { countryCode: 'TW', city: '中山區 (Zhongshan Dist)', state: 'TPE', bbox: '25.055,121.529,25.061,121.538', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
+  { countryCode: 'TW', city: '板橋區 (Banqiao Dist)', state: 'NTP', bbox: '25.006,121.458,25.017,121.472', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
+  { countryCode: 'TW', city: '西屯區 (Xitun Dist)', state: 'TXG', bbox: '24.154,120.635,24.167,120.652', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
+  { countryCode: 'TW', city: '鼓山區 (Gushan Dist)', state: 'KHH', bbox: '22.654,120.286,22.668,120.302', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
+  { countryCode: 'TW', city: '東區 (East Dist)', state: 'HSZ', bbox: '24.782,121.008,24.794,121.022', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' }
+];
 
-const key = (street: string, city: string, state: string) =>
-  `${street} ${city} ${state}`.toLowerCase().replace(/[^a-z0-9]/g, '');
+const key = (countryCode: string, street: string, city: string, state: string) =>
+  `${countryCode}|${street}|${city}|${state}`.toLowerCase().replace(/\s+/g, '');
+
+function validPostcode(postcode: string, format: OsmSyncArea['postcodeFormat']): boolean {
+  if (format === 'none') return true;
+  if (format === 'tw3to6') return /^\d{3}(\d{2,3})?$/.test(postcode);
+  return /^\d{5}$/.test(postcode);
+}
 
 // The OSM object must itself be tagged as a residential building with a street address.
 export async function syncOsmApartments(
-  fetcher: OsmFetcher = fetch
+  fetcher: OsmFetcher = fetch,
+  areas: readonly OsmSyncArea[] = AREAS
 ): Promise<OsmApartment[]> {
   const result: OsmApartment[] = [];
   const ids = new Set<string>();
-  const addresses = new Set(US_ADDRESSES.map(a => key(a.street, a.city, a.state)));
+  const addresses = new Set([
+    ...US_ADDRESSES.map(a => key('US', a.street, a.city, a.state)),
+    ...HK_ADDRESSES.map(a => key('HK', a.street, a.city, a.state)),
+    ...TW_ADDRESSES.map(a => key('TW', a.street, a.city, a.state))
+  ]);
 
-  for (const area of AREAS) {
+  for (const area of areas) {
     const beforeArea = result.length;
     const buildingFilter = area.buildings === 'apartments'
       ? '["building"="apartments"]'
       : `["building"~"^(${area.buildings})$"]`;
-    const query = `[out:json][timeout:25];way${buildingFilter}["addr:housenumber"]["addr:street"]["addr:postcode"](${area.bbox});out center 80;`;
+    const postcodeFilter = area.postcodeFormat === 'none' ? '' : '["addr:postcode"]';
+    const query = `[out:json][timeout:25];way${buildingFilter}["addr:housenumber"]["addr:street"]${postcodeFilter}(${area.bbox});out center 80;`;
     let body: { elements?: OsmElement[] } | undefined;
     let lastError: unknown;
     for (const endpoint of ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter']) {
@@ -85,34 +128,54 @@ export async function syncOsmApartments(
       const tags = element.tags;
       const lat = element.lat ?? element.center?.lat;
       const lng = element.lon ?? element.center?.lon;
+      const rawCity = tags?.['addr:city']?.trim() || '';
+      const rawPostcode = tags?.['addr:postcode']?.trim() || '';
       if (!area.buildings.split('|').includes(tags?.building || '') ||
-          tags['addr:city']?.trim().toLowerCase() !== area.city.toLowerCase() ||
-          (tags['addr:state'] && tags['addr:state'].trim().toUpperCase() !== area.state) ||
-          !/^\d+[A-Za-z]?$/.test(tags['addr:housenumber']?.trim() || '') ||
-          !tags['addr:street']?.trim() ||
-          !/^\d{5}$/.test(tags['addr:postcode']?.trim() || '') ||
+          (area.requireCityTag !== false && rawCity.toLowerCase() !== area.city.toLowerCase()) ||
+          (area.countryCode === 'US' && tags?.['addr:state'] && tags['addr:state'].trim().toUpperCase() !== area.state) ||
+          !/^\d+[A-Za-z]?$/.test(tags?.['addr:housenumber']?.trim() || '') ||
+          !tags?.['addr:street']?.trim() ||
+          !validPostcode(rawPostcode, area.postcodeFormat || 'us5') ||
           !Number.isFinite(lat) || !Number.isFinite(lng) ||
-          lat! < -90 || lat! > 90 || lng! < -180 || lng! > 180 ||
+          Math.abs(lat!) > 90 || Math.abs(lng!) > 180 ||
           element.type !== 'way' || !element.center ||
           !Number.isSafeInteger(element.id)) continue;
 
       const id = `${element.type}/${element.id}`;
-      const street = `${tags['addr:housenumber'].trim()} ${tags['addr:street'].trim()}`;
-      const addressKey = key(street, area.city, area.state);
+      const hn = tags['addr:housenumber'].trim();
+      const st = tags['addr:street'].trim();
+      const street = area.countryCode === 'TW' ? `${st}${hn}號` : `${hn} ${st}`;
+      const city = area.countryCode === 'US' ? (rawCity || area.city) : area.city;
+      const postcode = area.postcodeFormat === 'none' ? '' : rawPostcode;
+      const addressKey = key(area.countryCode, street, city, area.state);
       if (ids.has(id) || addresses.has(addressKey)) continue;
       ids.add(id);
       addresses.add(addressKey);
-      result.push({ id, building: tags.building as OsmApartment['building'], street, city: area.city, state: area.state,
-        postcode: tags['addr:postcode'].trim(), lat: lat!, lng: lng! });
+      const entry: OsmApartment = {
+        id,
+        building: tags.building as OsmApartment['building'],
+        street,
+        city,
+        state: area.state,
+        postcode,
+        lat: lat!,
+        lng: lng!
+      };
+      if (area.countryCode !== 'US') entry.countryCode = area.countryCode;
+      else if (area.state !== 'DE' && area.state !== 'OR') entry.countryCode = 'US';
+      result.push(entry);
     }
     if (result.length === beforeArea) throw new Error(`OpenStreetMap returned no valid residential building addresses for ${area.city}`);
   }
   return result.sort((a, b) => a.id.localeCompare(b.id));
 }
 
-export async function syncOsmApartmentsIfAvailable(fetcher?: OsmFetcher): Promise<OsmApartment[] | null> {
+export async function syncOsmApartmentsIfAvailable(
+  fetcher?: OsmFetcher,
+  areas?: readonly OsmSyncArea[]
+): Promise<OsmApartment[] | null> {
   try {
-    return await syncOsmApartments(fetcher);
+    return await syncOsmApartments(fetcher, areas);
   } catch (error) {
     if (error instanceof OsmQueryUnavailableError) return null;
     throw error;
@@ -120,21 +183,43 @@ export async function syncOsmApartmentsIfAvailable(fetcher?: OsmFetcher): Promis
 }
 
 export function assertOsmSnapshotContinuity(
-  previous: Pick<OsmApartment, 'id' | 'state'>[],
-  next: Pick<OsmApartment, 'id' | 'state'>[]
+  previous: Pick<OsmApartment, 'id' | 'state' | 'countryCode'>[],
+  next: Pick<OsmApartment, 'id' | 'state' | 'countryCode'>[]
 ): void {
-  const nextIds = new Set(next.map(address => address.id));
-  const previousByState = new Map<string, string[]>();
+  const nextByScope = new Map<string, Set<string>>();
+  const seenIds = new Set<string>();
+  const previousIdScopes = new Map<string, string>();
   for (const address of previous) {
-    const ids = previousByState.get(address.state) || [];
-    ids.push(address.id);
-    previousByState.set(address.state, ids);
+    previousIdScopes.set(address.id, `${address.countryCode || 'US'}:${address.state}`);
   }
-  for (const [state, ids] of previousByState) {
-    const retained = ids.filter(id => nextIds.has(id)).length;
-    const maxMissing = Math.max(1, Math.floor(ids.length * 0.1));
+  for (const address of next) {
+    if (seenIds.has(address.id)) {
+      throw new Error(`Duplicate OpenStreetMap object ${address.id} in the next snapshot`);
+    }
+    seenIds.add(address.id);
+    const scope = `${address.countryCode || 'US'}:${address.state}`;
+    const previousScope = previousIdScopes.get(address.id);
+    if (previousScope && previousScope !== scope) {
+      throw new Error(`OpenStreetMap object ${address.id} moved from ${previousScope} to ${scope}`);
+    }
+    const ids = nextByScope.get(scope) || new Set<string>();
+    ids.add(address.id);
+    nextByScope.set(scope, ids);
+  }
+
+  const previousByScope = new Map<string, string[]>();
+  for (const address of previous) {
+    const scope = `${address.countryCode || 'US'}:${address.state}`;
+    const ids = previousByScope.get(scope) || [];
+    ids.push(address.id);
+    previousByScope.set(scope, ids);
+  }
+  for (const [scope, ids] of previousByScope) {
+    const scopedNextIds = nextByScope.get(scope) || new Set<string>();
+    const retained = ids.filter(id => scopedNextIds.has(id)).length;
+    const maxMissing = Math.floor(ids.length * 0.1);
     if (ids.length - retained > maxMissing) {
-      throw new Error(`Incomplete OpenStreetMap snapshot for ${state}: retained ${retained}/${ids.length} existing buildings`);
+      throw new Error(`Incomplete OpenStreetMap snapshot for ${scope}: retained ${retained}/${ids.length} existing buildings`);
     }
   }
 }

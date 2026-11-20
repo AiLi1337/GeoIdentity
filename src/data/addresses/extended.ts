@@ -54,6 +54,19 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       lng: 127.1145,
       timezone: 'Asia/Seoul (KST)',
       timezoneCode: 'KST'
+    },
+    {
+      street: '연수구 센트럴로 160 송도 센트럴파크 푸르지오 (Songdo Central Park Prugio, 160 Central-ro, Yeonsu-gu)',
+      city: '연수구 (Yeonsu-gu)',
+      state: '28',
+      stateFull: '인천광역시 (Incheon)',
+      postcode: '22006',
+      country: 'South Korea',
+      countryCode: 'KR',
+      lat: 37.3925,
+      lng: 126.6415,
+      timezone: 'Asia/Seoul (KST)',
+      timezoneCode: 'KST'
     }
   ],
 
@@ -99,6 +112,20 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       lng: 6.1610,
       timezone: 'Europe/Zurich (CET)',
       timezoneCode: 'CET'
+    },
+    {
+      street: 'Gerechtigkeitsgasse 48, Apt 3',
+      city: 'Bern',
+      state: 'BE',
+      stateFull: 'Bern',
+      postcode: '3011',
+      country: 'Switzerland',
+      countryCode: 'CH',
+      lat: 46.9482,
+      lng: 7.4545,
+      isTaxFree: false,
+      timezone: 'Europe/Zurich (CET)',
+      timezoneCode: 'CET'
     }
   ],
 
@@ -133,6 +160,21 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       taxRate: 'Tax Favored Zone',
       timezone: 'Europe/Luxembourg (CET)',
       timezoneCode: 'CET'
+    },
+    {
+      street: '14 Rue de Belval, Apt 3B',
+      city: 'Esch-sur-Alzette',
+      state: 'LU-ES',
+      stateFull: 'Esch-sur-Alzette',
+      postcode: 'L-4024',
+      country: 'Luxembourg',
+      countryCode: 'LU',
+      lat: 49.4978,
+      lng: 5.9742,
+      isTaxFree: false,
+      taxRate: '17.00%',
+      timezone: 'Europe/Luxembourg (CET)',
+      timezoneCode: 'CET'
     }
   ],
 
@@ -163,6 +205,19 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       countryCode: 'IE',
       lat: 51.8965,
       lng: -8.4635,
+      timezone: 'Europe/Dublin (GMT/IST)',
+      timezoneCode: 'GMT'
+    },
+    {
+      street: 'Cuirt Seoige, Bohermore, Apt 18',
+      city: 'Galway',
+      state: 'G',
+      stateFull: 'Galway',
+      postcode: 'H91 K5Y2',
+      country: 'Ireland',
+      countryCode: 'IE',
+      lat: 53.2775,
+      lng: -9.0415,
       timezone: 'Europe/Dublin (GMT/IST)',
       timezoneCode: 'GMT'
     }
@@ -208,6 +263,19 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       lng: 11.2705,
       timezone: 'Europe/Rome (CET)',
       timezoneCode: 'CET'
+    },
+    {
+      street: 'Via Carlo Cattaneo 18, Apt 4A',
+      city: 'Verona',
+      state: 'VEN',
+      stateFull: 'Veneto',
+      postcode: '37121',
+      country: 'Italy',
+      countryCode: 'IT',
+      lat: 45.4375,
+      lng: 10.9905,
+      timezone: 'Europe/Rome (CET)',
+      timezoneCode: 'CET'
     }
   ],
 
@@ -238,6 +306,32 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       lng: 2.2115,
       timezone: 'Europe/Madrid (CET)',
       timezoneCode: 'CET'
+    },
+    {
+      street: 'Avenida de Aragón 28, Apt 6B',
+      city: 'Valencia',
+      state: 'VC',
+      stateFull: 'Valencian Community',
+      postcode: '46021',
+      country: 'Spain',
+      countryCode: 'ES',
+      lat: 39.4698,
+      lng: -0.3578,
+      timezone: 'Europe/Madrid (CET)',
+      timezoneCode: 'CET'
+    },
+    {
+      street: 'Calle Betis 44, Apt 3A',
+      city: 'Sevilla',
+      state: 'AN',
+      stateFull: 'Andalusia',
+      postcode: '41010',
+      country: 'Spain',
+      countryCode: 'ES',
+      lat: 37.3812,
+      lng: -6.0018,
+      timezone: 'Europe/Madrid (CET)',
+      timezoneCode: 'CET'
     }
   ],
 
@@ -266,6 +360,19 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       countryCode: 'NL',
       lat: 51.9075,
       lng: 4.4895,
+      timezone: 'Europe/Amsterdam (CET)',
+      timezoneCode: 'CET'
+    },
+    {
+      street: 'Kanaalstraat 142, Apt 2',
+      city: 'Utrecht',
+      state: 'UT',
+      stateFull: 'Utrecht',
+      postcode: '3531 CN',
+      country: 'Netherlands',
+      countryCode: 'NL',
+      lat: 52.0895,
+      lng: 5.0985,
       timezone: 'Europe/Amsterdam (CET)',
       timezoneCode: 'CET'
     }
@@ -311,6 +418,19 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       lng: 100.3065,
       timezone: 'Asia/Kuala_Lumpur (MYT)',
       timezoneCode: 'MYT'
+    },
+    {
+      street: 'Country Garden Danga Bay, Jalan Skudai, Apt 18-06',
+      city: 'Johor Bahru',
+      state: 'JHR',
+      stateFull: 'Johor',
+      postcode: '80200',
+      country: 'Malaysia',
+      countryCode: 'MY',
+      lat: 1.4675,
+      lng: 103.7265,
+      timezone: 'Asia/Kuala_Lumpur (MYT)',
+      timezoneCode: 'MYT'
     }
   ],
 
@@ -354,6 +474,32 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       lng: 98.9675,
       timezone: 'Asia/Bangkok (ICT)',
       timezoneCode: 'ICT'
+    },
+    {
+      street: 'The Base Uptown Phuket, 88/118 Chalermprakiat Ratchakan Thi 9 Rd, Apt 510',
+      city: 'Mueang Phuket',
+      state: 'HKT',
+      stateFull: 'Phuket',
+      postcode: '83000',
+      country: 'Thailand',
+      countryCode: 'TH',
+      lat: 7.9025,
+      lng: 98.3685,
+      timezone: 'Asia/Bangkok (ICT)',
+      timezoneCode: 'ICT'
+    },
+    {
+      street: 'Unixx South Pattaya, 163 Pratumnak Rd, Apt 2108',
+      city: 'Pattaya',
+      state: 'CBI',
+      stateFull: 'Chonburi',
+      postcode: '20150',
+      country: 'Thailand',
+      countryCode: 'TH',
+      lat: 12.9215,
+      lng: 100.8715,
+      timezone: 'Asia/Bangkok (ICT)',
+      timezoneCode: 'ICT'
     }
   ],
 
@@ -384,6 +530,19 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       lng: 105.8145,
       timezone: 'Asia/Ho_Chi_Minh (ICT)',
       timezoneCode: 'ICT'
+    },
+    {
+      street: 'Azura Apartment, 339 Tran Hung Dao, Apt 19B',
+      city: 'Da Nang',
+      state: 'DAD',
+      stateFull: 'Da Nang',
+      postcode: '550000',
+      country: 'Vietnam',
+      countryCode: 'VN',
+      lat: 16.0712,
+      lng: 108.2298,
+      timezone: 'Asia/Ho_Chi_Minh (ICT)',
+      timezoneCode: 'ICT'
     }
   ],
 
@@ -412,6 +571,32 @@ export const EXTENDED_ADDRESSES: Record<string, RealAddress[]> = {
       countryCode: 'PH',
       lat: 14.5525,
       lng: 121.0185,
+      timezone: 'Asia/Manila (PHT)',
+      timezoneCode: 'PHT'
+    },
+    {
+      street: '1016 Residences, Archbishop Reyes Ave, Cebu Business Park, Apt 14D',
+      city: 'Cebu City',
+      state: 'CEB',
+      stateFull: 'Cebu',
+      postcode: '6000',
+      country: 'Philippines',
+      countryCode: 'PH',
+      lat: 10.3178,
+      lng: 123.9035,
+      timezone: 'Asia/Manila (PHT)',
+      timezoneCode: 'PHT'
+    },
+    {
+      street: 'Abreeza Place, J.P. Laurel Ave, Bajada, Apt 912',
+      city: 'Davao City',
+      state: 'DVO',
+      stateFull: 'Davao',
+      postcode: '8000',
+      country: 'Philippines',
+      countryCode: 'PH',
+      lat: 7.0912,
+      lng: 125.6115,
       timezone: 'Asia/Manila (PHT)',
       timezoneCode: 'PHT'
     }

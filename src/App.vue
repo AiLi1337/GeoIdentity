@@ -429,8 +429,6 @@ function handleStateChange(state: string) {
 function handleIpIdentityGenerated(identity: GeneratedIdentity) {
   if (activeGeneratorTab.value !== 'ip') return;
   currentIdentity.value = identity;
-  selectedCountryCode.value = identity.countryCode;
-  selectedState.value = identity.address.state;
   saveToHistory(identity);
   historyList.value = getHistory();
   if (toastRef.value) {
@@ -445,7 +443,10 @@ function handleIpNoAddress() {
 watch(activeGeneratorTab, tab => {
   currentIdentity.value = null;
   addressError.value = '';
-  if (tab === 'standard') handleGenerate();
+  if (tab === 'standard') {
+    filters.value.state = selectedState.value || undefined;
+    handleGenerate();
+  }
 });
 
 function handleJumpToCountry(code: CountryCode) {
@@ -472,7 +473,8 @@ function handleToggleFav(identity: GeneratedIdentity) {
 function handleSelectIdentity(identity: GeneratedIdentity) {
   currentIdentity.value = identity;
   selectedCountryCode.value = identity.countryCode;
-  selectedState.value = identity.address.state;
+  selectedState.value = '';
+  filters.value.state = undefined;
   if (toastRef.value) {
     toastRef.value.show(t('history.apply'));
   }
@@ -500,11 +502,12 @@ onMounted(() => {
   window.addEventListener('hashchange', handleHashChange);
   handleHashChange();
 
-  // Load first identity
+  // Load first identity without implicitly locking selectedState
   if (historyList.value.length > 0 && historyList.value[0].address.addressMode === filters.value.addressMode) {
     currentIdentity.value = historyList.value[0];
     selectedCountryCode.value = currentIdentity.value.countryCode;
-    selectedState.value = currentIdentity.value.address.state;
+    selectedState.value = '';
+    filters.value.state = undefined;
   } else {
     handleGenerate();
   }

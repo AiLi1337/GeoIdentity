@@ -41,6 +41,11 @@
             <div class="font-mono font-bold text-emerald-400">{{ isZh ? metadata.lastUpdatedFormattedZh : metadata.lastUpdatedFormattedEn }}</div>
           </div>
 
+          <div class="px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs">
+            <div class="text-[10px] text-slate-400">{{ t('monitor.metadataUpdated') }}</div>
+            <div class="font-mono font-bold text-sky-400">{{ isZh ? metadata.metadataUpdatedFormattedZh : metadata.metadataUpdatedFormattedEn }}</div>
+          </div>
+
           <button
             type="button"
             @click="runHealthAudit"
@@ -464,8 +469,11 @@ function runHealthAudit() {
   isAuditing.value = true;
   auditNotice.value = '';
   const addresses = [...Object.values(ADDRESS_MAP).flat(), ...RESIDENTIAL_ADDRESSES];
-  const valid = addresses.every(a => a.street.trim() && a.city.trim() && a.postcode.trim() &&
-    Number.isFinite(a.lat) && Number.isFinite(a.lng) && Math.abs(a.lat) <= 90 && Math.abs(a.lng) <= 180);
+  const valid = addresses.every(a => {
+    const validPostcode = a.countryCode === 'HK' ? !a.postcode.trim() : Boolean(a.postcode.trim());
+    return a.street.trim() && a.city.trim() && validPostcode &&
+      Number.isFinite(a.lat) && Number.isFinite(a.lng) && Math.abs(a.lat) <= 90 && Math.abs(a.lng) <= 180;
+  });
   auditPassed.value = valid && addresses.length === metadata.stats.totalPhysicalVerifiedAddresses;
   auditNotice.value = auditPassed.value ? t('monitor.auditPassed') : t('monitor.auditFailed');
   isAuditing.value = false;

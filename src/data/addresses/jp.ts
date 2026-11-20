@@ -10,7 +10,9 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 35.6590,
-    lng: 139.7295
+    lng: 139.7295,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   },
   {
     street: '千代田区三番町1-1 ザ・パークハウス三番町 (The Parkhouse Sanbancho, 1-1 Sanbancho, Chiyoda-ku)',
@@ -21,7 +23,9 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 35.6905,
-    lng: 139.7445
+    lng: 139.7445,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   },
   {
     street: '渋谷区桜丘町1-1 渋谷プレイス (Shibuya Sakuragaoka Residences, 1-1 Sakuragaokacho, Shibuya-ku)',
@@ -32,7 +36,9 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 35.6565,
-    lng: 139.7020
+    lng: 139.7020,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   },
   {
     street: '新宿区西新宿5-1-1 ザ・パークハウス西新宿タワー60 (The Parkhouse Nishi Shinjuku Tower 60, 5-1-1 Nishi-Shinjuku)',
@@ -43,7 +49,9 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 35.6935,
-    lng: 139.6885
+    lng: 139.6885,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   },
   {
     street: '北区大深町1-1 グランフロント大阪オーナーズタワー (Grand Front Osaka Owners Tower, 1-1 Ohfukacho, Kita-ku)',
@@ -54,7 +62,9 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 34.7065,
-    lng: 135.4945
+    lng: 135.4945,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   },
   {
     street: '浪速区湊町1-2-3 ローレルタワー難波 (Laurel Tower Namba, 1-2-3 Minatomachi, Naniwa-ku)',
@@ -65,7 +75,9 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 34.6675,
-    lng: 135.4965
+    lng: 135.4965,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   },
   {
     street: '西区みなとみらい5-3-1 M.M.タワーズ (M.M. Towers, 5-3-1 Minatomirai, Nishi-ku)',
@@ -76,7 +88,9 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 35.4615,
-    lng: 139.6295
+    lng: 139.6295,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   },
   {
     street: '中京区柳八幡町65 ザ・レジデンス京都御池 (The Residence Kyoto Oike, 65 Yanagihachiman-cho, Nakagyo-ku)',
@@ -87,7 +101,9 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 35.0115,
-    lng: 135.7645
+    lng: 135.7645,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   },
   {
     street: '早良区百道浜1-3-70 ネクサス百道レジデンシャルタワー (Nexus Momochihama Tower, 1-3-70 Momochihama, Sawara-ku)',
@@ -98,6 +114,47 @@ export const JP_ADDRESSES: RealAddress[] = [
     country: 'Japan',
     countryCode: 'JP',
     lat: 33.5935,
-    lng: 130.3545
+    lng: 130.3545,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
+  },
+  {
+    street: '中区泉1-10-25 シティタワー久屋大通 (City Tower Hisaya-odori, 1-10-25 Izumi, Naka-ku)',
+    city: '名古屋市 (Nagoya-shi)',
+    state: '23',
+    stateFull: '愛知県 (Aichi)',
+    postcode: '461-0001',
+    country: 'Japan',
+    countryCode: 'JP',
+    lat: 35.1765,
+    lng: 136.9085,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
+  },
+  {
+    street: '中央区北2条東2-1 ザ・タワーズフロンティア札幌 (The Towers Frontier Sapporo, N2 E2, Chuo-ku)',
+    city: '札幌市 (Sapporo-shi)',
+    state: '01',
+    stateFull: '北海道 (Hokkaido)',
+    postcode: '060-0032',
+    country: 'Japan',
+    countryCode: 'JP',
+    lat: 43.0645,
+    lng: 141.3610,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
+  },
+  {
+    street: '那覇市おもろまち4-8-14 リュークスタワー (Ryukyu Omoromachi Residence, 4-8-14 Omoromachi, Naha-shi)',
+    city: '那覇市 (Naha-shi)',
+    state: '47',
+    stateFull: '沖縄県 (Okinawa)',
+    postcode: '900-0006',
+    country: 'Japan',
+    countryCode: 'JP',
+    lat: 26.2245,
+    lng: 127.6945,
+    timezone: 'Asia/Tokyo (JST)',
+    timezoneCode: 'JST'
   }
 ];

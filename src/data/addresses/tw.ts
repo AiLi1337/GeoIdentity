@@ -10,7 +10,9 @@ export const TW_ADDRESSES: RealAddress[] = [
     country: 'Taiwan',
     countryCode: 'TW',
     lat: 25.0345,
-    lng: 121.5720
+    lng: 121.5720,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
   },
   {
     street: '大安区和平东路一段199号 (No. 199, Sec. 1, Heping E. Rd)',
@@ -21,7 +23,9 @@ export const TW_ADDRESSES: RealAddress[] = [
     country: 'Taiwan',
     countryCode: 'TW',
     lat: 25.0268,
-    lng: 121.5340
+    lng: 121.5340,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
   },
   {
     street: '板桥区汉生东路166号 (No. 166, Hansheng E. Rd)',
@@ -32,7 +36,9 @@ export const TW_ADDRESSES: RealAddress[] = [
     country: 'Taiwan',
     countryCode: 'TW',
     lat: 25.0118,
-    lng: 121.4685
+    lng: 121.4685,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
   },
   {
     street: '西屯区市政北五路18号 (No. 18, Shizheng N. 5th Rd)',
@@ -43,7 +49,9 @@ export const TW_ADDRESSES: RealAddress[] = [
     country: 'Taiwan',
     countryCode: 'TW',
     lat: 24.1610,
-    lng: 120.6425
+    lng: 120.6425,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
   },
   {
     street: '苓雅区海边路31号 (No. 31, Haibian Rd)',
@@ -54,7 +62,9 @@ export const TW_ADDRESSES: RealAddress[] = [
     country: 'Taiwan',
     countryCode: 'TW',
     lat: 22.6175,
-    lng: 120.2925
+    lng: 120.2925,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
   },
   {
     street: '东区关新路19巷8号 (No. 8, Ln. 19, Guanxin Rd)',
@@ -65,6 +75,47 @@ export const TW_ADDRESSES: RealAddress[] = [
     country: 'Taiwan',
     countryCode: 'TW',
     lat: 24.7875,
-    lng: 121.0185
+    lng: 121.0185,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
+  },
+  {
+    street: '中山區明水路672巷18號 (No. 18, Ln. 672, Mingshui Rd)',
+    city: '中山區 (Zhongshan District)',
+    state: 'TPE',
+    stateFull: '台北市 (Taipei City)',
+    postcode: '104',
+    country: 'Taiwan',
+    countryCode: 'TW',
+    lat: 25.0815,
+    lng: 121.5525,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
+  },
+  {
+    street: '桃園區中正路1188號 (No. 1188, Zhongzheng Rd)',
+    city: '桃園區 (Taoyuan District)',
+    state: 'TYN',
+    stateFull: '桃園市 (Taoyuan City)',
+    postcode: '330',
+    country: 'Taiwan',
+    countryCode: 'TW',
+    lat: 25.0165,
+    lng: 121.2985,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
+  },
+  {
+    street: '東區裕農路621巷28號 (No. 28, Ln. 621, Yunong Rd)',
+    city: '東區 (East District)',
+    state: 'TNN',
+    stateFull: '台南市 (Tainan City)',
+    postcode: '701',
+    country: 'Taiwan',
+    countryCode: 'TW',
+    lat: 22.9895,
+    lng: 120.2325,
+    timezone: 'Asia/Taipei (CST)',
+    timezoneCode: 'CST'
   }
 ];

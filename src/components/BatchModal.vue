@@ -171,7 +171,9 @@
                     <span
                       class="px-2 py-0.5 rounded-md text-[10px] font-semibold"
                       :class="[
-                        item.address.addressMode === 'residential'
+                        item.address.addressMode === 'sourced'
+                          ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                          : item.address.addressMode === 'residential'
                           ? 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300'
                           : item.address.addressMode === 'derivation'
                             ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
@@ -201,7 +203,7 @@
                       v-if="item.address.isTaxFree"
                       class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
                     >
-                      {{ locale === 'zh' ? '0.00% (免税)' : '0.00% (Tax-Free)' }}
+                      {{ getBatchTaxRate(item.address) }}
                     </span>
                     <span v-else class="text-slate-400">
                       {{ getBatchTaxRate(item.address) }}
@@ -241,6 +243,7 @@ import { Layers, X, Download, Code2, RefreshCw } from 'lucide-vue-next';
 import type { CountryCode, GeneratedIdentity, FilterOptions, AddressMode } from '../types/identity';
 import { generateIdentity } from '../services/identityGenerator';
 import { exportToCSV, exportToJSON } from '../services/exportService';
+import { formatTaxRate } from '../services/taxRateDisplay';
 import { useI18n } from '../i18n';
 
 const props = defineProps<{
@@ -258,20 +261,7 @@ defineEmits<{
 const { locale, t } = useI18n();
 
 function getBatchTaxRate(addr: any): string {
-  if (locale.value === 'zh') {
-    if (addr.isTaxFree || (addr.taxRate && addr.taxRate.includes('No Sales Tax'))) {
-      return '0.00% (免消费税)';
-    }
-    if (addr.taxRate && addr.taxRate.includes('Standard Tax')) {
-      return '标准消费税率';
-    }
-    return addr.taxRate || '0.00% (免消费税)';
-  } else {
-    if (addr.isTaxFree || (addr.taxRate && addr.taxRate.includes('免税'))) {
-      return '0.00% (No Sales Tax)';
-    }
-    return addr.taxRate || '0.00% (No Sales Tax)';
-  }
+  return formatTaxRate(addr.taxRate, addr.isTaxFree, locale.value === 'zh' ? 'zh' : 'en');
 }
 
 const selectedCount = ref(10);
