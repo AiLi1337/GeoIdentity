@@ -345,5 +345,111 @@ export const COUNTRIES: CountryInfo[] = [
       { code: 'CEB', nameZh: '宿务省', nameEn: 'Cebu' },
       { code: 'DVO', nameZh: '达沃市', nameEn: 'Davao' }
     ]
+  },
+
+  // --- 新西兰与欧洲新增国家 (OSM + 方案C) ---
+  {
+    code: 'NZ',
+    nameZh: '新西兰',
+    nameEn: 'New Zealand',
+    flag: '🇳🇿',
+    dialCode: '+64',
+    currency: 'NZD ($)',
+    continent: 'asia_pacific',
+    popularStates: [
+      { code: 'AUK', nameZh: '奥克兰大区 (Auckland)', nameEn: 'Auckland' },
+      { code: 'WGN', nameZh: '惠灵顿大区 (Wellington)', nameEn: 'Wellington' }
+    ]
+  },
+  {
+    code: 'PT',
+    nameZh: '葡萄牙',
+    nameEn: 'Portugal',
+    flag: '🇵🇹',
+    dialCode: '+351',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: '11', nameZh: '里斯本区 (Lisboa)', nameEn: 'Lisbon (Lisboa)' },
+      { code: '13', nameZh: '波尔图区 (Porto)', nameEn: 'Porto' }
+    ]
+  },
+  {
+    code: 'BE',
+    nameZh: '比利时',
+    nameEn: 'Belgium',
+    flag: '🇧🇪',
+    dialCode: '+32',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: 'BRU', nameZh: '布鲁塞尔首都大区 (Bruxelles)', nameEn: 'Brussels (Bruxelles)' },
+      { code: 'VAN', nameZh: '安特卫普省 (Antwerpen)', nameEn: 'Antwerp (Antwerpen)' }
+    ]
+  },
+  {
+    code: 'AT',
+    nameZh: '奥地利',
+    nameEn: 'Austria',
+    flag: '🇦🇹',
+    dialCode: '+43',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: '9', nameZh: '维也纳 (Wien)', nameEn: 'Vienna (Wien)' },
+      { code: '6', nameZh: '施泰尔马克州 / 格拉茨 (Graz)', nameEn: 'Styria (Graz)' }
+    ]
+  },
+  {
+    code: 'SE',
+    nameZh: '瑞典',
+    nameEn: 'Sweden',
+    flag: '🇸🇪',
+    dialCode: '+46',
+    currency: 'SEK (kr)',
+    continent: 'europe',
+    popularStates: [
+      { code: 'AB', nameZh: '斯德哥尔摩省 (Stockholm)', nameEn: 'Stockholm' },
+      { code: 'O', nameZh: '西约塔兰省 / 哥德堡 (Göteborg)', nameEn: 'Västra Götaland (Gothenburg)' }
+    ]
+  },
+  {
+    code: 'FI',
+    nameZh: '芬兰',
+    nameEn: 'Finland',
+    flag: '🇫🇮',
+    dialCode: '+358',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: '18', nameZh: '新地区 / 赫尔辛基 (Helsinki)', nameEn: 'Uusimaa (Helsinki)' },
+      { code: '11', nameZh: '皮尔坎马区 / 坦佩雷 (Tampere)', nameEn: 'Pirkanmaa (Tampere)' }
+    ]
+  },
+  {
+    code: 'PL',
+    nameZh: '波兰',
+    nameEn: 'Poland',
+    flag: '🇵🇱',
+    dialCode: '+48',
+    currency: 'PLN (zł)',
+    continent: 'europe',
+    popularStates: [
+      { code: '14', nameZh: '马佐夫舍省 / 华沙 (Warszawa)', nameEn: 'Masovia (Warsaw)' },
+      { code: '12', nameZh: '小波兰省 / 克拉科夫 (Kraków)', nameEn: 'Lesser Poland (Kraków)' }
+    ]
+  },
+  {
+    code: 'HU',
+    nameZh: '匈牙利',
+    nameEn: 'Hungary',
+    flag: '🇭🇺',
+    dialCode: '+36',
+    currency: 'HUF (Ft)',
+    continent: 'europe',
+    popularStates: [
+      { code: 'BU', nameZh: '布达佩斯 (Budapest)', nameEn: 'Budapest' },
+      { code: 'CS', nameZh: '琼格拉德州 / 塞格德 (Szeged)', nameEn: 'Csongrád-Csanád (Szeged)' }
+    ]
   }
 ];

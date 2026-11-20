@@ -300,4 +300,43 @@ await assert.rejects(syncOsmApartmentsIfAvailable(async () => ({ ok: false, stat
   /HTTP 400/, 'a malformed query must fail rather than silently skip');
 await assert.rejects(syncOsmApartments(async () => ({ ok: true, json: async () => ({ elements: [] }) }), testAreas),
   /no valid residential building addresses for Wilmington/);
+
+// New-country postcode validation, optional missing-tag retention, and addr:city preservation
+const europeSyncAreas: OsmSyncArea[] = [
+  { countryCode: 'BE', city: 'Antwerpen', state: 'VAN', bbox: '51.192,4.427,51.200,4.435', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'SE', city: 'Goteborg', state: 'O', bbox: '57.690,11.918,57.698,11.926', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'PL', city: 'Warszawa', state: '14', bbox: '52.220,21.011,52.228,21.019', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false }
+];
+const europeSynced = await syncOsmApartments(async (url: string) => ({
+  ok: true,
+  json: async () => ({
+    elements: url.includes('51.192')
+      ? [
+          valid(51, { building: 'house', 'addr:housenumber': '54', 'addr:street': 'Arthur Sterckstraat', 'addr:city': 'Berchem', 'addr:postcode': '' }, 51.197, 4.429),
+          valid(52, { building: 'house', 'addr:housenumber': '55', 'addr:street': 'Conflict Bank Street', 'addr:city': 'Berchem', 'addr:postcode': '', amenity: 'bank' }, 51.197, 4.429),
+          valid(53, { building: 'house', 'addr:housenumber': '56', 'addr:street': 'Foreign Street', 'addr:city': 'Berchem', 'addr:postcode': '', 'addr:country': 'NL' }, 51.197, 4.429)
+        ]
+      : url.includes('57.690')
+        ? [
+            valid(54, { building: 'apartments', 'addr:housenumber': '12', 'addr:street': 'Kabelgatan', 'addr:city': 'Göteborg', 'addr:postcode': '414 57' }, 57.691, 11.925),
+            valid(55, { building: 'apartments', 'addr:housenumber': '14', 'addr:street': 'Bad Post Street', 'addr:city': 'Göteborg', 'addr:postcode': '999' }, 57.691, 11.925)
+          ]
+        : [
+            valid(56, { building: 'apartments', 'addr:housenumber': '3', 'addr:street': 'Poznańska', 'addr:city': 'Warszawa', 'addr:postcode': '00-680' }, 52.223, 21.012),
+            valid(57, { building: 'apartments', 'addr:housenumber': '5', 'addr:street': 'Missing Required Zip', 'addr:city': 'Warszawa', 'addr:postcode': '' }, 52.223, 21.012)
+          ]
+  })
+}), europeSyncAreas);
+assert.equal(europeSynced.length, 3);
+assert.equal(europeSynced.find(a => a.id === 'way/51')?.city, 'Berchem', 'preserves original addr:city instead of overwriting with query scope');
+assert.equal(europeSynced.find(a => a.id === 'way/51')?.postcodeStatus, 'missing-original-tag');
+assert.equal(europeSynced.find(a => a.id === 'way/54')?.postcode, '414 57', 'preserves Swedish space-separated postcode');
+assert.equal(europeSynced.find(a => a.id === 'way/56')?.postcode, '00-680', 'preserves Polish leading-zero hyphenated postcode');
+
+const unverifiedEmptySnapshot = [
+  ...(currentSnapshot as any[]).map(a => a.id === 'way/331595545' ? { ...a, postcodeStatus: undefined } : a)
+];
+assert.equal(computeAddressMetadataStats(unverifiedEmptySnapshot as any).coordinateErrors, 1,
+  'empty non-HK postcode without missing-original-tag evidence fails metadata validation');
+
 console.log('Address sync validation, multi-country continuity, offline metadata refresh, and failure handling passed');

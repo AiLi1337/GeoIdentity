@@ -58,7 +58,8 @@
               : 'bg-slate-800/60 text-slate-400 border-slate-700/60 hover:text-slate-200 hover:bg-slate-800'
           ]"
         >
-          <span>🌍 全部 21 国</span>
+          <Globe class="w-3.5 h-3.5" aria-hidden="true" />
+          <span>{{ isZh ? `全部 ${countryPins.length} 国` : `All ${countryPins.length} Countries` }}</span>
         </button>
 
         <span class="text-slate-700">|</span>
@@ -80,7 +81,7 @@
                   : 'bg-slate-800/80 text-slate-300 border-slate-700/60 hover:text-white hover:bg-slate-800'
             ]"
           >
-            <span>{{ pin.flag }}</span>
+            <span><CountryFlag :code="pin.code" :label="isZh ? pin.nameZh : pin.nameEn" decorative size="xs" /></span>
             <span>{{ isZh ? pin.nameZh : pin.code }}</span>
           </button>
         </div>
@@ -267,14 +268,14 @@
       >
         <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
           <div class="flex items-center gap-2">
-            <span class="text-xl">{{ activeTooltipPin.flag }}</span>
+            <CountryFlag :code="activeTooltipPin.code" :label="isZh ? activeTooltipPin.nameZh : activeTooltipPin.nameEn" decorative size="md" />
             <div>
               <div class="font-bold text-slate-100 flex items-center gap-1.5">
                 <span>{{ isZh ? activeTooltipPin.nameZh : activeTooltipPin.nameEn }}</span>
                 <span class="text-[10px] px-1 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700 font-mono">{{ activeTooltipPin.code }}</span>
               </div>
               <div class="text-[10px] text-slate-400 font-mono">
-                {{ activeTooltipPin.continentZh }} · {{ activeTooltipPin.isTaxFree ? '免税特区' : '标准税区' }}
+                {{ t(`continents.${activeTooltipPin.continent}`) }} · {{ isZh ? (activeTooltipPin.isTaxFree ? '免税特区' : '标准税区') : (activeTooltipPin.isTaxFree ? 'Tax-Free' : 'Standard') }}
               </div>
             </div>
           </div>
@@ -309,7 +310,7 @@
     <div class="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-slate-800/80 text-center">
       <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">
         <div class="text-[11px] text-slate-400">已部署国家/地区</div>
-        <div class="text-base font-bold text-emerald-400 font-mono">21 / 21</div>
+        <div class="text-base font-bold text-emerald-400 font-mono">{{ countryPins.length }} / {{ metadata.totalCountries }}</div>
       </div>
       <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">
         <div class="text-[11px] text-slate-400">{{ t('monitor.buildingAddresses') }}</div>
@@ -330,10 +331,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { Globe, X } from 'lucide-vue-next';
+import CountryFlag from '../CountryFlag.vue';
 import { useI18n } from '../../i18n';
+import { COUNTRIES } from '../../data/countries';
 import metadata from '../../data/addresses/metadata.json';
 import { worldLandPath, worldGraticulePath, countryVectorPaths, pinCoordinates } from '../../data/addresses/worldMapData';
-import type { CountryCode } from '../../types/identity';
+import type { CountryCode, CountryInfo } from '../../types/identity';
 
 defineProps<{
   selectedCountryCode?: CountryCode | '';
@@ -352,8 +355,7 @@ interface CountryPin {
   y: number;
   nameZh: string;
   nameEn: string;
-  flag: string;
-  continentZh: string;
+  continent: CountryInfo['continent'];
   isTaxFree: boolean;
   landmarkCount: number;
   schemeBCount: number;
@@ -364,291 +366,28 @@ const breakdown = metadata.countryBreakdown as Record<string, any>;
 
 // Prominent pins that have enough space to show their code label permanently
 function isProminentPin(code: string): boolean {
-  return ['US', 'CA', 'GB', 'JP', 'AU'].includes(code);
+  return ['US', 'CA', 'GB', 'JP', 'AU', 'NZ'].includes(code);
 }
 
-const countryPins = computed<CountryPin[]>(() => [
-  // North America
-  {
-    code: 'US',
-    x: pinCoordinates.US.x,
-    y: pinCoordinates.US.y,
-    nameZh: '美国',
-    nameEn: 'United States',
-    flag: '🇺🇸',
-    continentZh: '北美洲',
-    isTaxFree: false,
-    landmarkCount: breakdown.US?.landmarkCount || 26,
-    schemeBCount: breakdown.US?.schemeBResidentialCount || 112,
-    schemeACapacity: breakdown.US?.schemeACapacity || 83067
-  },
-  {
-    code: 'CA',
-    x: pinCoordinates.CA.x,
-    y: pinCoordinates.CA.y,
-    nameZh: '加拿大',
-    nameEn: 'Canada',
-    flag: '🇨🇦',
-    continentZh: '北美洲',
-    isTaxFree: false,
-    landmarkCount: breakdown.CA?.landmarkCount || 6,
-    schemeBCount: breakdown.CA?.schemeBResidentialCount || 16,
-    schemeACapacity: breakdown.CA?.schemeACapacity || 6184
-  },
-
-  // Europe
-  {
-    code: 'GB',
-    x: pinCoordinates.GB.x,
-    y: pinCoordinates.GB.y,
-    nameZh: '英国',
-    nameEn: 'United Kingdom',
-    flag: '🇬🇧',
-    continentZh: '欧洲',
-    isTaxFree: false,
-    landmarkCount: breakdown.GB?.landmarkCount || 10,
-    schemeBCount: breakdown.GB?.schemeBResidentialCount || 18,
-    schemeACapacity: breakdown.GB?.schemeACapacity || 1200
-  },
-  {
-    code: 'DE',
-    x: pinCoordinates.DE.x,
-    y: pinCoordinates.DE.y,
-    nameZh: '德国',
-    nameEn: 'Germany',
-    flag: '🇩🇪',
-    continentZh: '欧洲',
-    isTaxFree: false,
-    landmarkCount: breakdown.DE?.landmarkCount || 6,
-    schemeBCount: breakdown.DE?.schemeBResidentialCount || 16,
-    schemeACapacity: breakdown.DE?.schemeACapacity || 240
-  },
-  {
-    code: 'FR',
-    x: pinCoordinates.FR.x,
-    y: pinCoordinates.FR.y,
-    nameZh: '法国',
-    nameEn: 'France',
-    flag: '🇫🇷',
-    continentZh: '欧洲',
-    isTaxFree: false,
-    landmarkCount: breakdown.FR?.landmarkCount || 6,
-    schemeBCount: breakdown.FR?.schemeBResidentialCount || 14,
-    schemeACapacity: breakdown.FR?.schemeACapacity || 120
-  },
-  {
-    code: 'IT',
-    x: pinCoordinates.IT.x,
-    y: pinCoordinates.IT.y,
-    nameZh: '意大利',
-    nameEn: 'Italy',
-    flag: '🇮🇹',
-    continentZh: '欧洲',
-    isTaxFree: false,
-    landmarkCount: breakdown.IT?.landmarkCount || 4,
-    schemeBCount: breakdown.IT?.schemeBResidentialCount || 15,
-    schemeACapacity: breakdown.IT?.schemeACapacity || 0
-  },
-  {
-    code: 'ES',
-    x: pinCoordinates.ES.x,
-    y: pinCoordinates.ES.y,
-    nameZh: '西班牙',
-    nameEn: 'Spain',
-    flag: '🇪🇸',
-    continentZh: '欧洲',
-    isTaxFree: false,
-    landmarkCount: breakdown.ES?.landmarkCount || 4,
-    schemeBCount: breakdown.ES?.schemeBResidentialCount || 14,
-    schemeACapacity: breakdown.ES?.schemeACapacity || 0
-  },
-  {
-    code: 'NL',
-    x: pinCoordinates.NL.x,
-    y: pinCoordinates.NL.y,
-    nameZh: '荷兰',
-    nameEn: 'Netherlands',
-    flag: '🇳🇱',
-    continentZh: '欧洲',
-    isTaxFree: false,
-    landmarkCount: breakdown.NL?.landmarkCount || 4,
-    schemeBCount: breakdown.NL?.schemeBResidentialCount || 12,
-    schemeACapacity: breakdown.NL?.schemeACapacity || 0
-  },
-  {
-    code: 'CH',
-    x: pinCoordinates.CH.x,
-    y: pinCoordinates.CH.y,
-    nameZh: '瑞士',
-    nameEn: 'Switzerland',
-    flag: '🇨🇭',
-    continentZh: '欧洲 (低税)',
-    isTaxFree: true,
-    landmarkCount: breakdown.CH?.landmarkCount || 4,
-    schemeBCount: breakdown.CH?.schemeBResidentialCount || 12,
-    schemeACapacity: breakdown.CH?.schemeACapacity || 0
-  },
-  {
-    code: 'LU',
-    x: pinCoordinates.LU.x,
-    y: pinCoordinates.LU.y,
-    nameZh: '卢森堡',
-    nameEn: 'Luxembourg',
-    flag: '🇱🇺',
-    continentZh: '欧洲 (低税)',
-    isTaxFree: true,
-    landmarkCount: breakdown.LU?.landmarkCount || 3,
-    schemeBCount: breakdown.LU?.schemeBResidentialCount || 8,
-    schemeACapacity: breakdown.LU?.schemeACapacity || 0
-  },
-  {
-    code: 'IE',
-    x: pinCoordinates.IE.x,
-    y: pinCoordinates.IE.y,
-    nameZh: '爱尔兰',
-    nameEn: 'Ireland',
-    flag: '🇮🇪',
-    continentZh: '欧洲 (低税)',
-    isTaxFree: true,
-    landmarkCount: breakdown.IE?.landmarkCount || 4,
-    schemeBCount: breakdown.IE?.schemeBResidentialCount || 10,
-    schemeACapacity: breakdown.IE?.schemeACapacity || 0
-  },
-
-  // Asia / Pacific
-  {
-    code: 'JP',
-    x: pinCoordinates.JP.x,
-    y: pinCoordinates.JP.y,
-    nameZh: '日本',
-    nameEn: 'Japan',
-    flag: '🇯🇵',
-    continentZh: '亚太',
-    isTaxFree: false,
-    landmarkCount: breakdown.JP?.landmarkCount || 9,
-    schemeBCount: breakdown.JP?.schemeBResidentialCount || 16,
-    schemeACapacity: breakdown.JP?.schemeACapacity || 1200
-  },
-  {
-    code: 'KR',
-    x: pinCoordinates.KR.x,
-    y: pinCoordinates.KR.y,
-    nameZh: '韩国',
-    nameEn: 'South Korea',
-    flag: '🇰🇷',
-    continentZh: '亚太',
-    isTaxFree: false,
-    landmarkCount: breakdown.KR?.landmarkCount || 4,
-    schemeBCount: breakdown.KR?.schemeBResidentialCount || 14,
-    schemeACapacity: breakdown.KR?.schemeACapacity || 0
-  },
-  {
-    code: 'HK',
-    x: pinCoordinates.HK.x,
-    y: pinCoordinates.HK.y,
-    nameZh: '中国香港',
-    nameEn: 'Hong Kong',
-    flag: '🇭🇰',
-    continentZh: '亚太 (免税港)',
-    isTaxFree: true,
-    landmarkCount: breakdown.HK?.landmarkCount || 6,
-    schemeBCount: breakdown.HK?.schemeBResidentialCount || 12,
-    schemeACapacity: breakdown.HK?.schemeACapacity || 400
-  },
-  {
-    code: 'TW',
-    x: pinCoordinates.TW.x,
-    y: pinCoordinates.TW.y,
-    nameZh: '中国台湾',
-    nameEn: 'Taiwan',
-    flag: '🇹🇼',
-    continentZh: '亚太',
-    isTaxFree: false,
-    landmarkCount: breakdown.TW?.landmarkCount || 6,
-    schemeBCount: breakdown.TW?.schemeBResidentialCount || 12,
-    schemeACapacity: breakdown.TW?.schemeACapacity || 350
-  },
-  {
-    code: 'SG',
-    x: pinCoordinates.SG.x,
-    y: pinCoordinates.SG.y,
-    nameZh: '新加坡',
-    nameEn: 'Singapore',
-    flag: '🇸🇬',
-    continentZh: '亚太',
-    isTaxFree: false,
-    landmarkCount: breakdown.SG?.landmarkCount || 6,
-    schemeBCount: breakdown.SG?.schemeBResidentialCount || 12,
-    schemeACapacity: breakdown.SG?.schemeACapacity || 330
-  },
-  {
-    code: 'AU',
-    x: pinCoordinates.AU.x,
-    y: pinCoordinates.AU.y,
-    nameZh: '澳大利亚',
-    nameEn: 'Australia',
-    flag: '🇦🇺',
-    continentZh: '亚太',
-    isTaxFree: false,
-    landmarkCount: breakdown.AU?.landmarkCount || 6,
-    schemeBCount: breakdown.AU?.schemeBResidentialCount || 16,
-    schemeACapacity: breakdown.AU?.schemeACapacity || 0
-  },
-
-  // Southeast Asia
-  {
-    code: 'MY',
-    x: pinCoordinates.MY.x,
-    y: pinCoordinates.MY.y,
-    nameZh: '马来西亚',
-    nameEn: 'Malaysia',
-    flag: '🇲🇾',
-    continentZh: '东南亚',
-    isTaxFree: false,
-    landmarkCount: breakdown.MY?.landmarkCount || 4,
-    schemeBCount: breakdown.MY?.schemeBResidentialCount || 10,
-    schemeACapacity: breakdown.MY?.schemeACapacity || 0
-  },
-  {
-    code: 'TH',
-    x: pinCoordinates.TH.x,
-    y: pinCoordinates.TH.y,
-    nameZh: '泰国',
-    nameEn: 'Thailand',
-    flag: '🇹🇭',
-    continentZh: '东南亚',
-    isTaxFree: false,
-    landmarkCount: breakdown.TH?.landmarkCount || 4,
-    schemeBCount: breakdown.TH?.schemeBResidentialCount || 10,
-    schemeACapacity: breakdown.TH?.schemeACapacity || 0
-  },
-  {
-    code: 'VN',
-    x: pinCoordinates.VN.x,
-    y: pinCoordinates.VN.y,
-    nameZh: '越南',
-    nameEn: 'Vietnam',
-    flag: '🇻🇳',
-    continentZh: '东南亚',
-    isTaxFree: false,
-    landmarkCount: breakdown.VN?.landmarkCount || 4,
-    schemeBCount: breakdown.VN?.schemeBResidentialCount || 10,
-    schemeACapacity: breakdown.VN?.schemeACapacity || 0
-  },
-  {
-    code: 'PH',
-    x: pinCoordinates.PH.x,
-    y: pinCoordinates.PH.y,
-    nameZh: '菲律宾',
-    nameEn: 'Philippines',
-    flag: '🇵🇭',
-    continentZh: '东南亚',
-    isTaxFree: false,
-    landmarkCount: breakdown.PH?.landmarkCount || 4,
-    schemeBCount: breakdown.PH?.schemeBResidentialCount || 10,
-    schemeACapacity: breakdown.PH?.schemeACapacity || 0
-  }
-]);
+const countryPins = computed<CountryPin[]>(() =>
+  COUNTRIES.flatMap(country => {
+    const coord = pinCoordinates[country.code];
+    if (!coord) return [];
+    const stats = breakdown[country.code];
+    return [{
+      code: country.code,
+      x: coord.x,
+      y: coord.y,
+      nameZh: country.nameZh,
+      nameEn: country.nameEn,
+      continent: country.continent,
+      isTaxFree: Boolean(country.isTaxFreeZone),
+      landmarkCount: stats?.landmarkCount ?? 0,
+      schemeBCount: stats?.schemeBResidentialCount ?? 0,
+      schemeACapacity: stats?.schemeACapacity ?? 0
+    }];
+  })
+);
 
 const totalLandmarks = computed(() => metadata.stats.totalPhysicalLandmarks);
 const totalResidential = computed(() => metadata.stats.totalSchemeBResidential);

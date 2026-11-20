@@ -367,6 +367,7 @@ import {
   Info
 } from 'lucide-vue-next';
 import type { FilterOptions, AddressMode } from '../types/identity';
+import { COUNTRIES } from '../data/countries';
 import { getAddressCoverageStats } from '../data/addresses';
 import { useI18n } from '../i18n';
 
@@ -390,11 +391,16 @@ const poolStats = getAddressCoverageStats();
 
 const sourcedCountriesSummary = computed(() => {
   const counts = poolStats.sourcedCountryCounts;
-  const labels: Record<string, string> = locale.value === 'zh'
-    ? { US: '美国', HK: '香港', TW: '台湾' }
-    : { US: 'US', HK: 'HK', TW: 'TW' };
-  return poolStats.sourcedCountries
-    .map(code => `${labels[code] || code} ${counts[code] || 0}`)
+  const countryLookup = new Map(COUNTRIES.map(c => [c.code, c]));
+  return COUNTRIES
+    .filter(c => (counts[c.code] || 0) > 0)
+    .map(c => {
+      const info = countryLookup.get(c.code);
+      const label = locale.value === 'zh'
+        ? (c.code === 'HK' ? '香港' : c.code === 'TW' ? '台湾' : (info?.nameZh || c.code))
+        : c.code;
+      return `${label} ${counts[c.code]}`;
+    })
     .join(' · ');
 });
 
@@ -412,7 +418,7 @@ const modeComparisonItems = computed(() => [
     badgeBg: 'bg-blue-500',
     source: t('addressMode.landmarkSource'),
     interpolation: t('addressMode.landmarkInterp'),
-    coverage: t('addressMode.landmarkCoverage', { countries: poolStats.totalCountries, count: poolStats.landmarkCount }),
+    coverage: t('addressMode.landmarkCoverage', { countries: poolStats.landmarkCountriesCount, count: poolStats.landmarkCount }),
     target: t('addressMode.landmarkTarget'),
     noMatch: t('addressMode.landmarkNoMatch')
   },
@@ -426,7 +432,7 @@ const modeComparisonItems = computed(() => [
     source: t('addressMode.derivationSource'),
     interpolation: t('addressMode.derivationInterp'),
     coverage: t('addressMode.derivationCoverage', {
-      countries: poolStats.totalCountries,
+      countries: poolStats.derivationCountriesCount,
       rules: poolStats.derivationRulesCount,
       capacity: poolStats.derivationCapacity.toLocaleString()
     }),
@@ -442,7 +448,7 @@ const modeComparisonItems = computed(() => [
     badgeBg: 'bg-purple-500',
     source: t('addressMode.residentialSource'),
     interpolation: t('addressMode.residentialInterp'),
-    coverage: t('addressMode.residentialCoverage', { countries: poolStats.totalCountries, count: poolStats.residentialCount }),
+    coverage: t('addressMode.residentialCoverage', { countries: poolStats.residentialCountriesCount, count: poolStats.residentialCount }),
     target: t('addressMode.residentialTarget'),
     noMatch: t('addressMode.residentialNoMatch')
   },

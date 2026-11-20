@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { getRandomAddress, getSourcedAddress, OSM_APARTMENTS } from '../src/data/addresses';
+import { getAddressCoverageStats, getRandomAddress, getSourcedAddress, OSM_APARTMENTS } from '../src/data/addresses';
+import { isValidCountryPostcode } from '../src/data/addresses/postcodeRules';
 import { HK_ADDRESSES } from '../src/data/addresses/hk';
 import { TW_ADDRESSES } from '../src/data/addresses/tw';
 import { JP_ADDRESSES } from '../src/data/addresses/jp';
@@ -7,6 +8,7 @@ import { FR_ADDRESSES } from '../src/data/addresses/fr';
 import { generateIdentity, generateIdentityFromAddress } from '../src/services/identityGenerator';
 import { buildCSVContent } from '../src/services/exportService';
 import { formatTaxRate } from '../src/services/taxRateDisplay';
+import type { CountryCode } from '../src/types/identity';
 import metadata from '../src/data/addresses/metadata.json';
 
 assert(OSM_APARTMENTS.length > 0, 'the sourced address pool must not be empty');
@@ -30,16 +32,47 @@ for (let i = 0; i < 100; i++) {
   assert.match(identity.address.sourceId || '', /^(node|way|relation)\/\d+$/);
   assert.equal(identity.address.addressLine2, undefined, 'a building address has no proven unit');
 }
-assert(OSM_APARTMENTS.length > 110, 'the sourced pool retains the expanded multi-country coverage');
+assert(OSM_APARTMENTS.length >= 242, `expected >= 242 sourced records across 11 countries, got ${OSM_APARTMENTS.length}`);
 assert.equal(OSM_APARTMENTS.length, metadata.stats.totalOsmBuildings, 'published source count matches the actual pool');
-const usSourcedCities = new Set(OSM_APARTMENTS.filter(a => a.countryCode === 'US').map(a => a.city));
-assert(usSourcedCities.size >= 5, `US sourced addresses should cover >= 5 cities, got ${usSourcedCities.size}`);
+const coverageStats = getAddressCoverageStats();
+assert.equal(coverageStats.totalCountries, 29, 'global country catalog covers 29 countries');
+assert.equal(coverageStats.derivationCountriesCount, 21, 'Scheme A derivation remains accurately reported as 21 countries');
+assert.equal(coverageStats.residentialCountriesCount, 21, 'Scheme B residential remains accurately reported as 21 countries');
+assert.equal(coverageStats.landmarkCountriesCount, 29, 'Scheme C landmarks cover all 29 countries');
+assert.equal(coverageStats.sourcedCountriesCount, 11, 'OSM sourced pool covers 11 countries');
+
+for (const newCountry of ['NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU'] as CountryCode[]) {
+  const list = OSM_APARTMENTS.filter(a => a.countryCode === newCountry);
+  assert.equal(list.length, 8, `${newCountry} has 8 sourced OSM entries`);
+  assert.equal(new Set(list.map(a => a.state)).size, 2, `${newCountry} sourced entries cover 2 regions`);
+  for (const addr of list) {
+    assert(isValidCountryPostcode(newCountry, addr.postcode, { source: 'OpenStreetMap', postcodeStatus: addr.postcodeStatus }),
+      `${newCountry} ${addr.sourceId} postcode "${addr.postcode}" satisfies country validation`);
+    assert(addr.timezone && addr.timezone !== 'UTC+0', `${newCountry} ${addr.sourceId} has local IANA timezone`);
+  }
+}
+assert.equal(
+  OSM_APARTMENTS.filter(a => a.postcodeStatus === 'missing-original-tag').length,
+  22,
+  'all 22 verified missing-postcode OSM buildings preserve empty string with explicit evidence'
+);
+assert.equal(
+  OSM_APARTMENTS.find(a => a.sourceId === 'way/135082963')?.postcode,
+  '414 57',
+  'Swedish postcode keeps original spacing'
+);
+assert.equal(
+  OSM_APARTMENTS.find(a => a.sourceId === 'way/512528656')?.city,
+  'Berchem',
+  'Belgian Antwerpen-area building preserves original addr:city "Berchem"'
+);
+assert.equal(OSM_APARTMENTS.filter(a => a.countryCode === 'US').length, 137, 'US retains all 137 OSM records');
 const hkSourced = OSM_APARTMENTS.filter(a => a.countryCode === 'HK');
-assert(hkSourced.length >= 12, `HK sourced addresses should have >= 12 entries, got ${hkSourced.length}`);
+assert.equal(hkSourced.length, 19, `HK sourced addresses retain 19 entries, got ${hkSourced.length}`);
 assert(new Set(hkSourced.map(a => a.state)).size >= 3, 'HK sourced addresses cover >= 3 districts');
 assert(hkSourced.every(a => a.postcode === ''), 'HK sourced addresses keep empty postcode');
 const twSourced = OSM_APARTMENTS.filter(a => a.countryCode === 'TW');
-assert(twSourced.length >= 12, `TW sourced addresses should have >= 12 entries, got ${twSourced.length}`);
+assert.equal(twSourced.length, 22, `TW sourced addresses retain 22 entries, got ${twSourced.length}`);
 assert(new Set(twSourced.map(a => a.state)).size >= 3, 'TW sourced addresses cover >= 3 cities');
 assert(twSourced.every(a => /^\d{3}(\d{2,3})?$/.test(a.postcode)), 'TW sourced addresses have valid Taiwan postcodes');
 assert(HK_ADDRESSES.every(a => a.timezone?.startsWith('Asia/Hong_Kong')), 'HK landmarks carry a usable IANA timezone');

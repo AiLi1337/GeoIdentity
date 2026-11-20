@@ -1,6 +1,7 @@
 export type CountryCode = 
   | 'US' | 'GB' | 'JP' | 'CA' | 'AU' | 'DE' | 'FR' | 'HK' | 'TW' | 'SG'
-  | 'KR' | 'CH' | 'IE' | 'LU' | 'IT' | 'ES' | 'NL' | 'MY' | 'TH' | 'VN' | 'PH';
+  | 'KR' | 'CH' | 'IE' | 'LU' | 'IT' | 'ES' | 'NL' | 'MY' | 'TH' | 'VN' | 'PH'
+  | 'NZ' | 'PT' | 'BE' | 'AT' | 'SE' | 'FI' | 'PL' | 'HU';
 
 export type Continent = 'all' | 'tax_free' | 'north_america' | 'europe' | 'asia_pacific' | 'southeast_asia';
 
@@ -59,6 +60,7 @@ export interface RealAddress {
   source?: 'OpenStreetMap';
   sourceId?: string;
   sourceBuildingType?: string;
+  postcodeStatus?: 'missing-original-tag';
   addressLine1?: string;
   addressLine2?: string;
   city: string;

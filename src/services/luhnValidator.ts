@@ -66,7 +66,15 @@ const BANKS_BY_COUNTRY: Record<CountryCode, string[]> = {
   MY: ['Maybank (Malayan Banking)', 'CIMB Bank', 'Public Bank', 'RHB Bank'],
   TH: ['Bangkok Bank (ธนาคารกรุงเทพ)', 'Kasikornbank (KBank)', 'Siam Commercial Bank (SCB)'],
   VN: ['Vietcombank', 'VietinBank', 'BIDV', 'Techcombank'],
-  PH: ['BDO Unibank', 'Bank of the Philippine Islands (BPI)', 'Metrobank']
+  PH: ['BDO Unibank', 'Bank of the Philippine Islands (BPI)', 'Metrobank'],
+  NZ: ['ANZ New Zealand', 'ASB Bank', 'Bank of New Zealand (BNZ)', 'Kiwibank'],
+  PT: ['Caixa Geral de Depósitos (CGD)', 'Millennium bcp', 'Banco BPI', 'Novo Banco'],
+  BE: ['BNP Paribas Fortis', 'KBC Bank', 'Belfius Bank', 'ING Belgium'],
+  AT: ['Erste Bank Österreich', 'Raiffeisen Bank International', 'Bank Austria (UniCredit)', 'BAWAG P.S.K.'],
+  SE: ['Swedbank', 'SEB (Skandinaviska Enskilda Banken)', 'Handelsbanken', 'Nordea Sweden'],
+  FI: ['OP Financial Group', 'Nordea Finland', 'Danske Bank Finland', 'Aktia Bank'],
+  PL: ['PKO Bank Polski', 'Bank Pekao S.A.', 'mBank', 'Santander Bank Polska'],
+  HU: ['OTP Bank', 'K&H Bank', 'MBH Bank', 'Erste Bank Hungary']
 };
 
 /**

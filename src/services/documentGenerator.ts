@@ -393,5 +393,117 @@ export function generateDocument(countryCode: CountryCode, gender: Gender, birth
         description: '符合菲律宾统计局 (PSA) 国民身份识别编码系统'
       };
     }
+
+    case 'NZ': {
+      const p1 = Math.floor(10 + Math.random() * 89);
+      const p2 = Math.floor(100 + Math.random() * 900);
+      const p3 = Math.floor(100 + Math.random() * 900);
+      return {
+        typeName: 'Synthetic NZ Reference Format',
+        typeNameZh: '新西兰合成测试编号 (非官方证件)',
+        typeNameLocal: 'Synthetic NZ Test ID (UI Placeholder)',
+        docNumber: `${p1}-${p2}-${p3}`,
+        description: '仅用于新西兰数字分段格式与界面测试的合成编号，非真实 IRD 或官方有效证件'
+      };
+    }
+
+    case 'PT': {
+      const digits = Math.floor(100000000 + Math.random() * 900000000).toString();
+      return {
+        typeName: 'Synthetic PT Tax Format',
+        typeNameZh: '葡萄牙合成测试税号格式 (非官方证件)',
+        typeNameLocal: 'Número de Teste Sintético (PT)',
+        docNumber: `${digits.substring(0, 3)} ${digits.substring(3, 6)} ${digits.substring(6)}`,
+        description: '仅用于葡萄牙 9 位分段格式测试的合成编号，非真实 NIF 或官方有效证件'
+      };
+    }
+
+    case 'BE': {
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const seq = Math.floor(100 + Math.random() * 899);
+      const chk = Math.floor(10 + Math.random() * 89);
+      return {
+        typeName: 'Synthetic BE Registry Format',
+        typeNameZh: '比利时合成测试登记格式 (非官方证件)',
+        typeNameLocal: 'Testnummer / Numéro de test (BE)',
+        docNumber: `${yy}.${mm}.${dd}-${seq}.${chk}`,
+        description: '仅用于比利时日期与序号排版测试的合成编号，非官方 Rijksregisternummer'
+      };
+    }
+
+    case 'AT': {
+      const seq = Math.floor(1000 + Math.random() * 9000);
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      return {
+        typeName: 'Synthetic AT Identifier Format',
+        typeNameZh: '奥地利合成测试识别格式 (非官方证件)',
+        typeNameLocal: 'Synthetische Testnummer (AT)',
+        docNumber: `${seq} ${dd}${mm}${yy}`,
+        description: '仅用于奥地利 10 位编号排版测试的合成编号，非官方 SVNR 或有效证件'
+      };
+    }
+
+    case 'SE': {
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const tail = Math.floor(1000 + Math.random() * 9000);
+      return {
+        typeName: 'Synthetic SE Personal Format',
+        typeNameZh: '瑞典合成测试个人编号格式 (非官方证件)',
+        typeNameLocal: 'Syntetiskt testnummer (SE)',
+        docNumber: `${yy}${mm}${dd}-${tail}`,
+        description: '仅用于瑞典连字符日期编号排版测试的合成编号，非真实 Personnummer'
+      };
+    }
+
+    case 'FI': {
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const sep = birthYear >= 2000 ? 'A' : '-';
+      const seq = Math.floor(100 + Math.random() * 899);
+      return {
+        typeName: 'Synthetic FI Identity Format',
+        typeNameZh: '芬兰合成测试身份格式 (非官方证件)',
+        typeNameLocal: 'Synteettinen testitunnus (FI)',
+        docNumber: `${dd}${mm}${yy}${sep}${seq}T`,
+        description: '仅用于芬兰排版与界面测试的合成占位编号，非真实 Henkilötunnus'
+      };
+    }
+
+    case 'PL': {
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const rawMonth = Math.floor(1 + Math.random() * 12);
+      const mm = (birthYear >= 2000 ? rawMonth + 20 : rawMonth).toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const seq = Math.floor(10000 + Math.random() * 90000);
+      return {
+        typeName: 'Synthetic PL Numeric Format',
+        typeNameZh: '波兰合成测试身份格式 (非官方证件)',
+        typeNameLocal: 'Syntetyczny numer testowy (PL)',
+        docNumber: `${yy}${mm}${dd}${seq}`,
+        description: '仅用于波兰 11 位数字格式与界面测试的合成编号，非真实 PESEL'
+      };
+    }
+
+    case 'HU': {
+      const prefix = birthYear >= 2000 ? (gender === 'male' ? 3 : 4) : (gender === 'male' ? 1 : 2);
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const seq = Math.floor(1000 + Math.random() * 9000);
+      return {
+        typeName: 'Synthetic HU Registry Format',
+        typeNameZh: '匈牙利合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Szintetikus tesztazonosító (HU)',
+        docNumber: `${prefix}-${yy}${mm}${dd}-${seq}`,
+        description: '仅用于匈牙利分段排版测试的合成编号，非真实官方身份证件'
+      };
+    }
   }
 }

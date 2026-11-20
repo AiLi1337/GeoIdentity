@@ -219,6 +219,46 @@ export const NAMES_BY_COUNTRY: Record<CountryCode, NameData> = {
     maleFirstNames: ['Joshua', 'Angelo', 'Christian', 'Gabriel', 'Mark', 'John Paul', 'Nathaniel', 'Daniel'],
     femaleFirstNames: ['Princess', 'Angel', 'Mary Joy', 'Jasmine', 'Samantha', 'Nicole', 'Bea', 'Chloe'],
     lastNames: ['Santos', 'Reyes', 'Cruz', 'Bautista', 'Ocampo', 'Garcia', 'Mendoza', 'Torres', 'Tomas']
+  },
+  NZ: {
+    maleFirstNames: ['Oliver', 'Jack', 'Noah', 'Leo', 'George', 'Charlie', 'Lucas', 'William', 'Hunter', 'Theo'],
+    femaleFirstNames: ['Charlotte', 'Isla', 'Amelia', 'Olivia', 'Harper', 'Mia', 'Willow', 'Ella', 'Lily', 'Ruby'],
+    lastNames: ['Smith', 'Wilson', 'Williams', 'Brown', 'Taylor', 'Jones', 'Anderson', 'Thompson', 'White', 'Walker']
+  },
+  PT: {
+    maleFirstNames: ['João', 'Martim', 'Rodrigo', 'Santiago', 'Tomás', 'Afonso', 'Duarte', 'Tiago', 'Diogo', 'Gonçalo'],
+    femaleFirstNames: ['Maria', 'Leonor', 'Matilde', 'Beatriz', 'Mariana', 'Inês', 'Carolina', 'Sofia', 'Margarida', 'Francisca'],
+    lastNames: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira', 'Costa', 'Rodrigues', 'Martins', 'Sousa', 'Fernandes']
+  },
+  BE: {
+    maleFirstNames: ['Noah', 'Arthur', 'Jules', 'Louis', 'Liam', 'Lucas', 'Léo', 'Adam', 'Matteo', 'Victor'],
+    femaleFirstNames: ['Emma', 'Olivia', 'Mila', 'Louise', 'Lina', 'Sofia', 'Alice', 'Camille', 'Elena', 'Anna'],
+    lastNames: ['Peeters', 'Janssens', 'Maes', 'Jacobs', 'Mertens', 'Willems', 'Claes', 'Goossens', 'Dubois', 'Lambert']
+  },
+  AT: {
+    maleFirstNames: ['Maximilian', 'Jakob', 'Paul', 'Lukas', 'David', 'Felix', 'Tobias', 'Jonas', 'Moritz', 'Alexander'],
+    femaleFirstNames: ['Anna', 'Emma', 'Marie', 'Sophia', 'Lena', 'Mia', 'Laura', 'Johanna', 'Hanna', 'Sarah'],
+    lastNames: ['Gruber', 'Huber', 'Bauer', 'Wagner', 'Müller', 'Pichler', 'Steiner', 'Moser', 'Mayer', 'Hofer']
+  },
+  SE: {
+    maleFirstNames: ['William', 'Noah', 'Hugo', 'Liam', 'Adam', 'Oscar', 'Oliver', 'Elias', 'Lucas', 'Nils'],
+    femaleFirstNames: ['Astrid', 'Maja', 'Alma', 'Vera', 'Freja', 'Elsa', 'Alice', 'Ebba', 'Wilma', 'Klara'],
+    lastNames: ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Lindberg']
+  },
+  FI: {
+    maleFirstNames: ['Leo', 'Eino', 'Oliver', 'Elias', 'Väinö', 'Onni', 'Toivo', 'Emil', 'Mikko', 'Juho'],
+    femaleFirstNames: ['Aino', 'Olivia', 'Sofia', 'Aada', 'Eevi', 'Emma', 'Isla', 'Helmi', 'Kerttu', 'Venla'],
+    lastNames: ['Korhonen', 'Virtanen', 'Mäkinen', 'Nieminen', 'Mäkelä', 'Hämäläinen', 'Laine', 'Heikkinen', 'Koskinen', 'Järvinen']
+  },
+  PL: {
+    maleFirstNames: ['Antoni', 'Jan', 'Aleksander', 'Franciszek', 'Jakub', 'Mikołaj', 'Szymon', 'Piotr', 'Michał', 'Kacper'],
+    femaleFirstNames: ['Zofia', 'Zuzanna', 'Hanna', 'Maja', 'Laura', 'Julia', 'Oliwia', 'Alicja', 'Pola', 'Maria'],
+    lastNames: ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kowalczyk', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak']
+  },
+  HU: {
+    maleFirstNames: ['Bence', 'Máté', 'Levente', 'Dominik', 'Ádám', 'Dániel', 'Marcell', 'Péter', 'Balázs', 'László'],
+    femaleFirstNames: ['Hanna', 'Anna', 'Zsófia', 'Léna', 'Luca', 'Boglárka', 'Eszter', 'Nóra', 'Réka', 'Dóra'],
+    lastNames: ['Nagy', 'Kovács', 'Tóth', 'Szabó', 'Horváth', 'Varga', 'Kiss', 'Molnár', 'Németh', 'Farkas']
   }
 };
 
@@ -339,7 +379,15 @@ export const COUNTRY_LOCAL_META: Record<CountryCode, CountryLocalMeta> = {
   MY: { code: 'MY', langLabel: 'Melayu', countryLocalName: 'Malaysia', langCode: 'ms' },
   TH: { code: 'TH', langLabel: 'ไทย', countryLocalName: 'ประเทศไทย', langCode: 'th' },
   VN: { code: 'VN', langLabel: 'Tiếng Việt', countryLocalName: 'Việt Nam', langCode: 'vi' },
-  PH: { code: 'PH', langLabel: 'Filipino', countryLocalName: 'Pilipinas', langCode: 'fil' }
+  PH: { code: 'PH', langLabel: 'Filipino', countryLocalName: 'Pilipinas', langCode: 'fil' },
+  NZ: { code: 'NZ', langLabel: 'English', countryLocalName: 'New Zealand', langCode: 'en' },
+  PT: { code: 'PT', langLabel: 'Português', countryLocalName: 'Portugal', langCode: 'pt' },
+  BE: { code: 'BE', langLabel: 'Nederlands / Français', countryLocalName: 'België / Belgique', langCode: 'nl' },
+  AT: { code: 'AT', langLabel: 'Deutsch', countryLocalName: 'Österreich', langCode: 'de' },
+  SE: { code: 'SE', langLabel: 'Svenska', countryLocalName: 'Sverige', langCode: 'sv' },
+  FI: { code: 'FI', langLabel: 'Suomi', countryLocalName: 'Suomi', langCode: 'fi' },
+  PL: { code: 'PL', langLabel: 'Polski', countryLocalName: 'Polska', langCode: 'pl' },
+  HU: { code: 'HU', langLabel: 'Magyar', countryLocalName: 'Magyarország', langCode: 'hu' }
 };
 
 export function getRandomName(countryCode: CountryCode, gender: Gender) {

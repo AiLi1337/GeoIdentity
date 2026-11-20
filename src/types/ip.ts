@@ -1,5 +1,3 @@
-import type { CountryCode } from './identity';
-
 export type IpApiSource = 'IPWhois' | 'IPInfo' | 'GeoJS' | 'IPGuide';
 
 export interface IpQuerySourceResult {
@@ -24,7 +22,7 @@ export interface IpConsensusResult {
   targetIp: string;
   isClientDetected: boolean;
   winnerCountry: string;
-  winnerCountryCode: CountryCode;
+  winnerCountryCode: string;
   winnerRegion: string;
   winnerCity: string;
   winnerPostal?: string;

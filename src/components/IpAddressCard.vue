@@ -76,16 +76,17 @@
             </span>
           </div>
 
-          <div class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <div class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex flex-wrap items-center gap-2">
             <MapPin class="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
-            <span>{{ consensus.winnerCity }}, {{ consensus.winnerRegion }}, {{ consensus.winnerCountry }}</span>
+            <CountryFlag :code="consensus.winnerCountryCode" :label="consensus.winnerCountry || consensus.winnerCountryCode" decorative size="sm" />
+            <span>{{ [consensus.winnerCity, consensus.winnerRegion, consensus.winnerCountry].filter(Boolean).join(', ') }}</span>
             <span v-if="consensus.winnerPostal" class="text-xs font-mono font-normal text-slate-500 dark:text-slate-400">
               ({{ consensus.winnerPostal }})
             </span>
           </div>
 
           <!-- Strategy Summary -->
-          <div class="flex items-center gap-1.5 text-xs text-indigo-900/80 dark:text-indigo-200/90">
+          <div v-if="consensus.strategySummaryZh || consensus.strategySummaryEn" class="flex items-center gap-1.5 text-xs text-indigo-900/80 dark:text-indigo-200/90">
             <CheckCircle2 class="w-3.5 h-3.5 text-emerald-500 shrink-0" />
             <span class="font-medium">
               {{ locale === 'zh' ? consensus.strategySummaryZh : consensus.strategySummaryEn }}
@@ -156,7 +157,10 @@
             </div>
             <div class="flex items-center justify-between">
               <span class="text-slate-400 dark:text-slate-500 text-[11px]">{{ t('ipGen.colCountry') }}:</span>
-              <span class="font-medium text-slate-700 dark:text-slate-300">{{ item.countryCode }}</span>
+              <span class="font-medium text-slate-700 dark:text-slate-300 inline-flex items-center gap-1.5">
+                <CountryFlag v-if="item.countryCode" :code="item.countryCode" :label="item.country || item.countryCode" decorative size="xs" />
+                <span>{{ item.countryCode }}</span>
+              </span>
             </div>
             <div v-if="item.postal" class="flex items-center justify-between">
               <span class="text-slate-400 dark:text-slate-500 text-[11px]">{{ t('ipGen.colZip') }}:</span>
@@ -185,6 +189,7 @@ import {
   ChevronDown,
   Server
 } from 'lucide-vue-next';
+import CountryFlag from './CountryFlag.vue';
 import type { IpConsensusResult } from '../types/ip';
 import type { GeneratedIdentity } from '../types/identity';
 import { detectClientIp, queryMultiSourceIp } from '../services/ipService';
@@ -225,26 +230,42 @@ async function handleSearch() {
   addressError.value = '';
   consensus.value = null;
   emit('no-address');
+  let resolvedConsensus: IpConsensusResult | null = null;
   try {
     const res = await queryMultiSourceIp(ipInput.value);
     if (res.successQueries === 0) {
       addressError.value = t('ipGen.lookupFailed');
       return;
     }
+    resolvedConsensus = res;
     consensus.value = res;
     if (res.targetIp && !ipInput.value) {
       ipInput.value = res.targetIp;
     }
-    
+
     const resolvedAddress = resolveAddressFromIp(res);
-    const addressKindZh = resolvedAddress.addressMode === 'derivation' ? '街道插值门牌' : '内置地址样本';
-    const addressKindEn = resolvedAddress.addressMode === 'derivation' ? 'Interpolated street number' : 'Bundled address sample';
-    res.strategySummaryZh = `匹配 ${resolvedAddress.city}, ${resolvedAddress.state} 的${addressKindZh}；可能并非 IP 同城，投递与 AVS 未核验`;
-    res.strategySummaryEn = `${addressKindEn} in ${resolvedAddress.city}, ${resolvedAddress.state}; may differ from IP city. Delivery and AVS unverified.`;
+    const addressKindZh = resolvedAddress.addressMode === 'derivation'
+      ? '街道插值门牌'
+      : resolvedAddress.source === 'OpenStreetMap'
+        ? 'OpenStreetMap 可核对建筑门牌'
+        : '内置地址样本';
+    const addressKindEn = resolvedAddress.addressMode === 'derivation'
+      ? 'Interpolated street number'
+      : resolvedAddress.source === 'OpenStreetMap'
+        ? 'OSM-sourced building address'
+        : 'Bundled address sample';
+    res.strategySummaryZh = `匹配 ${resolvedAddress.city}, ${resolvedAddress.stateFull || resolvedAddress.state} 的${addressKindZh}；可能并非 IP 同城，投递与 AVS 未核验`;
+    res.strategySummaryEn = `${addressKindEn} in ${resolvedAddress.city}, ${resolvedAddress.stateFull || resolvedAddress.state}; may differ from IP city. Delivery and AVS unverified.`;
     emit('identity-generated', generateIdentityFromAddress(resolvedAddress), res);
   } catch (error) {
     console.error('IP lookup failed', error);
-    addressError.value = t('ipGen.lookupFailed');
+    if (resolvedConsensus && error instanceof Error && error.message.startsWith('No address sample for country')) {
+      addressError.value = t('ipGen.noCountryAddress', {
+        country: resolvedConsensus.winnerCountry || resolvedConsensus.winnerCountryCode || t('ipGen.unknownCountry')
+      });
+    } else {
+      addressError.value = t('ipGen.lookupFailed');
+    }
   } finally {
     isLoading.value = false;
   }

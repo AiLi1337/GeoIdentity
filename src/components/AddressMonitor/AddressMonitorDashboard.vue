@@ -201,7 +201,7 @@
               <!-- Country Info -->
               <td class="py-3.5 px-3">
                 <div class="flex items-center gap-2.5">
-                  <span class="text-xl">{{ item.flag }}</span>
+                  <CountryFlag :code="item.code" :label="isZh ? item.nameZh : item.nameEn" decorative size="md" />
                   <div>
                     <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                       <span>{{ isZh ? item.nameZh : item.nameEn }}</span>
@@ -282,10 +282,10 @@
         <!-- Modal Header -->
         <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <div class="flex items-center gap-2.5">
-            <span class="text-2xl">{{ activeSampleCountry.flag }}</span>
+            <CountryFlag :code="activeSampleCountry.code" :label="isZh ? activeSampleCountry.nameZh : activeSampleCountry.nameEn" decorative size="lg" />
             <div>
               <h4 class="font-bold text-base text-slate-900 dark:text-white">
-                {{ t('monitor.modalTitle', { flag: activeSampleCountry.flag, name: isZh ? activeSampleCountry.nameZh : activeSampleCountry.nameEn }) }}
+                {{ t('monitor.modalTitle', { name: isZh ? activeSampleCountry.nameZh : activeSampleCountry.nameEn }) }}
               </h4>
               <p class="text-xs text-slate-500 dark:text-slate-400">
                 收录 {{ sampleResidentialList.length }} 处居民住宅与 {{ sampleLandmarkList.length }} 处方案 C 建筑门牌
@@ -349,7 +349,7 @@
                 <div class="flex items-center justify-between">
                   <span class="font-bold text-slate-900 dark:text-white">{{ addr.street }}</span>
                   <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400">
-                    {{ addr.postcode }}
+                    {{ addr.postcode || '—' }}
                   </span>
                 </div>
                 <div class="text-slate-500 dark:text-slate-400 flex items-center gap-2">
@@ -396,8 +396,10 @@ import {
   Search, CheckCircle2, X, Zap
 } from 'lucide-vue-next';
 import { useI18n } from '../../i18n';
+import CountryFlag from '../CountryFlag.vue';
 import metadata from '../../data/addresses/metadata.json';
 import { ADDRESS_MAP } from '../../data/addresses/index';
+import { isValidCountryPostcode } from '../../data/addresses/postcodeRules';
 import { RESIDENTIAL_ADDRESSES } from '../../data/addresses/schemes/residentialAddresses';
 import type { CountryCode, RealAddress } from '../../types/identity';
 import WorldMapMonitor from './WorldMapMonitor.vue';
@@ -456,13 +458,9 @@ function handleSelectCountry(code: CountryCode | '') {
 }
 
 function formatContinent(c: string) {
-  const map: Record<string, string> = {
-    north_america: '北美洲',
-    europe: '欧洲',
-    asia_pacific: '亚太地区',
-    southeast_asia: '东南亚'
-  };
-  return map[c] || c;
+  const key = `continents.${c}`;
+  const label = t(key);
+  return label === key ? c : label;
 }
 
 function runHealthAudit() {
@@ -470,7 +468,10 @@ function runHealthAudit() {
   auditNotice.value = '';
   const addresses = [...Object.values(ADDRESS_MAP).flat(), ...RESIDENTIAL_ADDRESSES];
   const valid = addresses.every(a => {
-    const validPostcode = a.countryCode === 'HK' ? !a.postcode.trim() : Boolean(a.postcode.trim());
+    const validPostcode = isValidCountryPostcode(a.countryCode, a.postcode, {
+      source: a.source,
+      postcodeStatus: a.postcodeStatus
+    });
     return a.street.trim() && a.city.trim() && validPostcode &&
       Number.isFinite(a.lat) && Number.isFinite(a.lng) && Math.abs(a.lat) <= 90 && Math.abs(a.lng) <= 180;
   });

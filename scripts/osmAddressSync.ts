@@ -1,6 +1,11 @@
 import { US_ADDRESSES } from '../src/data/addresses/us';
 import { HK_ADDRESSES } from '../src/data/addresses/hk';
 import { TW_ADDRESSES } from '../src/data/addresses/tw';
+import {
+  COUNTRIES_WITH_OPTIONAL_MISSING_OSM_POSTCODE,
+  isValidCountryPostcode,
+  type OsmPostcodeStatus
+} from '../src/data/addresses/postcodeRules';
 import type { CountryCode } from '../src/types/identity';
 
 export interface OsmApartment {
@@ -10,6 +15,7 @@ export interface OsmApartment {
   city: string;
   state: string;
   postcode: string;
+  postcodeStatus?: OsmPostcodeStatus;
   countryCode?: CountryCode;
   lat: number;
   lng: number;
@@ -22,7 +28,8 @@ export interface OsmSyncArea {
   bbox: string;
   buildings: string;
   requireCityTag?: boolean;
-  postcodeFormat?: 'us5' | 'tw3to6' | 'none';
+  postcodeFormat?: 'us5' | 'tw3to6' | 'none' | 'country';
+  allowMissingPostcode?: boolean;
 }
 
 interface OsmElement {
@@ -66,16 +73,39 @@ export const AREAS: readonly OsmSyncArea[] = [
   { countryCode: 'TW', city: '板橋區 (Banqiao Dist)', state: 'NTP', bbox: '25.006,121.458,25.017,121.472', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
   { countryCode: 'TW', city: '西屯區 (Xitun Dist)', state: 'TXG', bbox: '24.154,120.635,24.167,120.652', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
   { countryCode: 'TW', city: '鼓山區 (Gushan Dist)', state: 'KHH', bbox: '22.654,120.286,22.668,120.302', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
-  { countryCode: 'TW', city: '東區 (East Dist)', state: 'HSZ', bbox: '24.782,121.008,24.794,121.022', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' }
+  { countryCode: 'TW', city: '東區 (East Dist)', state: 'HSZ', bbox: '24.782,121.008,24.794,121.022', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'tw3to6' },
+  { countryCode: 'NZ', city: 'Auckland', state: 'AUK', bbox: '-36.860,174.737,-36.852,174.745', buildings: 'apartments|residential|house|detached', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'NZ', city: 'Wellington', state: 'WGN', bbox: '-41.298,174.781,-41.290,174.789', buildings: 'apartments|residential|house|detached', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'PT', city: 'Lisboa', state: '11', bbox: '38.715,-9.167,38.723,-9.159', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'PT', city: 'Porto', state: '13', bbox: '41.153,-8.621,41.161,-8.613', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'BE', city: 'Bruxelles', state: 'BRU', bbox: '50.829,4.354,50.837,4.362', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'BE', city: 'Antwerpen', state: 'VAN', bbox: '51.192,4.427,51.200,4.435', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'AT', city: 'Wien', state: '9', bbox: '48.198,16.345,48.206,16.353', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'AT', city: 'Graz', state: '6', bbox: '47.057,15.442,47.065,15.450', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'SE', city: 'Stockholm', state: 'AB', bbox: '59.311,18.066,59.319,18.074', buildings: 'apartments|residential|house|detached', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'SE', city: 'Goteborg', state: 'O', bbox: '57.690,11.918,57.698,11.926', buildings: 'apartments|residential|house|detached', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: true },
+  { countryCode: 'FI', city: 'Helsinki', state: '18', bbox: '60.179,24.946,60.187,24.954', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'FI', city: 'Tampere', state: '11', bbox: '61.496,23.790,61.504,23.798', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'PL', city: 'Warszawa', state: '14', bbox: '52.220,21.011,52.228,21.019', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'PL', city: 'Krakow', state: '12', bbox: '50.048,19.941,50.056,19.949', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'HU', city: 'Budapest', state: 'BU', bbox: '47.513,19.049,47.521,19.057', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'HU', city: 'Szeged', state: 'CS', bbox: '46.248,20.145,46.256,20.153', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false }
 ];
 
 const key = (countryCode: string, street: string, city: string, state: string) =>
   `${countryCode}|${street}|${city}|${state}`.toLowerCase().replace(/\s+/g, '');
 
-function validPostcode(postcode: string, format: OsmSyncArea['postcodeFormat']): boolean {
-  if (format === 'none') return true;
-  if (format === 'tw3to6') return /^\d{3}(\d{2,3})?$/.test(postcode);
-  return /^\d{5}$/.test(postcode);
+const STREET_BEFORE_HN_COUNTRIES = new Set<CountryCode>(['PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU']);
+
+function validSyncPostcode(postcode: string, area: OsmSyncArea): { valid: boolean; postcodeStatus?: OsmPostcodeStatus } {
+  if (area.postcodeFormat === 'none') return { valid: true };
+  if (!postcode) {
+    if (area.allowMissingPostcode && COUNTRIES_WITH_OPTIONAL_MISSING_OSM_POSTCODE.has(area.countryCode)) {
+      return { valid: true, postcodeStatus: 'missing-original-tag' };
+    }
+    return { valid: false };
+  }
+  return { valid: isValidCountryPostcode(area.countryCode, postcode, { source: 'OpenStreetMap' }) };
 }
 
 function hasNonResidentialUse(tags: Record<string, string> | undefined): boolean {
@@ -101,7 +131,7 @@ export async function syncOsmApartments(
     const buildingFilter = area.buildings === 'apartments'
       ? '["building"="apartments"]'
       : `["building"~"^(${area.buildings})$"]`;
-    const postcodeFilter = area.postcodeFormat === 'none' ? '' : '["addr:postcode"]';
+    const postcodeFilter = (area.postcodeFormat === 'none' || area.allowMissingPostcode) ? '' : '["addr:postcode"]';
     const query = `[out:json][timeout:25];way${buildingFilter}["addr:housenumber"]["addr:street"]${postcodeFilter}(${area.bbox});out center 80;`;
     let body: { elements?: OsmElement[] } | undefined;
     let lastError: unknown;
@@ -135,6 +165,7 @@ export async function syncOsmApartments(
       const lng = element.lon ?? element.center?.lon;
       const rawCity = tags?.['addr:city']?.trim() || '';
       const rawPostcode = tags?.['addr:postcode']?.trim() || '';
+      const postcodeCheck = validSyncPostcode(rawPostcode, area);
       if (!area.buildings.split('|').includes(tags?.building || '') ||
           hasNonResidentialUse(tags) ||
           (tags?.['addr:country'] && tags['addr:country'].trim().toUpperCase() !== area.countryCode) ||
@@ -142,7 +173,7 @@ export async function syncOsmApartments(
           (area.countryCode === 'US' && tags?.['addr:state'] && tags['addr:state'].trim().toUpperCase() !== area.state) ||
           !/^\d+[A-Za-z]?$/.test(tags?.['addr:housenumber']?.trim() || '') ||
           !tags?.['addr:street']?.trim() ||
-          !validPostcode(rawPostcode, area.postcodeFormat || 'us5') ||
+          !postcodeCheck.valid ||
           !Number.isFinite(lat) || !Number.isFinite(lng) ||
           Math.abs(lat!) > 90 || Math.abs(lng!) > 180 ||
           element.type !== 'way' || !element.center ||
@@ -151,8 +182,12 @@ export async function syncOsmApartments(
       const id = `${element.type}/${element.id}`;
       const hn = tags['addr:housenumber'].trim();
       const st = tags['addr:street'].trim();
-      const street = area.countryCode === 'TW' ? `${st}${hn}號` : `${hn} ${st}`;
-      const city = area.countryCode === 'US' ? (rawCity || area.city) : area.city;
+      const street = area.countryCode === 'TW'
+        ? `${st}${hn}號`
+        : STREET_BEFORE_HN_COUNTRIES.has(area.countryCode)
+          ? `${st} ${hn}`
+          : `${hn} ${st}`;
+      const city = (area.countryCode === 'HK' || area.countryCode === 'TW') ? area.city : (rawCity || area.city);
       const postcode = area.postcodeFormat === 'none' ? '' : rawPostcode;
       const addressKey = key(area.countryCode, street, city, area.state);
       if (ids.has(id) || addresses.has(addressKey)) continue;
@@ -165,6 +200,7 @@ export async function syncOsmApartments(
         city,
         state: area.state,
         postcode,
+        ...(postcodeCheck.postcodeStatus ? { postcodeStatus: postcodeCheck.postcodeStatus } : {}),
         lat: lat!,
         lng: lng!
       };

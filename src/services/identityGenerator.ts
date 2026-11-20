@@ -177,7 +177,88 @@ function generateRandomPhone(countryCode: CountryCode): { phone: string; formatt
         formatted: `+63 9${line.toString().substring(0, 2)} ${line.toString().substring(2, 5)} ${line.toString().substring(5)}`
       };
     }
+    case 'NZ': {
+      const p1 = Math.floor(100 + Math.random() * 900);
+      const p2 = Math.floor(1000 + Math.random() * 9000);
+      return {
+        phone: `+6421${p1}${p2}`,
+        formatted: `+64 21 ${p1} ${p2}`
+      };
+    }
+    case 'PT': {
+      const line = Math.floor(10000000 + Math.random() * 90000000);
+      return {
+        phone: `+3519${line}`,
+        formatted: `+351 9${line.toString().substring(0, 2)} ${line.toString().substring(2, 5)} ${line.toString().substring(5)}`
+      };
+    }
+    case 'BE': {
+      const d = Math.floor(Math.random() * 10);
+      const p1 = Math.floor(10 + Math.random() * 89);
+      const p2 = Math.floor(10 + Math.random() * 89);
+      const p3 = Math.floor(10 + Math.random() * 89);
+      return {
+        phone: `+3247${d}${p1}${p2}${p3}`,
+        formatted: `+32 47${d} ${p1} ${p2} ${p3}`
+      };
+    }
+    case 'AT': {
+      const p1 = Math.floor(100 + Math.random() * 900);
+      const p2 = Math.floor(1000 + Math.random() * 9000);
+      return {
+        phone: `+43664${p1}${p2}`,
+        formatted: `+43 664 ${p1}${p2}`
+      };
+    }
+    case 'SE': {
+      const p1 = Math.floor(100 + Math.random() * 900);
+      const p2 = Math.floor(10 + Math.random() * 90);
+      const p3 = Math.floor(10 + Math.random() * 90);
+      return {
+        phone: `+4670${p1}${p2}${p3}`,
+        formatted: `+46 70 ${p1} ${p2} ${p3}`
+      };
+    }
+    case 'FI': {
+      const p1 = Math.floor(100 + Math.random() * 900);
+      const p2 = Math.floor(1000 + Math.random() * 9000);
+      return {
+        phone: `+35840${p1}${p2}`,
+        formatted: `+358 40 ${p1} ${p2}`
+      };
+    }
+    case 'PL': {
+      const p1 = Math.floor(100 + Math.random() * 900);
+      const p2 = Math.floor(100 + Math.random() * 900);
+      const p3 = Math.floor(100 + Math.random() * 900);
+      return {
+        phone: `+48${p1}${p2}${p3}`,
+        formatted: `+48 ${p1} ${p2} ${p3}`
+      };
+    }
+    case 'HU': {
+      const p1 = Math.floor(100 + Math.random() * 900);
+      const p2 = Math.floor(1000 + Math.random() * 9000);
+      return {
+        phone: `+3630${p1}${p2}`,
+        formatted: `+36 30 ${p1} ${p2}`
+      };
+    }
   }
+}
+
+function toEmailToken(value: string, fallback: string): string {
+  const ascii = value
+    .replace(/ł/g, 'l')
+    .replace(/Ł/g, 'L')
+    .replace(/ø/g, 'o')
+    .replace(/Ø/g, 'O')
+    .replace(/ß/g, 'ss')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
+  return ascii || fallback;
 }
 
 function generateResidentialAddressLine2(countryCode: CountryCode): string {
@@ -231,8 +312,8 @@ export function generateIdentity(countryCode: CountryCode, options?: FilterOptio
   const nameData = getRandomName(countryCode, gender);
 
   // Email & Username
-  const cleanFirst = nameData.firstName.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const cleanLast = nameData.lastName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanFirst = toEmailToken(nameData.firstName, 'user');
+  const cleanLast = toEmailToken(nameData.lastName, 'profile');
   const numSuffix = Math.floor(10 + Math.random() * 90);
   const emailDomains = ['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'proton.me'];
   const domain = emailDomains[Math.floor(Math.random() * emailDomains.length)];
@@ -364,8 +445,8 @@ export function generateIdentityFromAddress(
 
   const nameData = getRandomName(countryCode, gender);
 
-  const cleanFirst = nameData.firstName.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const cleanLast = nameData.lastName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanFirst = toEmailToken(nameData.firstName, 'user');
+  const cleanLast = toEmailToken(nameData.lastName, 'profile');
   const numSuffix = Math.floor(10 + Math.random() * 90);
   const emailDomains = ['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'proton.me'];
   const domain = emailDomains[Math.floor(Math.random() * emailDomains.length)];

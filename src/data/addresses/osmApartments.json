@@ -1,5 +1,172 @@
 [
   {
+    "id": "way/100012405",
+    "building": "apartments",
+    "street": "Neustiftgasse 24",
+    "city": "Wien",
+    "state": "9",
+    "postcode": "1070",
+    "countryCode": "AT",
+    "lat": 48.20552165,
+    "lng": 16.3523345
+  },
+  {
+    "id": "way/100017878",
+    "building": "apartments",
+    "street": "Neustiftgasse 18",
+    "city": "Wien",
+    "state": "9",
+    "postcode": "1070",
+    "countryCode": "AT",
+    "lat": 48.20566365,
+    "lng": 16.3529029
+  },
+  {
+    "id": "way/100017891",
+    "building": "apartments",
+    "street": "Neustiftgasse 20",
+    "city": "Wien",
+    "state": "9",
+    "postcode": "1070",
+    "countryCode": "AT",
+    "lat": 48.2055957,
+    "lng": 16.35269845
+  },
+  {
+    "id": "way/100017896",
+    "building": "apartments",
+    "street": "Neustiftgasse 22",
+    "city": "Wien",
+    "state": "9",
+    "postcode": "1070",
+    "countryCode": "AT",
+    "lat": 48.20548875,
+    "lng": 16.3525235
+  },
+  {
+    "id": "way/100180862",
+    "building": "apartments",
+    "street": "Ilmarinkatu 31",
+    "city": "Tampere",
+    "state": "11",
+    "postcode": "33500",
+    "countryCode": "FI",
+    "lat": 61.502161900000004,
+    "lng": 23.793500350000002
+  },
+  {
+    "id": "way/100180869",
+    "building": "apartments",
+    "street": "Ilmarinkatu 29",
+    "city": "Tampere",
+    "state": "11",
+    "postcode": "33500",
+    "countryCode": "FI",
+    "lat": 61.5021231,
+    "lng": 23.7926663
+  },
+  {
+    "id": "way/100180873",
+    "building": "apartments",
+    "street": "Ilmarinkatu 33",
+    "city": "Tampere",
+    "state": "11",
+    "postcode": "33500",
+    "countryCode": "FI",
+    "lat": 61.502317649999995,
+    "lng": 23.794161600000002
+  },
+  {
+    "id": "way/100180883",
+    "building": "apartments",
+    "street": "Ilmarinkatu 35",
+    "city": "Tampere",
+    "state": "11",
+    "postcode": "33500",
+    "countryCode": "FI",
+    "lat": 61.50230675,
+    "lng": 23.7948514
+  },
+  {
+    "id": "way/1005553621",
+    "building": "apartments",
+    "street": "Tisza Lajos körút 72",
+    "city": "Szeged",
+    "state": "CS",
+    "postcode": "6720",
+    "countryCode": "HU",
+    "lat": 46.24868155,
+    "lng": 20.145373
+  },
+  {
+    "id": "way/1018755206",
+    "building": "apartments",
+    "street": "Poznańska 3",
+    "city": "Warszawa",
+    "state": "14",
+    "postcode": "00-680",
+    "countryCode": "PL",
+    "lat": 52.223582300000004,
+    "lng": 21.01243225
+  },
+  {
+    "id": "way/1018755208",
+    "building": "apartments",
+    "street": "Piękna 54",
+    "city": "Warszawa",
+    "state": "14",
+    "postcode": "00-672",
+    "countryCode": "PL",
+    "lat": 52.2232552,
+    "lng": 21.01225135
+  },
+  {
+    "id": "way/1019191725",
+    "building": "apartments",
+    "street": "Koszykowa 61A",
+    "city": "Warszawa",
+    "state": "14",
+    "postcode": "00-667",
+    "countryCode": "PL",
+    "lat": 52.2218551,
+    "lng": 21.0114859
+  },
+  {
+    "id": "way/1019206055",
+    "building": "apartments",
+    "street": "Jana i Jędrzeja Śniadeckich 10",
+    "city": "Warszawa",
+    "state": "14",
+    "postcode": "00-656",
+    "countryCode": "PL",
+    "lat": 52.22139455,
+    "lng": 21.0143987
+  },
+  {
+    "id": "way/1027681951",
+    "building": "apartments",
+    "street": "Rua da Boavista 554",
+    "city": "Porto",
+    "state": "13",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "PT",
+    "lat": 41.1564757,
+    "lng": -8.61979445
+  },
+  {
+    "id": "way/1027681953",
+    "building": "apartments",
+    "street": "Rua do Barão de Forrester 15",
+    "city": "Porto",
+    "state": "13",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "PT",
+    "lat": 41.1564546,
+    "lng": -8.6195117
+  },
+  {
     "id": "way/104186213",
     "building": "apartments",
     "street": "1415 Southwest Alder Street",
@@ -8,6 +175,132 @@
     "postcode": "97205",
     "lat": 45.5222145,
     "lng": -122.6864857
+  },
+  {
+    "id": "way/105667399",
+    "building": "apartments",
+    "street": "Grazbachgasse 38",
+    "city": "Graz",
+    "state": "6",
+    "postcode": "8010",
+    "countryCode": "AT",
+    "lat": 47.0646439,
+    "lng": 15.442749200000002
+  },
+  {
+    "id": "way/105667401",
+    "building": "apartments",
+    "street": "Grazbachgasse 36",
+    "city": "Graz",
+    "state": "6",
+    "postcode": "8010",
+    "countryCode": "AT",
+    "lat": 47.0649375,
+    "lng": 15.44294875
+  },
+  {
+    "id": "way/109317244",
+    "building": "apartments",
+    "street": "Conrad-von-Hötzendorf-Straße 29",
+    "city": "Graz",
+    "state": "6",
+    "postcode": "8010",
+    "countryCode": "AT",
+    "lat": 47.0616782,
+    "lng": 15.44433455
+  },
+  {
+    "id": "way/110605865",
+    "building": "apartments",
+    "street": "Chaussée de Charleroi - Charleroise Steenweg 84",
+    "city": "Bruxelles",
+    "state": "BRU",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "BE",
+    "lat": 50.8291379,
+    "lng": 4.35596885
+  },
+  {
+    "id": "way/110605912",
+    "building": "apartments",
+    "street": "Avenue Louise - Louizalaan 85",
+    "city": "Bruxelles",
+    "state": "BRU",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "BE",
+    "lat": 50.8319304,
+    "lng": 4.3583852499999995
+  },
+  {
+    "id": "way/110605917",
+    "building": "apartments",
+    "street": "Chaussée de Charleroi - Charleroise Steenweg 80",
+    "city": "Bruxelles",
+    "state": "BRU",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "BE",
+    "lat": 50.8292551,
+    "lng": 4.35603515
+  },
+  {
+    "id": "way/110605944",
+    "building": "apartments",
+    "street": "Chaussée de Charleroi - Charleroise Steenweg 86",
+    "city": "Bruxelles",
+    "state": "BRU",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "BE",
+    "lat": 50.829068199999995,
+    "lng": 4.35597435
+  },
+  {
+    "id": "way/113505864",
+    "building": "detached",
+    "street": "Åsögatan 95",
+    "city": "Stockholm",
+    "state": "AB",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "SE",
+    "lat": 59.31260975,
+    "lng": 18.0705088
+  },
+  {
+    "id": "way/1137955796",
+    "building": "apartments",
+    "street": "Conrad-von-Hötzendorf-Straße 70a",
+    "city": "Graz",
+    "state": "6",
+    "postcode": "8010",
+    "countryCode": "AT",
+    "lat": 47.057743450000004,
+    "lng": 15.445475349999999
+  },
+  {
+    "id": "way/1153419335",
+    "building": "apartments",
+    "street": "76 Brougham Street",
+    "city": "Wellington",
+    "state": "WGN",
+    "postcode": "6011",
+    "countryCode": "NZ",
+    "lat": -41.29771795,
+    "lng": 174.78454015
+  },
+  {
+    "id": "way/117815009",
+    "building": "apartments",
+    "street": "Horváth Mihály utca 8",
+    "city": "Szeged",
+    "state": "CS",
+    "postcode": "6720",
+    "countryCode": "HU",
+    "lat": 46.25494705,
+    "lng": 20.1510229
   },
   {
     "id": "way/1241865862",
@@ -20,6 +313,17 @@
     "lng": -75.555952
   },
   {
+    "id": "way/1247395713",
+    "building": "apartments",
+    "street": "Józefa 25",
+    "city": "Kraków",
+    "state": "12",
+    "postcode": "31-056",
+    "countryCode": "PL",
+    "lat": 50.051019100000005,
+    "lng": 19.9480031
+  },
+  {
     "id": "way/125820107",
     "building": "apartments",
     "street": "709 Southwest 16th Avenue",
@@ -28,6 +332,160 @@
     "postcode": "97205",
     "lat": 45.5215087,
     "lng": -122.6885813
+  },
+  {
+    "id": "way/1267997954",
+    "building": "apartments",
+    "street": "Kolmas linja 25",
+    "city": "Helsinki",
+    "state": "18",
+    "postcode": "00530",
+    "countryCode": "FI",
+    "lat": 60.183840000000004,
+    "lng": 24.94610665
+  },
+  {
+    "id": "way/1267997955",
+    "building": "apartments",
+    "street": "Kolmas linja 23",
+    "city": "Helsinki",
+    "state": "18",
+    "postcode": "00530",
+    "countryCode": "FI",
+    "lat": 60.1836679,
+    "lng": 24.94655755
+  },
+  {
+    "id": "way/128161213",
+    "building": "apartments",
+    "street": "Neljäs linja 2",
+    "city": "Helsinki",
+    "state": "18",
+    "postcode": "00530",
+    "countryCode": "FI",
+    "lat": 60.18172165,
+    "lng": 24.953697599999998
+  },
+  {
+    "id": "way/128161224",
+    "building": "apartments",
+    "street": "Kolmas linja 3",
+    "city": "Helsinki",
+    "state": "18",
+    "postcode": "00530",
+    "countryCode": "FI",
+    "lat": 60.18143255,
+    "lng": 24.952184250000002
+  },
+  {
+    "id": "way/131269302",
+    "building": "apartments",
+    "street": "Balzac utca 11",
+    "city": "Budapest",
+    "state": "BU",
+    "postcode": "1136",
+    "countryCode": "HU",
+    "lat": 47.515500450000005,
+    "lng": 19.0565878
+  },
+  {
+    "id": "way/132679260",
+    "building": "apartments",
+    "street": "Visegrádi utca 17",
+    "city": "Budapest",
+    "state": "BU",
+    "postcode": "1132",
+    "countryCode": "HU",
+    "lat": 47.514097,
+    "lng": 19.0554958
+  },
+  {
+    "id": "way/133092426",
+    "building": "apartments",
+    "street": "Hollán Ernő utca 33",
+    "city": "Budapest",
+    "state": "BU",
+    "postcode": "1136",
+    "countryCode": "HU",
+    "lat": 47.51660615,
+    "lng": 19.05199365
+  },
+  {
+    "id": "way/133102444",
+    "building": "apartments",
+    "street": "Hollán Ernő utca 5",
+    "city": "Budapest",
+    "state": "BU",
+    "postcode": "1136",
+    "countryCode": "HU",
+    "lat": 47.5135636,
+    "lng": 19.049822849999998
+  },
+  {
+    "id": "way/135082963",
+    "building": "apartments",
+    "street": "Kabelgatan 12",
+    "city": "Göteborg",
+    "state": "O",
+    "postcode": "414 57",
+    "countryCode": "SE",
+    "lat": 57.6906529,
+    "lng": 11.924610900000001
+  },
+  {
+    "id": "way/135188231",
+    "building": "apartments",
+    "street": "Chapmansgatan 14",
+    "city": "Göteborg",
+    "state": "O",
+    "postcode": "414 56",
+    "countryCode": "SE",
+    "lat": 57.6939273,
+    "lng": 11.922601799999999
+  },
+  {
+    "id": "way/135188232",
+    "building": "apartments",
+    "street": "Chapmansgatan 16",
+    "city": "Göteborg",
+    "state": "O",
+    "postcode": "414 56",
+    "countryCode": "SE",
+    "lat": 57.6935752,
+    "lng": 11.9228006
+  },
+  {
+    "id": "way/135188233",
+    "building": "apartments",
+    "street": "Hellstedtsgatan 3",
+    "city": "Göteborg",
+    "state": "O",
+    "postcode": "414 56",
+    "countryCode": "SE",
+    "lat": 57.69393775,
+    "lng": 11.92187795
+  },
+  {
+    "id": "way/135188234",
+    "building": "apartments",
+    "street": "Hellstedtsgatan 5",
+    "city": "Göteborg",
+    "state": "O",
+    "postcode": "414 56",
+    "countryCode": "SE",
+    "lat": 57.694017849999994,
+    "lng": 11.92132185
+  },
+  {
+    "id": "way/135188235",
+    "building": "apartments",
+    "street": "Hellstedtsgatan 7",
+    "city": "Göteborg",
+    "state": "O",
+    "postcode": "414 56",
+    "countryCode": "SE",
+    "lat": 57.6936565,
+    "lng": 11.921379
   },
   {
     "id": "way/138259004",
@@ -50,6 +508,39 @@
     "countryCode": "HK",
     "lat": 22.2838027,
     "lng": 114.1486952
+  },
+  {
+    "id": "way/151894491",
+    "building": "apartments",
+    "street": "Bożego Ciała 23",
+    "city": "Kraków",
+    "state": "12",
+    "postcode": "31-059",
+    "countryCode": "PL",
+    "lat": 50.0500175,
+    "lng": 19.944020549999998
+  },
+  {
+    "id": "way/151901686",
+    "building": "apartments",
+    "street": "Józefa 8",
+    "city": "Kraków",
+    "state": "12",
+    "postcode": "31-056",
+    "countryCode": "PL",
+    "lat": 50.0505257,
+    "lng": 19.9435292
+  },
+  {
+    "id": "way/151901718",
+    "building": "apartments",
+    "street": "Józefa 2",
+    "city": "Kraków",
+    "state": "12",
+    "postcode": "31-056",
+    "countryCode": "PL",
+    "lat": 50.050425000000004,
+    "lng": 19.9431061
   },
   {
     "id": "way/152294634",
@@ -569,6 +1060,28 @@
     "lng": -73.9835964
   },
   {
+    "id": "way/242505781",
+    "building": "apartments",
+    "street": "Tisza Lajos körút 78",
+    "city": "Szeged",
+    "state": "CS",
+    "postcode": "6720",
+    "countryCode": "HU",
+    "lat": 46.248284,
+    "lng": 20.145748249999997
+  },
+  {
+    "id": "way/242505782",
+    "building": "apartments",
+    "street": "Tisza Lajos körút 76",
+    "city": "Szeged",
+    "state": "CS",
+    "postcode": "6720",
+    "countryCode": "HU",
+    "lat": 46.24841175,
+    "lng": 20.1455891
+  },
+  {
     "id": "way/243501533",
     "building": "apartments",
     "street": "1731 West Burnside Street",
@@ -642,6 +1155,65 @@
     "countryCode": "TW",
     "lat": 24.7927989,
     "lng": 121.0088564
+  },
+  {
+    "id": "way/256920024",
+    "building": "apartments",
+    "street": "72 Brougham Street",
+    "city": "Wellington",
+    "state": "WGN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "NZ",
+    "lat": -41.297513050000006,
+    "lng": 174.78463979999998
+  },
+  {
+    "id": "way/256920033",
+    "building": "apartments",
+    "street": "23 Pirie Street",
+    "city": "Wellington",
+    "state": "WGN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "NZ",
+    "lat": -41.2973343,
+    "lng": 174.78337355
+  },
+  {
+    "id": "way/259149968",
+    "building": "house",
+    "street": "38 Pirie Street",
+    "city": "Wellington",
+    "state": "WGN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "NZ",
+    "lat": -41.29786095,
+    "lng": 174.78384425000002
+  },
+  {
+    "id": "way/259149969",
+    "building": "house",
+    "street": "44 Pirie Street",
+    "city": "Wellington",
+    "state": "WGN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "NZ",
+    "lat": -41.2979657,
+    "lng": 174.7841305
+  },
+  {
+    "id": "way/259150614",
+    "building": "house",
+    "street": "53 Pirie Street",
+    "city": "Wellington",
+    "state": "WGN",
+    "postcode": "6011",
+    "countryCode": "NZ",
+    "lat": -41.29787725,
+    "lng": 174.78512295000002
   },
   {
     "id": "way/260107784",
@@ -785,6 +1357,18 @@
     "lng": 121.4594364
   },
   {
+    "id": "way/307089194",
+    "building": "apartments",
+    "street": "Rua de Alves Redol 372",
+    "city": "Porto",
+    "state": "13",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "PT",
+    "lat": 41.1609964,
+    "lng": -8.615521600000001
+  },
+  {
     "id": "way/316843071",
     "building": "apartments",
     "street": "3 花園街 Fa Yuen Street",
@@ -910,6 +1494,18 @@
     "postcode": "97201",
     "lat": 45.5152254,
     "lng": -122.6850737
+  },
+  {
+    "id": "way/331595545",
+    "building": "residential",
+    "street": "28 Douglas Street",
+    "city": "Auckland",
+    "state": "AUK",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "NZ",
+    "lat": -36.8556961,
+    "lng": 174.7441406
   },
   {
     "id": "way/342879350",
@@ -1630,6 +2226,18 @@
     "lng": -122.6886151
   },
   {
+    "id": "way/37331784",
+    "building": "apartments",
+    "street": "Björngårdsgatan 23",
+    "city": "Stockholm",
+    "state": "AB",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "SE",
+    "lat": 59.31519485,
+    "lng": 18.06669685
+  },
+  {
     "id": "way/378327273",
     "building": "house",
     "street": "和平東路二段76巷4號",
@@ -1671,6 +2279,17 @@
     "countryCode": "US",
     "lat": 42.9946263,
     "lng": -71.4568857
+  },
+  {
+    "id": "way/386440253",
+    "building": "apartments",
+    "street": "Rua da Boavista 364",
+    "city": "Porto",
+    "state": "13",
+    "postcode": "4050-102",
+    "countryCode": "PT",
+    "lat": 41.15609,
+    "lng": -8.61752135
   },
   {
     "id": "way/390780632",
@@ -1724,6 +2343,18 @@
     "lng": -122.6786595
   },
   {
+    "id": "way/408676645",
+    "building": "apartments",
+    "street": "Rua Saraiva Carvalho 120",
+    "city": "Lisboa",
+    "state": "11",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "PT",
+    "lat": 38.7167047,
+    "lng": -9.161521650000001
+  },
+  {
     "id": "way/409264189",
     "building": "apartments",
     "street": "和平東路一段183巷9號",
@@ -1756,6 +2387,30 @@
     "lng": 121.5333994
   },
   {
+    "id": "way/413828663",
+    "building": "apartments",
+    "street": "Rua Coelho da Rocha 80",
+    "city": "Lisboa",
+    "state": "11",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "PT",
+    "lat": 38.71663865,
+    "lng": -9.16524465
+  },
+  {
+    "id": "way/413828667",
+    "building": "apartments",
+    "street": "Rua de Infantaria 16 70",
+    "city": "Lisboa",
+    "state": "11",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "PT",
+    "lat": 38.7184837,
+    "lng": -9.16611275
+  },
+  {
     "id": "way/41943623",
     "building": "apartments",
     "street": "945 Northwest Naito Parkway",
@@ -1786,6 +2441,29 @@
     "lng": -122.6749266
   },
   {
+    "id": "way/419992821",
+    "building": "apartments",
+    "street": "90 Oriental Parade",
+    "city": "Wellington",
+    "state": "WGN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "NZ",
+    "lat": -41.29192945,
+    "lng": 174.78706814999998
+  },
+  {
+    "id": "way/431595754",
+    "building": "apartments",
+    "street": "Rua Silva Carvalho 167",
+    "city": "Lisboa",
+    "state": "11",
+    "postcode": "1250-250",
+    "countryCode": "PT",
+    "lat": 38.719666849999996,
+    "lng": -9.1618381
+  },
+  {
     "id": "way/512075480",
     "building": "apartments",
     "street": "1717 Delaware Avenue",
@@ -1794,6 +2472,54 @@
     "postcode": "19806",
     "lat": 39.7586677,
     "lng": -75.5629909
+  },
+  {
+    "id": "way/512528656",
+    "building": "house",
+    "street": "Arthur Sterckstraat 54",
+    "city": "Berchem",
+    "state": "VAN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "BE",
+    "lat": 51.1974441,
+    "lng": 4.429846250000001
+  },
+  {
+    "id": "way/512528659",
+    "building": "house",
+    "street": "Arthur Sterckstraat 58",
+    "city": "Berchem",
+    "state": "VAN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "BE",
+    "lat": 51.1973878,
+    "lng": 4.42987715
+  },
+  {
+    "id": "way/512539318",
+    "building": "house",
+    "street": "Mimosastraat 22",
+    "city": "Berchem",
+    "state": "VAN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "BE",
+    "lat": 51.197230250000004,
+    "lng": 4.42842205
+  },
+  {
+    "id": "way/512539323",
+    "building": "house",
+    "street": "Zonnebloemstraat 2",
+    "city": "Berchem",
+    "state": "VAN",
+    "postcode": "",
+    "postcodeStatus": "missing-original-tag",
+    "countryCode": "BE",
+    "lat": 51.197149100000004,
+    "lng": 4.42849715
   },
   {
     "id": "way/52058496",

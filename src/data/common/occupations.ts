@@ -46,7 +46,15 @@ export const UNIVERSITIES_BY_COUNTRY: Record<CountryCode, string[]> = {
   MY: ['Universiti Malaya (UM)', 'Universiti Kebangsaan Malaysia (UKM)', 'Universiti Putra Malaysia (UPM)', 'Universiti Sains Malaysia (USM)'],
   TH: ['Chulalongkorn University', 'Mahidol University', 'Thammasat University', 'Chiang Mai University'],
   VN: ['Vietnam National University, Hanoi (VNU)', 'VNU University of Science, HCM', 'Hanoi University of Science and Technology'],
-  PH: ['University of the Philippines (UP)', 'Ateneo de Manila University', 'De La Salle University (DLSU)', 'University of Santo Tomas']
+  PH: ['University of the Philippines (UP)', 'Ateneo de Manila University', 'De La Salle University (DLSU)', 'University of Santo Tomas'],
+  NZ: ['University of Auckland', 'University of Otago', 'Victoria University of Wellington', 'University of Canterbury'],
+  PT: ['Universidade de Lisboa', 'Universidade do Porto', 'Universidade de Coimbra', 'Universidade Nova de Lisboa'],
+  BE: ['KU Leuven', 'Ghent University (UGent)', 'Université libre de Bruxelles (ULB)', 'UCLouvain'],
+  AT: ['University of Vienna', 'TU Wien', 'University of Graz', 'University of Innsbruck'],
+  SE: ['Karolinska Institutet', 'KTH Royal Institute of Technology', 'Lund University', 'Uppsala University', 'University of Gothenburg'],
+  FI: ['University of Helsinki', 'Aalto University', 'Tampere University', 'University of Turku'],
+  PL: ['University of Warsaw', 'Jagiellonian University in Kraków', 'Warsaw University of Technology', 'AGH University of Kraków'],
+  HU: ['Eötvös Loránd University (ELTE)', 'Budapest University of Technology and Economics (BME)', 'University of Szeged', 'University of Debrecen']
 };
 
 export const COMPANIES_BY_COUNTRY: Record<CountryCode, string[]> = {
@@ -70,5 +78,13 @@ export const COMPANIES_BY_COUNTRY: Record<CountryCode, string[]> = {
   MY: ['Petronas Digital Sdn Bhd', 'Grab Malaysia Technologies', 'CIMB Group Holdings', 'AirAsia Digital Group'],
   TH: ['PTT Public Company Limited', 'CP All Group (7-Eleven Thailand)', 'Central Retail Corp', 'Kasikorn Digital Labs'],
   VN: ['Vingroup Joint Stock Company', 'Viettel Military Telecom', 'FPT Software Global', 'VNG Corporation'],
-  PH: ['Ayala Land & Technologies', 'SM Investments Corp', 'Globe Telecom Innovation', 'San Miguel Global Holdings']
+  PH: ['Ayala Land & Technologies', 'SM Investments Corp', 'Globe Telecom Innovation', 'San Miguel Global Holdings'],
+  NZ: ['Xero Limited', 'Fisher & Paykel Healthcare', 'Spark New Zealand', 'Mainfreight Limited'],
+  PT: ['Galp Energia SGPS', 'EDP Energias de Portugal', 'Jerónimo Martins SGPS', 'Farfetch Portugal', 'Sonae SGPS'],
+  BE: ['Umicore NV/SA', 'KBC Group', 'Solvay S.A.', 'Colruyt Group', 'Proximus Group'],
+  AT: ['OMV AG', 'voestalpine AG', 'Erste Group Bank AG', 'Verbund AG', 'Andritz AG'],
+  SE: ['Ericsson AB', 'Spotify AB', 'Volvo Group', 'H&M Group', 'Atlas Copco AB'],
+  FI: ['Nokia Corporation', 'KONE Corporation', 'Neste Corporation', 'Wärtsilä Corporation', 'Supercell Oy'],
+  PL: ['PKN Orlen S.A.', 'CD PROJEKT S.A.', 'Allegro.eu', 'Asseco Poland S.A.', 'InPost S.A.'],
+  HU: ['MOL Group', 'Richter Gedeon Nyrt.', 'OTP Bank Nyrt.', 'Magyar Telekom', 'Graphisoft SE']
 };

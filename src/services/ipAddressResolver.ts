@@ -1,5 +1,7 @@
-import type { CountryCode, RealAddress } from '../types/identity';
+import type { RealAddress } from '../types/identity';
 import type { IpConsensusResult } from '../types/ip';
+import { COUNTRIES } from '../data/countries';
+import { ADDRESS_MAP } from '../data/addresses/index';
 import { matchesState, STREET_DERIVATION_RULES, deriveStreetAddress } from '../data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES } from '../data/addresses/schemes/residentialAddresses';
 
@@ -7,10 +9,20 @@ function getRandomItem<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function normalizeCityToken(value: string): string {
+  return value
+    .replace(/ł/g, 'l')
+    .replace(/Ł/g, 'L')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 function cityMatches(itemCity: string, targetCity: string): boolean {
   if (!targetCity || !itemCity) return false;
-  const c1 = itemCity.toLowerCase().trim();
-  const c2 = targetCity.toLowerCase().trim();
+  const c1 = normalizeCityToken(itemCity);
+  const c2 = normalizeCityToken(targetCity);
   if (c1 === c2) return true;
   if (c1.includes(c2) || c2.includes(c1)) return true;
 
@@ -48,11 +60,31 @@ function cityMatches(itemCity: string, targetCity: string): boolean {
       ['seoul', '首尔', '江南', '瑞草', '麻浦', '松坡', '龙山'].some(k => c1.includes(k))) return true;
   if (c2.includes('busan') && ['busan', '釜山', 'haeundae', 'millak'].some(k => c1.includes(k))) return true;
 
+  // Europe / New Zealand multilingual city aliases
+  if ((c2.includes('lisbon') || c2.includes('lisboa')) && (c1.includes('lisboa') || c1.includes('lisbon'))) return true;
+  if ((c2.includes('brussels') || c2.includes('bruxelles') || c2.includes('brussel')) &&
+      (c1.includes('bruxelles') || c1.includes('brussels'))) return true;
+  if ((c2.includes('antwerp') || c2.includes('antwerpen') || c2.includes('berchem')) &&
+      (c1.includes('antwerp') || c1.includes('berchem'))) return true;
+  if ((c2.includes('vienna') || c2.includes('wien')) && (c1.includes('wien') || c1.includes('vienna'))) return true;
+  if ((c2.includes('gothenburg') || c2.includes('goteborg')) && (c1.includes('goteborg') || c1.includes('gothenburg'))) return true;
+  if ((c2.includes('warsaw') || c2.includes('warszawa')) && (c1.includes('warszawa') || c1.includes('warsaw'))) return true;
+  if ((c2.includes('tampere') || c2.includes('pirkanmaa')) && (c1.includes('tampere') || c1.includes('pirkanmaa'))) return true;
+  if ((c2.includes('helsinki') || c2.includes('uusimaa')) && (c1.includes('helsinki') || c1.includes('uusimaa'))) return true;
+  if ((c2.includes('graz') || c2.includes('styria') || c2.includes('steiermark')) &&
+      (c1.includes('graz') || c1.includes('styria') || c1.includes('steiermark'))) return true;
+
   return false;
 }
 
 export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress {
-  const countryCode = (consensus.winnerCountryCode || 'US') as CountryCode;
+  const rawCountryCode = (consensus.winnerCountryCode || '').trim().toUpperCase();
+  const supportedCountry = COUNTRIES.find(c => c.code === rawCountryCode);
+  if (!supportedCountry) {
+    const label = consensus.winnerCountry?.trim() || rawCountryCode || 'Unknown';
+    throw new Error(`No address sample for country ${label}`);
+  }
+  const countryCode = supportedCountry.code;
   const targetCity = (consensus.winnerCity || '').trim();
   const targetRegion = (consensus.winnerRegion || '').trim();
 
@@ -189,16 +221,53 @@ export function resolveAddressFromIp(consensus: IpConsensusResult): RealAddress 
   }
 
   // =========================================================================
-  // Track 6: Global bundled residential sample for unsupported countries.
+  // Track 5b: Same-country Scheme C / OSM building addresses (for C/OSM-only countries).
   // =========================================================================
-  const globalRes = RESIDENTIAL_ADDRESSES.filter(a => a.countryCode === 'US');
-  const fallback = globalRes.length > 0 ? getRandomItem(globalRes) : RESIDENTIAL_ADDRESSES[0];
-  consensus.matchedStrategy = 'global_residential_fallback';
-  consensus.strategySummaryZh = `未收录该国家的 IP 地址样本，返回美国内置地址；投递与 AVS 未核验`;
-  consensus.strategySummaryEn = `Country unavailable; using a bundled US address sample, delivery and AVS unverified`;
-  return {
-    ...fallback,
-    addressMode: 'residential',
-    buildingType: 'residential'
-  };
+  const countryLandmarks = ADDRESS_MAP[countryCode] || [];
+  if (countryLandmarks.length > 0) {
+    const cityLandmarks = targetCity ? countryLandmarks.filter(a => cityMatches(a.city, targetCity)) : [];
+    const regionLandmarks = (!cityLandmarks.length && targetRegion)
+      ? countryLandmarks.filter(a =>
+          matchesState(a.state, a.stateFull, targetRegion) ||
+          (a.stateFull ? cityMatches(a.stateFull, targetRegion) : false) ||
+          cityMatches(a.city, targetRegion)
+        )
+      : [];
+    const pool = cityLandmarks.length > 0 ? cityLandmarks : regionLandmarks.length > 0 ? regionLandmarks : countryLandmarks;
+    const match = getRandomItem(pool);
+    const isCityMatch = cityLandmarks.length > 0;
+    const isRegionMatch = !isCityMatch && regionLandmarks.length > 0;
+    consensus.matchedStrategy = isCityMatch ? 'exact_city_landmark' : 'state_fallback_landmark';
+    consensus.strategySummaryZh = isCityMatch
+      ? `IP 同城 OSM 建筑门牌：匹配 ${match.city} 的可核对来源地址；房号、投递与 AVS 未核验`
+      : isRegionMatch
+        ? `同区 OSM 建筑门牌：${targetCity || '该地区'} 暂无同城样本，已匹配 ${match.city}（${match.state}）；房号与投递未核验`
+        : `同国 OSM 建筑门牌：暂未匹配 ${targetCity || targetRegion || countryCode} 精细地区，已限制返回 ${match.country} ${match.city} 可核对地址；投递未核验`;
+    consensus.strategySummaryEn = isCityMatch
+      ? `Same-city OSM building in ${match.city}; unit, delivery and AVS unverified`
+      : isRegionMatch
+        ? `Same-region OSM building in ${match.city}; unit, delivery and AVS unverified`
+        : `Same-country OSM building in ${match.city}, ${match.country}; may differ from IP city, delivery unverified`;
+    return {
+      ...match,
+      addressMode: 'landmark',
+      buildingType: 'residential',
+      derivationMeta: {
+        mode: 'landmark',
+        modeLabelZh: match.source === 'OpenStreetMap' ? '方案C·OSM 住宅建筑门牌' : '方案C·建筑样本',
+        modeLabelEn: match.source === 'OpenStreetMap' ? 'Scheme C (OSM Residential Building)' : 'Scheme C (Building Sample)',
+        ruleSummary: match.source === 'OpenStreetMap'
+          ? 'OpenStreetMap 公开住宅建筑门牌，未验证住户或 AVS'
+          : '已有建筑地址样本，未验证住户或 AVS',
+        ruleSummaryEn: match.source === 'OpenStreetMap'
+          ? 'Public OSM residential building address; no unit, delivery or AVS verification'
+          : undefined,
+        interpolated: false,
+        buildingType: 'residential',
+        avsTier: match.source === 'OpenStreetMap' ? 'Residential Building (AVS unverified)' : 'Residential Condominium / Apartment'
+      }
+    };
+  }
+
+  throw new Error(`No address sample for country ${countryCode}`);
 }

@@ -16,7 +16,8 @@ const graticule30 = pathGen(d3.geoGraticule().step([30, 30])());
 
 const isoNumericMap = {
   US: '840', CA: '124', GB: '826', DE: '276', FR: '250', IT: '380', ES: '724', NL: '528', CH: '756', LU: '442', IE: '372',
-  JP: '392', KR: '410', TW: '158', AU: '036', MY: '458', TH: '764', VN: '704', PH: '608'
+  JP: '392', KR: '410', TW: '158', AU: '036', MY: '458', TH: '764', VN: '704', PH: '608',
+  NZ: '554', PT: '620', BE: '056', AT: '040', SE: '752', FI: '246', PL: '616', HU: '348'
 };
 
 const countryPaths = {};
@@ -49,7 +50,15 @@ const countryCoords = {
   MY: [101.9, 4.2],      // Malaysia
   TH: [100.9, 15.8],     // Thailand
   VN: [108.2, 14.0],     // Vietnam
-  PH: [121.7, 12.8]      // Philippines
+  PH: [121.7, 12.8],     // Philippines
+  NZ: [172.6, -41.5],    // New Zealand
+  PT: [-8.2, 39.5],      // Portugal
+  BE: [4.5, 50.8],       // Belgium
+  AT: [14.5, 47.6],      // Austria
+  SE: [15.5, 62.0],      // Sweden
+  FI: [25.7, 62.9],      // Finland
+  PL: [19.1, 52.0],      // Poland
+  HU: [19.5, 47.2]       // Hungary
 };
 
 const pins = {};

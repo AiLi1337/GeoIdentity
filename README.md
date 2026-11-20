@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>21 国内置地址样本、街道插值与可回溯 OSM 建筑门牌</strong><br>
+  <strong>29 国地址支持（21 国内置住宅/插值 + 11 国可回溯 OSM 建筑门牌）</strong><br>
   个人资料为合成测试数据；地址不代表可投递、真实住户、房号或 AVS 认证
 </p>
 
@@ -41,9 +41,10 @@
 
 ## 🌟 核心特性
 
-- **恢复多地区地址选择**：21 国内置住宅与公寓样本、街道门牌区间插值可在网页及批量生成中选择。插值门牌并非逐条核验的真实建筑，内置样本不保证投递或 AVS。
-- **可核对来源模式**：收录美国多座城市、香港多个行政区及台湾多个城市的 OSM 住宅建筑门牌，每条附原始对象链接；当前数量和覆盖以地址库监控页的数据快照为准。此模式无匹配时不跨地区兜底。
+- **多地区与可核对来源模式**：支持 29 个国家/地区（其中原有 21 国提供方案 A/B/C，新增 NZ、PT、BE、AT、SE、FI、PL、HU 共 8 国提供 OSM 来源与方案 C 建筑门牌）；每条 OSM 记录附原始对象链接与来源元数据（`src/data/addresses/osmProvenance.json`）。所有模式无匹配时严格报错，不跨地区或降级兜底。
+- **可核对来源范围与邮编边界**：OSM 住宅建筑门牌当前收录美国、中国香港、中国台湾、新西兰、葡萄牙、比利时、奥地利、瑞典、芬兰、波兰、匈牙利指定区域；香港邮编为空，部分缺少原始 `addr:postcode` 标签的 OSM 建筑（NZ/PT/BE/SE 共 22 处）保留空字符串与缺失证据，不伪造邮编。
 - **边界**：OSM 是众包数据；仅说明建筑门牌有来源对象，不代表房号、住户、产权、邮政投递或 AVS 认证。合成身份与建筑没有任何居住关联。
+- **国家旗帜资产许可**：界面国旗图标采用本地静态 SVG（来自 `lipis/flag-icons` `v7.6.0`，commit `0d8909b00aa8418802a5abf2afa82356b129a7ef`，MIT License，许可文本保留于 `src/assets/flags/LICENSE`）。
 - 🗺️ **三地图引擎与防“IP 送中”安全沙箱**：
   - 默认首选 **OpenStreetMap (OSM)**：国内 100% 免翻直连秒开，真实建筑门牌无偏移，零送中风险；
   - 备选 **Bing Maps (必应地图)**：微软官方全球道路图与高分辨率卫星图；
@@ -108,7 +109,7 @@ npx wrangler pages deploy dist --project-name geo-identity --branch main
 
 项目仓库内已内置每日自动化调度工作流 [`.github/workflows/daily-address-sync.yml`](.github/workflows/daily-address-sync.yml)：
 * **定时运行**：计划每天 UTC 00:00（北京时间 08:00）运行；GitHub 的定时任务可能延迟。
-* **公开数据采样**：从 [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL) 获取美国、香港和台湾限定区域的公开住宅建筑门牌、邮编（香港为空）、城市和坐标，过滤无效、重复、明确国家/美国州冲突及酒店、银行等已支持的用途冲突，写入 `osmApartments.json`。只代表 OSM 有建筑门牌，**不保证可投递或通过 AVS**，不关联住户。
+* **公开数据采样**：从 [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL) 获取美国、中国香港、中国台湾、新西兰、葡萄牙、比利时、奥地利、瑞典、芬兰、波兰及匈牙利限定区域的公开住宅建筑门牌、原始邮编（香港为空；NZ/PT/BE/SE 缺少原标签时保留空字符串）、城市和坐标，过滤无效、重复、明确国家/美国州冲突及酒店、银行等已支持的用途冲突，写入 `osmApartments.json`。只代表 OSM 有建筑门牌，**不保证可投递或通过 AVS**，不关联住户。
 * **失败处理**：上游暂不可用时跳过本次同步，保留仓库数据和上次成功时间；响应格式错误或旧地址异常大量消失时任务失败，不覆盖快照。页面显示的是已部署包的数据快照，并非实时查询；页面按钮只校验本地字段和数量。
 * **部署设置**：在 GitHub 仓库 Secrets 设置 `CLOUDFLARE_API_TOKEN`（对目标 Pages 项目有部署权限）与 `CLOUDFLARE_ACCOUNT_ID`，在 Variables 设置 `CF_PAGES_PROJECT`（当前为 `geo-identity`）。任务先校验并同步数据，有变化才提交 GitHub；定时运行每次都尝试部署已验证的快照，以便重试此前失败的发布。手动运行可通过 `deploy` 开关在地址无变化时部署。缺少部署配置时会在发布前失败。
 * **许可**：新增 OSM 数据受 [Open Database License](https://opendatacommons.org/licenses/odbl/) 约束，使用或再分发时保留归属与许可要求。原有静态地址库不由 OSM 同步验证。

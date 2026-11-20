@@ -1,13 +1,12 @@
-﻿import type { CountryCode } from '../types/identity';
-import type { IpConsensusResult, IpQuerySourceResult } from '../types/ip';
+﻿import type { IpConsensusResult, IpQuerySourceResult } from '../types/ip';
 import { COUNTRIES } from '../data/countries';
 
 const TIMEOUT_MS = 4000;
 
-function fetchWithTimeout(url: string, ms = TIMEOUT_MS): Promise<Response> {
+function fetchWithTimeout(url: string, ms = TIMEOUT_MS, fetcher: typeof fetch = fetch): Promise<Response> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), ms);
-  return fetch(url, { signal: controller.signal })
+  return fetcher(url, { signal: controller.signal })
     .finally(() => clearTimeout(id));
 }
 
@@ -52,46 +51,80 @@ function cleanCityName(raw?: string): string {
     .trim();
 }
 
-function matchCountryCode(rawCode?: string, rawName?: string): CountryCode {
-  if (rawCode) {
-    const upper = rawCode.toUpperCase();
-    const found = COUNTRIES.find(c => c.code === upper);
-    if (found) return found.code;
+function matchCountryCode(rawCode?: string, rawName?: string): string {
+  const trimmedCode = rawCode?.trim().toUpperCase() || '';
+  if (trimmedCode) {
+    const found = COUNTRIES.find(c => c.code === trimmedCode);
+    return found ? found.code : trimmedCode;
   }
   if (rawName) {
-    const lower = rawName.toLowerCase();
-    const found = COUNTRIES.find(c => 
-      c.nameEn.toLowerCase() === lower || 
-      c.nameZh === rawName ||
-      lower.includes(c.nameEn.toLowerCase())
+    const trimmedName = rawName.trim();
+    const lower = trimmedName.toLowerCase();
+    const found = COUNTRIES.find(c =>
+      c.nameEn.toLowerCase() === lower ||
+      c.nameZh === trimmedName
     );
     if (found) return found.code;
   }
-  return 'US';
+  return '';
 }
 
-async function queryIpWhois(ip: string): Promise<IpQuerySourceResult> {
+async function fetchIpJson(url: string, fetcher: typeof fetch): Promise<Record<string, any>> {
+  const res = await fetchWithTimeout(url, TIMEOUT_MS, fetcher);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  const data = await res.json();
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('Invalid IP API response');
+  }
+  return data as Record<string, any>;
+}
+
+function extractExplicitApiError(data: Record<string, any>, checkSuccessFlag = false): string | null {
+  if (checkSuccessFlag && data.success === false) {
+    return typeof data.message === 'string' && data.message.trim() ? data.message : 'API request failed';
+  }
+  if (typeof data.error === 'string' && data.error.trim()) {
+    return data.error;
+  }
+  if (data.error && typeof data.error === 'object') {
+    const msg = data.error.message || data.error.title;
+    return typeof msg === 'string' && msg.trim() ? msg : 'API request failed';
+  }
+  return null;
+}
+
+function failedIpResult(
+  source: IpQuerySourceResult['source'],
+  sourceName: string,
+  sourceUrl: string,
+  ip: string,
+  t0: number,
+  err: unknown
+): IpQuerySourceResult {
+  return {
+    source,
+    sourceName,
+    sourceUrl,
+    ip,
+    country: '',
+    countryCode: '',
+    region: '',
+    city: '',
+    latencyMs: Math.round(performance.now() - t0),
+    status: 'failed',
+    error: err instanceof Error ? err.message : 'Network Timeout'
+  };
+}
+
+async function queryIpWhois(ip: string, fetcher: typeof fetch = fetch): Promise<IpQuerySourceResult> {
   const t0 = performance.now();
   try {
     const url = `https://ipwho.is/${encodeURIComponent(ip)}`;
-    const res = await fetchWithTimeout(url);
-    const d = await res.json();
-    const latencyMs = Math.round(performance.now() - t0);
-    if (!d.success && d.message) {
-      return {
-        source: 'IPWhois',
-        sourceName: 'IPWhois Global Geo',
-        sourceUrl: 'https://ipwhois.io',
-        ip: ip || d.ip || '',
-        country: '',
-        countryCode: '',
-        region: '',
-        city: '',
-        latencyMs,
-        status: 'failed',
-        error: d.message
-      };
-    }
+    const d = await fetchIpJson(url, fetcher);
+    const apiError = extractExplicitApiError(d, true);
+    if (apiError) throw new Error(apiError);
     return {
       source: 'IPWhois',
       sourceName: 'IPWhois Global Geo',
@@ -105,33 +138,21 @@ async function queryIpWhois(ip: string): Promise<IpQuerySourceResult> {
       isp: d.connection?.isp || d.connection?.org || '',
       lat: d.latitude,
       lng: d.longitude,
-      latencyMs,
+      latencyMs: Math.round(performance.now() - t0),
       status: 'success'
     };
-  } catch (err: any) {
-    return {
-      source: 'IPWhois',
-      sourceName: 'IPWhois Global Geo',
-      sourceUrl: 'https://ipwhois.io',
-      ip,
-      country: '',
-      countryCode: '',
-      region: '',
-      city: '',
-      latencyMs: Math.round(performance.now() - t0),
-      status: 'failed',
-      error: err?.message || 'Network Timeout'
-    };
+  } catch (err) {
+    return failedIpResult('IPWhois', 'IPWhois Global Geo', 'https://ipwhois.io', ip, t0, err);
   }
 }
 
-async function queryIpInfo(ip: string): Promise<IpQuerySourceResult> {
+async function queryIpInfo(ip: string, fetcher: typeof fetch = fetch): Promise<IpQuerySourceResult> {
   const t0 = performance.now();
   try {
     const url = ip ? `https://ipinfo.io/${encodeURIComponent(ip)}/json` : 'https://ipinfo.io/json';
-    const res = await fetchWithTimeout(url);
-    const d = await res.json();
-    const latencyMs = Math.round(performance.now() - t0);
+    const d = await fetchIpJson(url, fetcher);
+    const apiError = extractExplicitApiError(d);
+    if (apiError) throw new Error(apiError);
     let lat: number | undefined;
     let lng: number | undefined;
     if (d.loc && typeof d.loc === 'string') {
@@ -154,33 +175,21 @@ async function queryIpInfo(ip: string): Promise<IpQuerySourceResult> {
       isp: d.org || '',
       lat,
       lng,
-      latencyMs,
+      latencyMs: Math.round(performance.now() - t0),
       status: 'success'
     };
-  } catch (err: any) {
-    return {
-      source: 'IPInfo',
-      sourceName: 'IPinfo.io Intelligence',
-      sourceUrl: 'https://ipinfo.io',
-      ip,
-      country: '',
-      countryCode: '',
-      region: '',
-      city: '',
-      latencyMs: Math.round(performance.now() - t0),
-      status: 'failed',
-      error: err?.message || 'Network Timeout'
-    };
+  } catch (err) {
+    return failedIpResult('IPInfo', 'IPinfo.io Intelligence', 'https://ipinfo.io', ip, t0, err);
   }
 }
 
-async function queryGeoJs(ip: string): Promise<IpQuerySourceResult> {
+async function queryGeoJs(ip: string, fetcher: typeof fetch = fetch): Promise<IpQuerySourceResult> {
   const t0 = performance.now();
   try {
     const url = ip ? `https://get.geojs.io/v1/ip/geo/${encodeURIComponent(ip)}.json` : 'https://get.geojs.io/v1/ip/geo.json';
-    const res = await fetchWithTimeout(url);
-    const d = await res.json();
-    const latencyMs = Math.round(performance.now() - t0);
+    const d = await fetchIpJson(url, fetcher);
+    const apiError = extractExplicitApiError(d);
+    if (apiError) throw new Error(apiError);
     return {
       source: 'GeoJS',
       sourceName: 'GeoJS Fast Anycast',
@@ -194,33 +203,21 @@ async function queryGeoJs(ip: string): Promise<IpQuerySourceResult> {
       isp: d.organization_name || '',
       lat: d.latitude ? parseFloat(d.latitude) : undefined,
       lng: d.longitude ? parseFloat(d.longitude) : undefined,
-      latencyMs,
+      latencyMs: Math.round(performance.now() - t0),
       status: 'success'
     };
-  } catch (err: any) {
-    return {
-      source: 'GeoJS',
-      sourceName: 'GeoJS Fast Anycast',
-      sourceUrl: 'https://www.geojs.io',
-      ip,
-      country: '',
-      countryCode: '',
-      region: '',
-      city: '',
-      latencyMs: Math.round(performance.now() - t0),
-      status: 'failed',
-      error: err?.message || 'Network Timeout'
-    };
+  } catch (err) {
+    return failedIpResult('GeoJS', 'GeoJS Fast Anycast', 'https://www.geojs.io', ip, t0, err);
   }
 }
 
-async function queryIpGuide(ip: string): Promise<IpQuerySourceResult> {
+async function queryIpGuide(ip: string, fetcher: typeof fetch = fetch): Promise<IpQuerySourceResult> {
   const t0 = performance.now();
   try {
     const url = ip ? `https://ip.guide/${encodeURIComponent(ip)}` : 'https://ip.guide/';
-    const res = await fetchWithTimeout(url);
-    const d = await res.json();
-    const latencyMs = Math.round(performance.now() - t0);
+    const d = await fetchIpJson(url, fetcher);
+    const apiError = extractExplicitApiError(d);
+    if (apiError) throw new Error(apiError);
     const cityName = cleanCityName(d.location?.city);
     const countryName = d.location?.country || '';
     return {
@@ -236,27 +233,15 @@ async function queryIpGuide(ip: string): Promise<IpQuerySourceResult> {
       isp: d.autonomous_system?.organization || d.autonomous_system?.name || '',
       lat: d.location?.latitude,
       lng: d.location?.longitude,
-      latencyMs,
+      latencyMs: Math.round(performance.now() - t0),
       status: 'success'
     };
-  } catch (err: any) {
-    return {
-      source: 'IPGuide',
-      sourceName: 'IP-Guide Global Geo',
-      sourceUrl: 'https://ip.guide',
-      ip,
-      country: '',
-      countryCode: '',
-      region: '',
-      city: '',
-      latencyMs: Math.round(performance.now() - t0),
-      status: 'failed',
-      error: err?.message || 'Network Timeout'
-    };
+  } catch (err) {
+    return failedIpResult('IPGuide', 'IP-Guide Global Geo', 'https://ip.guide', ip, t0, err);
   }
 }
 
-export async function queryMultiSourceIp(inputIp?: string): Promise<IpConsensusResult> {
+export async function queryMultiSourceIp(inputIp?: string, fetcher: typeof fetch = fetch): Promise<IpConsensusResult> {
   let targetIp = (inputIp || '').trim();
   let isClientDetected = false;
 
@@ -267,37 +252,42 @@ export async function queryMultiSourceIp(inputIp?: string): Promise<IpConsensusR
 
   // Concurrent queries to 4 authoritative sources (all with native browser CORS support)
   const [rWhois, rInfo, rGeoJs, rGuide] = await Promise.all([
-    queryIpWhois(targetIp),
-    queryIpInfo(targetIp),
-    queryGeoJs(targetIp),
-    queryIpGuide(targetIp)
+    queryIpWhois(targetIp, fetcher),
+    queryIpInfo(targetIp, fetcher),
+    queryGeoJs(targetIp, fetcher),
+    queryIpGuide(targetIp, fetcher)
   ]);
 
-  const results: IpQuerySourceResult[] = [rWhois, rInfo, rGeoJs, rGuide];
+  return summarizeIpConsensus(targetIp, isClientDetected, [rWhois, rInfo, rGeoJs, rGuide]);
+}
+
+export function summarizeIpConsensus(
+  targetIp: string,
+  isClientDetected: boolean,
+  results: IpQuerySourceResult[]
+): IpConsensusResult {
   const successfulResults = results.filter(r => r.status === 'success');
 
-  // If all failed, create a minimal fallback result
+  // If all failed, return an empty consensus with general_fallback status (IP card reports lookupFailed)
   if (successfulResults.length === 0) {
     return {
       targetIp: targetIp || '127.0.0.1',
       isClientDetected,
-      winnerCountry: 'United States',
-      winnerCountryCode: 'US',
-      winnerRegion: 'California',
-      winnerCity: 'Los Angeles',
-      winnerPostal: '90001',
-      winnerLat: 34.0522,
-      winnerLng: -118.2437,
+      winnerCountry: '',
+      winnerCountryCode: '',
+      winnerRegion: '',
+      winnerCity: '',
+      winnerPostal: '',
       isp: 'Unknown Network',
-      totalQueries: 4,
+      totalQueries: results.length,
       successQueries: 0,
-      cityVotes: { 'Los Angeles': 0 },
+      cityVotes: {},
       topCityVoteCount: 0,
       confidenceRate: 0,
       details: results,
       matchedStrategy: 'general_fallback',
-      strategySummaryZh: '所有查询接口超时，已启用默认通用降级配置',
-      strategySummaryEn: 'All IP APIs timed out, default fallback activated'
+      strategySummaryZh: '所有查询接口超时，未能获取 IP 归属地',
+      strategySummaryEn: 'All IP APIs timed out; unable to resolve IP location'
     };
   }
 
@@ -330,11 +320,20 @@ export async function queryMultiSourceIp(inputIp?: string): Promise<IpConsensusR
 
   const winnerCity = cityDisplayMap[topCityKey] || rep.city || 'Unknown';
   const winnerRegion = rep.region || '';
-  const winnerCountry = rep.country || 'United States';
-  const winnerCountryCode = matchCountryCode(rep.countryCode, rep.country);
+  const candidateCountryCode =
+    rep.countryCode?.trim() ||
+    successfulResults.find(r => r.countryCode?.trim())?.countryCode?.trim() ||
+    '';
+  const candidateCountryName =
+    rep.country?.trim() ||
+    successfulResults.find(r => r.country?.trim())?.country?.trim() ||
+    '';
+  const winnerCountryCode = matchCountryCode(candidateCountryCode, candidateCountryName);
+  const matchedCountry = COUNTRIES.find(c => c.code === winnerCountryCode);
+  const winnerCountry = candidateCountryName || matchedCountry?.nameEn || winnerCountryCode;
   const winnerPostal = rep.postal || successfulResults.find(r => r.postal)?.postal || '';
-  const winnerLat = rep.lat || successfulResults.find(r => r.lat !== undefined)?.lat;
-  const winnerLng = rep.lng || successfulResults.find(r => r.lng !== undefined)?.lng;
+  const winnerLat = rep.lat ?? successfulResults.find(r => r.lat !== undefined)?.lat;
+  const winnerLng = rep.lng ?? successfulResults.find(r => r.lng !== undefined)?.lng;
   const isp = rep.isp || successfulResults.find(r => r.isp)?.isp || '';
 
   // Calculate confidence rate based on agreement
@@ -358,7 +357,7 @@ export async function queryMultiSourceIp(inputIp?: string): Promise<IpConsensusR
     winnerLat,
     winnerLng,
     isp,
-    totalQueries: 4,
+    totalQueries: results.length,
     successQueries: successfulResults.length,
     cityVotes: displayCityVotes,
     topCityVoteCount,

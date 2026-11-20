@@ -78,9 +78,13 @@
           {{ locale === 'zh' ? '免税' : 'Tax-Free' }}
         </span>
 
-        <span class="text-2xl mb-1 filter drop-shadow-xs group-hover:scale-110 transition-transform">
-          {{ country.flag }}
-        </span>
+        <CountryFlag
+          :code="country.code"
+          :label="locale === 'zh' ? country.nameZh : country.nameEn"
+          decorative
+          size="lg"
+          class="mb-1.5 shadow-xs group-hover:scale-110 transition-transform"
+        />
         <span class="text-xs truncate w-full">
           {{ locale === 'zh' ? country.nameZh : country.nameEn }}
         </span>
@@ -97,7 +101,7 @@
     >
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full xl:w-auto">
         <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 shrink-0">
-          <span>{{ currentCountry.flag }}</span>
+          <CountryFlag :code="currentCountry.code" :label="locale === 'zh' ? currentCountry.nameZh : currentCountry.nameEn" decorative size="sm" />
           <span>{{ locale === 'zh' ? currentCountry.nameZh : currentCountry.nameEn }}</span>
           <span class="text-slate-400 font-normal">({{ currentCountry.currency }})</span>
         </span>
@@ -156,6 +160,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { Globe2, Search, Zap } from 'lucide-vue-next';
+import CountryFlag from './CountryFlag.vue';
 import { COUNTRIES } from '../data/countries';
 import type { CountryCode, Continent } from '../types/identity';
 import { useI18n } from '../i18n';

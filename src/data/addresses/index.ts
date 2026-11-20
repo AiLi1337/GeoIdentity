@@ -15,7 +15,7 @@ import { STREET_DERIVATION_RULES, getDerivationRule, deriveStreetAddress, matche
 import { getResidentialAddress, RESIDENTIAL_ADDRESSES } from './schemes/residentialAddresses';
 import osmApartments from './osmApartments.json';
 
-type OsmApartment = Pick<RealAddress, 'street' | 'city' | 'state' | 'postcode' | 'lat' | 'lng'> & {
+type OsmApartment = Pick<RealAddress, 'street' | 'city' | 'state' | 'postcode' | 'lat' | 'lng' | 'postcodeStatus'> & {
   id: string;
   building?: string;
   countryCode?: CountryCode;
@@ -105,16 +105,28 @@ function resolveOsmMeta(a: OsmApartment): OsmRegionMeta & { countryCode: Country
     };
   }
 
+const NEW_COUNTRY_OSM_META: Partial<Record<CountryCode, { taxRate: string; timezone: string; timezoneCode: string }>> = {
+  NZ: { taxRate: '15.00% (GST)', timezone: 'Pacific/Auckland (NZST/NZDT)', timezoneCode: 'NZST' },
+  PT: { taxRate: '23.00% (IVA)', timezone: 'Europe/Lisbon (WET/WEST)', timezoneCode: 'WET' },
+  BE: { taxRate: '21.00% (VAT/BTW)', timezone: 'Europe/Brussels (CET/CEST)', timezoneCode: 'CET' },
+  AT: { taxRate: '20.00% (USt.)', timezone: 'Europe/Vienna (CET/CEST)', timezoneCode: 'CET' },
+  SE: { taxRate: '25.00% (Moms)', timezone: 'Europe/Stockholm (CET/CEST)', timezoneCode: 'CET' },
+  FI: { taxRate: '25.50% (ALV)', timezone: 'Europe/Helsinki (EET/EEST)', timezoneCode: 'EET' },
+  PL: { taxRate: '23.00% (VAT)', timezone: 'Europe/Warsaw (CET/CEST)', timezoneCode: 'CET' },
+  HU: { taxRate: '27.00% (ÁFA)', timezone: 'Europe/Budapest (CET/CEST)', timezoneCode: 'CET' }
+};
+
   const stInfo = countryInfo?.popularStates.find(s => s.code === a.state);
   const isTaxFree = Boolean(stInfo?.isTaxFree || countryInfo?.isTaxFreeZone);
+  const meta = NEW_COUNTRY_OSM_META[countryCode];
   return {
     country,
     countryCode,
     stateFull: a.stateFull || stInfo?.nameEn || a.state,
     isTaxFree,
-    taxRate: isTaxFree ? '0.00% (No Sales Tax)' : 'Standard Tax',
-    timezone: 'UTC+0',
-    timezoneCode: 'UTC'
+    taxRate: isTaxFree ? '0.00% (No Sales Tax)' : (meta?.taxRate || 'Standard Tax'),
+    timezone: meta?.timezone || 'UTC+0',
+    timezoneCode: meta?.timezoneCode || 'UTC'
   };
 }
 
@@ -125,6 +137,7 @@ export const OSM_APARTMENTS: RealAddress[] = (osmApartments as OsmApartment[]).m
     city: a.city,
     state: a.state,
     postcode: a.postcode,
+    ...(a.postcodeStatus ? { postcodeStatus: a.postcodeStatus } : {}),
     lat: a.lat,
     lng: a.lng,
     stateFull: meta.stateFull,
@@ -172,7 +185,15 @@ export const ADDRESS_MAP: Record<CountryCode, RealAddress[]> = {
   MY: initResidentialSeedList([...(EXTENDED_ADDRESSES.MY || []), ...osmForCountry('MY')]),
   TH: initResidentialSeedList([...(EXTENDED_ADDRESSES.TH || []), ...osmForCountry('TH')]),
   VN: initResidentialSeedList([...(EXTENDED_ADDRESSES.VN || []), ...osmForCountry('VN')]),
-  PH: initResidentialSeedList([...(EXTENDED_ADDRESSES.PH || []), ...osmForCountry('PH')])
+  PH: initResidentialSeedList([...(EXTENDED_ADDRESSES.PH || []), ...osmForCountry('PH')]),
+  NZ: initResidentialSeedList(osmForCountry('NZ')),
+  PT: initResidentialSeedList(osmForCountry('PT')),
+  BE: initResidentialSeedList(osmForCountry('BE')),
+  AT: initResidentialSeedList(osmForCountry('AT')),
+  SE: initResidentialSeedList(osmForCountry('SE')),
+  FI: initResidentialSeedList(osmForCountry('FI')),
+  PL: initResidentialSeedList(osmForCountry('PL')),
+  HU: initResidentialSeedList(osmForCountry('HU'))
 };
 
 export function getAddressCoverageStats() {
@@ -183,16 +204,23 @@ export function getAddressCoverageStats() {
     sourcedRegions.add(`${a.countryCode}:${a.state}`);
   }
   const landmarkCount = Object.values(ADDRESS_MAP).reduce((sum, list) => sum + list.length, 0);
+  const landmarkCountriesCount = COUNTRIES.filter(c => (ADDRESS_MAP[c.code] || []).length > 0).length;
+  const derivationCountriesCount = new Set(STREET_DERIVATION_RULES.map(r => r.countryCode)).size;
+  const residentialCountriesCount = new Set(RESIDENTIAL_ADDRESSES.map(a => a.countryCode)).size;
   const derivationCapacity = STREET_DERIVATION_RULES.reduce((sum, r) => sum + Math.abs(r.maxNumber - r.minNumber) + 1, 0);
   return {
     sourcedCount: OSM_APARTMENTS.length,
     sourcedCountries: [...sourcedByCountry.keys()],
+    sourcedCountriesCount: sourcedByCountry.size,
     sourcedCountryCounts: Object.fromEntries(sourcedByCountry),
     sourcedRegionCount: sourcedRegions.size,
     landmarkCount,
+    landmarkCountriesCount,
     derivationRulesCount: STREET_DERIVATION_RULES.length,
+    derivationCountriesCount,
     derivationCapacity,
     residentialCount: RESIDENTIAL_ADDRESSES.length,
+    residentialCountriesCount,
     totalCountries: COUNTRIES.length
   };
 }

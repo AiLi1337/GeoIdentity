@@ -437,7 +437,10 @@ function handleIpIdentityGenerated(identity: GeneratedIdentity) {
 }
 
 function handleIpNoAddress() {
-  if (activeGeneratorTab.value === 'ip') currentIdentity.value = null;
+  if (activeGeneratorTab.value === 'ip') {
+    currentIdentity.value = null;
+    isBatchModalOpen.value = false;
+  }
 }
 
 watch(activeGeneratorTab, tab => {

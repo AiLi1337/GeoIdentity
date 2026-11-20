@@ -4,6 +4,7 @@ import { OSM_APARTMENTS } from '../src/data/addresses';
 import { STREET_DERIVATION_RULES, deriveStreetAddress, getDerivationRule, matchesState } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES, getResidentialAddress } from '../src/data/addresses/schemes/residentialAddresses';
 import { formatFullIdentityText, buildCSVContent } from '../src/services/exportService';
+import { queryMultiSourceIp } from '../src/services/ipService';
 import { resolveAddressFromIp } from '../src/services/ipAddressResolver';
 import type { CountryCode, AddressMode } from '../src/types/identity';
 import type { IpConsensusResult } from '../src/types/ip';
@@ -590,17 +591,6 @@ const sampleIpConsensuses: IpConsensusResult[] = [
     topCityVoteCount: 2,
     successQueries: 4,
     details: []
-  },
-  {
-    targetIp: '1.2.3.4',
-    winnerCountryCode: 'ZZ' as any,
-    winnerCountry: 'Nowhere',
-    winnerRegion: 'Nowhere',
-    winnerCity: 'Nowhere',
-    confidenceRate: 25,
-    topCityVoteCount: 1,
-    successQueries: 4,
-    details: []
   }
 ];
 
@@ -635,6 +625,172 @@ for (const consensus of sampleIpConsensuses) {
     assert(identity.address.buildingType === 'residential', 'Identity from IP resolved buildingType is residential');
   }
 }
+
+// 13.5b Controlled 4-route IP lookups must never cross-country fall back to US or misclassify errors
+const mockJsonRes = (payload: unknown, status = 200) =>
+  new Response(JSON.stringify(payload), { status, headers: { 'content-type': 'application/json' } });
+
+const routeMockFetcher = (
+  routes: { ipwhois: () => Response; ipinfo: () => Response; geojs: () => Response; ipguide: () => Response },
+  expectedIp: string
+): typeof fetch => async (input) => {
+  const url = String(input);
+  if (url === `https://ipwho.is/${encodeURIComponent(expectedIp)}`) return routes.ipwhois();
+  if (url === `https://ipinfo.io/${encodeURIComponent(expectedIp)}/json`) return routes.ipinfo();
+  if (url === `https://get.geojs.io/v1/ip/geo/${encodeURIComponent(expectedIp)}.json`) return routes.geojs();
+  if (url === `https://ip.guide/${encodeURIComponent(expectedIp)}`) return routes.ipguide();
+  throw new Error(`Unexpected IP route requested: ${url}`);
+};
+
+const brConsensus = await queryMultiSourceIp('198.51.100.21', routeMockFetcher({
+  ipwhois: () => mockJsonRes({ ip: '198.51.100.21', success: true, country: 'Brazil', country_code: 'BR', region: 'São Paulo', city: 'São Paulo', postal: '', latitude: -23.55, longitude: -46.63 }),
+  ipinfo: () => mockJsonRes({ ip: '198.51.100.21', country: 'BR', region: 'São Paulo', city: 'São Paulo', postal: '', loc: '-23.55,-46.63' }),
+  geojs: () => mockJsonRes({ ip: '198.51.100.21', country: 'Brazil', country_code: 'BR', region: 'São Paulo', city: 'São Paulo', latitude: '-23.55', longitude: '-46.63' }),
+  ipguide: () => mockJsonRes({ ip: '198.51.100.21', location: { country: 'Brazil', city: 'São Paulo', latitude: -23.55, longitude: -46.63 } })
+}, '198.51.100.21'));
+assert(brConsensus.successQueries === 4, '4-source BR mock resolves 4 successful APIs');
+assert(brConsensus.winnerCountryCode === 'BR' && brConsensus.winnerCountry === 'Brazil', `BR mock preserves BR/Brazil (got ${brConsensus.winnerCountryCode}/${brConsensus.winnerCountry})`);
+assert(brConsensus.details.every(d => d.countryCode !== 'US'), 'No BR source entry defaults countryCode to US');
+let brRejected = false;
+try {
+  resolveAddressFromIp(brConsensus);
+} catch (error) {
+  brRejected = error instanceof Error && error.message === 'No address sample for country Brazil';
+}
+assert(brRejected, 'BR consensus refuses address generation instead of falling back to US');
+
+// Conflicting code + name: explicit BR code must NOT be replaced by United States name
+const conflictingBrConsensus = await queryMultiSourceIp('198.51.100.21', routeMockFetcher({
+  ipwhois: () => mockJsonRes({ ip: '198.51.100.21', success: true, country: 'United States', country_code: 'BR', region: 'São Paulo', city: 'São Paulo' }),
+  ipinfo: () => mockJsonRes({ ip: '198.51.100.21', country: 'BR', region: 'São Paulo', city: 'São Paulo' }),
+  geojs: () => mockJsonRes({ ip: '198.51.100.21', country: 'United States', country_code: 'BR', region: 'São Paulo', city: 'São Paulo' }),
+  ipguide: () => mockJsonRes({ ip: '198.51.100.21', location: { country: 'United States', city: 'São Paulo' } })
+}, '198.51.100.21'));
+assert(conflictingBrConsensus.winnerCountryCode === 'BR', `Explicit BR code survives conflicting US name (got ${conflictingBrConsensus.winnerCountryCode})`);
+let conflictingBrRejected = false;
+try {
+  resolveAddressFromIp(conflictingBrConsensus);
+} catch (error) {
+  conflictingBrRejected = error instanceof Error && error.message.startsWith('No address sample for country');
+}
+assert(conflictingBrRejected, 'Conflicting BR code with US name rejects address generation instead of generating US address');
+
+// Whitespace representative code with conflicting US name must NOT hide other providers' explicit BR code
+const whitespaceRepBrConsensus = await queryMultiSourceIp('198.51.100.21', routeMockFetcher({
+  ipwhois: () => mockJsonRes({ ip: '198.51.100.21', success: true, country: 'United States', country_code: '   ', region: 'São Paulo', city: 'São Paulo' }),
+  ipinfo: () => mockJsonRes({ ip: '198.51.100.21', country: 'BR', region: 'São Paulo', city: 'São Paulo' }),
+  geojs: () => mockJsonRes({ ip: '198.51.100.21', country: 'Brazil', country_code: 'BR', region: 'São Paulo', city: 'São Paulo' }),
+  ipguide: () => mockJsonRes({ ip: '198.51.100.21', location: { country: 'Brazil', city: 'São Paulo' } })
+}, '198.51.100.21'));
+assert(whitespaceRepBrConsensus.successQueries === 4, 'Whitespace representative code scenario keeps 4 successful sources');
+assert(whitespaceRepBrConsensus.winnerCountryCode === 'BR', `Whitespace representative code yields winnerCountryCode=BR (got ${whitespaceRepBrConsensus.winnerCountryCode})`);
+let whitespaceRepRejected = false;
+try {
+  resolveAddressFromIp(whitespaceRepBrConsensus);
+} catch (error) {
+  whitespaceRepRejected = error instanceof Error && error.message.startsWith('No address sample for country');
+}
+assert(whitespaceRepRejected, 'Whitespace representative code with other explicit BR rejects address generation instead of generating US');
+
+// Name-only unsupported containing "United States" substring must NOT match US
+const umConsensus = await queryMultiSourceIp('198.51.100.21', routeMockFetcher({
+  ipwhois: () => mockJsonRes({ ip: '198.51.100.21', success: true, country: 'United States Minor Outlying Islands', country_code: '', region: 'Wake', city: 'Wake Island' }),
+  ipinfo: () => mockJsonRes({ ip: '198.51.100.21', country: '', region: 'Wake', city: 'Wake Island' }),
+  geojs: () => mockJsonRes({ ip: '198.51.100.21', country: 'United States Minor Outlying Islands', country_code: '', region: 'Wake', city: 'Wake Island' }),
+  ipguide: () => mockJsonRes({ ip: '198.51.100.21', location: { country: 'United States Minor Outlying Islands', city: 'Wake Island' } })
+}, '198.51.100.21'));
+assert(umConsensus.winnerCountryCode === '' && umConsensus.winnerCountry === 'United States Minor Outlying Islands',
+  'Name-only United States Minor Outlying Islands is not substring-mapped to US');
+let umRejected = false;
+try {
+  resolveAddressFromIp(umConsensus);
+} catch (error) {
+  umRejected = error instanceof Error && error.message === 'No address sample for country United States Minor Outlying Islands';
+}
+assert(umRejected, 'Name-only United States Minor Outlying Islands refuses address generation');
+
+const nameOnlyBr = await queryMultiSourceIp('198.51.100.22', routeMockFetcher({
+  ipwhois: () => mockJsonRes({ ip: '198.51.100.22', success: true, country: 'Brazil', country_code: '', region: 'São Paulo', city: 'São Paulo' }),
+  ipinfo: () => mockJsonRes({ ip: '198.51.100.22', country: '', region: 'São Paulo', city: 'São Paulo' }),
+  geojs: () => mockJsonRes({ ip: '198.51.100.22', country: 'Brazil', country_code: '', region: 'São Paulo', city: 'São Paulo' }),
+  ipguide: () => mockJsonRes({ ip: '198.51.100.22', location: { country: 'Brazil', city: 'São Paulo' } })
+}, '198.51.100.22'));
+assert(nameOnlyBr.winnerCountryCode === '' && nameOnlyBr.winnerCountry === 'Brazil', 'Country-name-only unsupported response preserves name without inventing US');
+let nameOnlyRejected = false;
+try {
+  resolveAddressFromIp(nameOnlyBr);
+} catch (error) {
+  nameOnlyRejected = error instanceof Error && error.message.startsWith('No address sample for country Brazil');
+}
+assert(nameOnlyRejected, 'Country-name-only unsupported country refuses address generation');
+
+const missingCountry = await queryMultiSourceIp('198.51.100.23', routeMockFetcher({
+  ipwhois: () => mockJsonRes({ ip: '198.51.100.23', success: true, country: '', country_code: '', region: '', city: 'NowhereCity' }),
+  ipinfo: () => mockJsonRes({ ip: '198.51.100.23', country: '', region: '', city: 'NowhereCity' }),
+  geojs: () => mockJsonRes({ ip: '198.51.100.23', country: '', country_code: '', region: '', city: 'NowhereCity' }),
+  ipguide: () => mockJsonRes({ ip: '198.51.100.23', location: { country: '', city: 'NowhereCity' } })
+}, '198.51.100.23'));
+assert(missingCountry.successQueries === 4 && missingCountry.winnerCountryCode === '' && missingCountry.winnerCountry === '',
+  'HTTP 200 missing country stays successful lookup without inventing United States');
+let missingRejected = false;
+try {
+  resolveAddressFromIp(missingCountry);
+} catch (error) {
+  missingRejected = error instanceof Error && error.message.startsWith('No address sample for country Unknown');
+}
+assert(missingRejected, 'Missing country successful IP refuses address generation');
+
+// Non-2xx HTTP 503 with {} JSON must all be failed (lookupFailed path), never empty-country success
+const http503Consensus = await queryMultiSourceIp('198.51.100.21', routeMockFetcher({
+  ipwhois: () => mockJsonRes({}, 503),
+  ipinfo: () => mockJsonRes({}, 503),
+  geojs: () => mockJsonRes({}, 503),
+  ipguide: () => mockJsonRes({}, 503)
+}, '198.51.100.21'));
+assert(http503Consensus.successQueries === 0 && http503Consensus.details.every(d => d.status === 'failed'),
+  'HTTP 503 JSON responses are all marked failed with successQueries=0');
+
+// HTTP 200 explicit API error payloads on all 4 providers must all be failed
+const apiErrorConsensus = await queryMultiSourceIp('198.51.100.21', routeMockFetcher({
+  ipwhois: () => mockJsonRes({ ip: '198.51.100.21', success: false, message: 'Controlled IPWhois API rejection' }),
+  ipinfo: () => mockJsonRes({ error: { title: 'Controlled IPInfo API rejection', message: 'Fixture response declares API failure' } }),
+  geojs: () => mockJsonRes({ error: 'Controlled GeoJS API rejection' }),
+  ipguide: () => mockJsonRes({ error: 'Controlled IPGuide API rejection' })
+}, '198.51.100.21'));
+assert(apiErrorConsensus.successQueries === 0 && apiErrorConsensus.details.every(d => d.status === 'failed'),
+  'Explicit HTTP 200 API error payloads are all marked failed with successQueries=0');
+
+const zzRejected = (() => {
+  try {
+    resolveAddressFromIp({
+      targetIp: '1.2.3.4', isClientDetected: false, winnerCountryCode: 'ZZ', winnerCountry: 'Nowhere',
+      winnerRegion: 'Nowhere', winnerCity: 'Nowhere', confidenceRate: 25, topCityVoteCount: 1, successQueries: 4, details: []
+    });
+    return false;
+  } catch (error) {
+    return error instanceof Error && error.message === 'No address sample for country Nowhere';
+  }
+})();
+assert(zzRejected, 'Unknown ZZ code refuses address generation instead of falling back to US');
+
+const failedIpConsensus = await queryMultiSourceIp('198.51.100.24', routeMockFetcher({
+  ipwhois: () => { throw new Error('network blocked'); },
+  ipinfo: () => { throw new Error('network blocked'); },
+  geojs: () => { throw new Error('network blocked'); },
+  ipguide: () => { throw new Error('network blocked'); }
+}, '198.51.100.24'));
+assert(failedIpConsensus.successQueries === 0 && failedIpConsensus.matchedStrategy === 'general_fallback', 'All-failed IP APIs keep successQueries=0 lookup-failure status');
+
+const ptConsensus = await queryMultiSourceIp('198.51.100.25', routeMockFetcher({
+  ipwhois: () => mockJsonRes({ ip: '198.51.100.25', success: true, country: 'Portugal', country_code: '', region: 'Lisbon', city: 'Lisbon' }),
+  ipinfo: () => mockJsonRes({ ip: '198.51.100.25', country: 'PT', region: 'Lisbon', city: 'Lisbon' }),
+  geojs: () => mockJsonRes({ ip: '198.51.100.25', country: 'Portugal', country_code: 'PT', region: 'Lisbon', city: 'Lisbon' }),
+  ipguide: () => mockJsonRes({ ip: '198.51.100.25', location: { country: '  united states ', city: 'Lisbon' } })
+}, '198.51.100.25'));
+const ptResolved = resolveAddressFromIp(ptConsensus);
+assert(ptConsensus.winnerCountryCode === 'PT' && ptResolved.countryCode === 'PT' && ptResolved.source === 'OpenStreetMap',
+  'Supported country name/code in 4-source IP stays in PT OSM/C pool');
+assert(ptConsensus.details[3].countryCode === 'US', 'Exact trimmed case-insensitive English country name still maps for supported US when code is absent');
 
 // 13.6 Sanitization of pre-existing Ste/Suite on residential inputs
 const pollutedResidential: any = {
@@ -694,12 +850,16 @@ for (let i = 0; i < 150; i++) {
 console.log('   Stress-tested 150 identities across all 3 modes and 21 countries: 100% residential, 0% Ste/Suite pollution!');
 
 // -----------------------------------------------------------------------------
-// 15. Multi-Region Coverage, Strict Mode/Country/State/TaxFree Isolation, & HK/TW Diversity
+// 15. Multi-Region Coverage, Strict Mode/Country/State/TaxFree Isolation, & New-8 OSM Countries
 // -----------------------------------------------------------------------------
-console.log('\n--- 15. Testing 21-Country Multi-Geography Diversity & Strict Filter Isolation ---');
+console.log('\n--- 15. Testing 21-Country A/B/C + 8 New-Country C/OSM & Strict Filter Isolation ---');
 
-// 15.1 All 21 countries must produce >= 2 distinct geographies in derivation, residential, and landmark modes
-for (const country of COUNTRIES) {
+const NEW_OSM_COUNTRIES = new Set<CountryCode>(['NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU']);
+const BASE_21_COUNTRIES = COUNTRIES.filter(c => !NEW_OSM_COUNTRIES.has(c.code));
+const NEW_8_COUNTRIES = COUNTRIES.filter(c => NEW_OSM_COUNTRIES.has(c.code));
+
+// 15.1 All 21 base countries must produce >= 2 distinct geographies in derivation, residential, and landmark modes
+for (const country of BASE_21_COUNTRIES) {
   for (const mode of ['derivation', 'residential', 'landmark'] as AddressMode[]) {
     const geographies = new Set<string>();
     for (let i = 0; i < 64; i++) {
@@ -711,6 +871,79 @@ for (const country of COUNTRIES) {
     assert(geographies.size >= 2, `[${country.code}/${mode}] produces >= 2 distinct geographies (observed ${geographies.size})`);
   }
 }
+
+// 15.1b All 8 new countries (NZ, PT, BE, AT, SE, FI, PL, HU) produce >= 2 distinct geographies in landmark & sourced,
+// retain local IANA timezones, valid contact/doc/finance/occupation fields, and strictly reject derivation & residential.
+assert(NEW_8_COUNTRIES.length === 8, 'Exactly 8 new OSM/C countries registered');
+for (const country of NEW_8_COUNTRIES) {
+  for (const mode of ['landmark', 'sourced'] as AddressMode[]) {
+    const geographies = new Set<string>();
+    for (let i = 0; i < 64; i++) {
+      const id = generateIdentity(country.code, { addressMode: mode });
+      assert(id.address.countryCode === country.code, `[${country.code}/${mode}] preserves countryCode`);
+      assert(id.address.addressMode === mode, `[${country.code}/${mode}] preserves requested addressMode`);
+      assert(id.address.source === 'OpenStreetMap', `[${country.code}/${mode}] keeps OpenStreetMap source`);
+      assert(id.address.addressLine2 === undefined, `[${country.code}/${mode}] never invents apartment unit`);
+      assert(id.address.timezone !== undefined && id.address.timezone !== 'UTC+0', `[${country.code}/${mode}] uses local IANA timezone (${id.address.timezone})`);
+      assert(id.contact.phone.startsWith(country.dialCode), `[${country.code}/${mode}] phone starts with ${country.dialCode}`);
+      assert(/^[a-z0-9.]+@[a-z0-9.-]+$/.test(id.contact.email) && !id.contact.email.startsWith('.'), `[${country.code}/${mode}] non-empty ASCII email (${id.contact.email})`);
+      assert(!!id.document.docNumber && !!id.occupation.company && !!id.occupation.university && !!id.finance.bankName, `[${country.code}/${mode}] complete profile fields`);
+      geographies.add(`${id.address.state}|${id.address.city}`);
+    }
+    assert(geographies.size >= 2, `[${country.code}/${mode}] produces >= 2 distinct geographies (observed ${geographies.size})`);
+  }
+  for (const unsupportedMode of ['derivation', 'residential'] as AddressMode[]) {
+    let rejected = false;
+    try {
+      generateIdentity(country.code, { addressMode: unsupportedMode });
+    } catch (error) {
+      rejected = error instanceof Error && error.message.startsWith('No matching address');
+    }
+    assert(rejected, `[${country.code}/${unsupportedMode}] rejects explicitly without falling back`);
+  }
+}
+
+const antwerpenId = generateIdentity('BE', { state: 'VAN', addressMode: 'sourced' });
+assert(antwerpenId.address.city === 'Berchem', `BE/VAN preserves original addr:city "Berchem", got "${antwerpenId.address.city}"`);
+
+// Same-country IP constraints for new 8 countries (city -> region -> national scope, never US fallback)
+const newCountryCityCase: IpConsensusResult = {
+  targetIp: '193.110.1.1',
+  isClientDetected: false,
+  winnerCountry: 'Austria',
+  winnerCountryCode: 'AT',
+  winnerRegion: 'Vienna',
+  winnerCity: 'Vienna',
+  confidenceRate: 100,
+  topCityVoteCount: 4,
+  successQueries: 4,
+  details: []
+};
+const atCityResolved = resolveAddressFromIp(newCountryCityCase);
+assert(atCityResolved.countryCode === 'AT' && atCityResolved.city === 'Wien' && newCountryCityCase.matchedStrategy === 'exact_city_landmark',
+  'IP resolution matches AT Vienna -> Wien via exact_city_landmark');
+
+const newCountryRegionCase: IpConsensusResult = {
+  ...newCountryCityCase,
+  winnerCountry: 'New Zealand',
+  winnerCountryCode: 'NZ',
+  winnerRegion: 'Wellington',
+  winnerCity: 'Lower Hutt'
+};
+const nzRegionResolved = resolveAddressFromIp(newCountryRegionCase);
+assert(nzRegionResolved.countryCode === 'NZ' && nzRegionResolved.state === 'WGN' && newCountryRegionCase.matchedStrategy === 'state_fallback_landmark',
+  'IP resolution matches NZ region-only -> WGN via state_fallback_landmark');
+
+const newCountryUnknownCityRegionCase: IpConsensusResult = {
+  ...newCountryCityCase,
+  winnerCountry: 'Poland',
+  winnerCountryCode: 'PL',
+  winnerRegion: 'Pomerania',
+  winnerCity: 'Gdansk'
+};
+const plScopedResolved = resolveAddressFromIp(newCountryUnknownCityRegionCase);
+assert(plScopedResolved.countryCode === 'PL' && newCountryUnknownCityRegionCase.matchedStrategy === 'state_fallback_landmark',
+  'IP resolution for new country unknown city/region stays in PL instead of falling back to US');
 
 // 15.2 HK & TW derivation diversity regressions (formerly pinned to CW/Mid-Levels and TPE/Da'an)
 const hkStates = new Set<string>();
@@ -738,8 +971,8 @@ for (const mode of ['landmark', 'derivation', 'residential', 'sourced'] as Addre
   }
 }
 
-// 15.3 Every popularState across all 21 countries is selectable in A, B, and C
-for (const country of COUNTRIES) {
+// 15.3 Every popularState across base 21 countries is selectable in A, B, and C; new 8 countries in C and sourced
+for (const country of BASE_21_COUNTRIES) {
   for (const st of country.popularStates) {
     for (const mode of ['derivation', 'residential', 'landmark'] as AddressMode[]) {
       const id = generateIdentity(country.code, { state: st.code, addressMode: mode });
@@ -750,8 +983,19 @@ for (const country of COUNTRIES) {
   }
 }
 
+for (const country of NEW_8_COUNTRIES) {
+  for (const st of country.popularStates) {
+    for (const mode of ['landmark', 'sourced'] as AddressMode[]) {
+      const id = generateIdentity(country.code, { state: st.code, addressMode: mode });
+      assert(id.address.countryCode === country.code, `${country.code}/${st.code} (${mode}) keeps countryCode`);
+      assert(id.address.addressMode === mode, `${country.code}/${st.code} (${mode}) keeps mode`);
+      assert(matchesState(id.address.state, id.address.stateFull, st.code), `${country.code}/${st.code} (${mode}) keeps state`);
+    }
+  }
+}
+
 // 15.4 Tax-free filter strict isolation: never cross to US or ignore tax-free constraint
-for (const nonTaxCountry of ['GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'JP', 'KR', 'TW', 'SG', 'AU', 'MY', 'TH', 'VN', 'PH'] as CountryCode[]) {
+for (const nonTaxCountry of ['GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'JP', 'KR', 'TW', 'SG', 'AU', 'MY', 'TH', 'VN', 'PH', 'NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU'] as CountryCode[]) {
   for (const mode of ['derivation', 'residential', 'landmark', 'sourced'] as AddressMode[]) {
     let threw = false;
     try {

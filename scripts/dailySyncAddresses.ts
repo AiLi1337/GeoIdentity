@@ -7,6 +7,7 @@ import { ADDRESS_MAP } from '../src/data/addresses/index';
 import { STREET_DERIVATION_RULES } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES } from '../src/data/addresses/schemes/residentialAddresses';
 import { syncOsmApartmentsIfAvailable, assertOsmSnapshotContinuity, type OsmApartment } from './osmAddressSync';
+import { isValidCountryPostcode } from '../src/data/addresses/postcodeRules';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,9 +41,10 @@ export function computeAddressMetadataStats(osmApartments: OsmApartment[]) {
     const resList = RESIDENTIAL_ADDRESSES.filter(a => a.countryCode === code);
 
     for (const a of [...landmarks, ...resList]) {
-      const hasValidPostcode = code === 'HK'
-        ? !a.postcode.trim()
-        : Boolean(a.postcode && a.postcode.trim());
+      const source = 'source' in a && a.source === 'OpenStreetMap' ? 'OpenStreetMap'
+        : ('id' in a && typeof a.id === 'string' && /^(node|way|relation)\/\d+$/.test(a.id) ? 'OpenStreetMap' : undefined);
+      const postcodeStatus = 'postcodeStatus' in a ? a.postcodeStatus : undefined;
+      const hasValidPostcode = isValidCountryPostcode(code, a.postcode, { source, postcodeStatus });
       if (!a.street.trim() || !a.city.trim() || !hasValidPostcode ||
           !Number.isFinite(a.lat) || !Number.isFinite(a.lng) ||
           Math.abs(a.lat) > 90 || Math.abs(a.lng) > 180) {
@@ -298,7 +300,7 @@ async function main() {
 
   const s = nextMetadata.stats;
   console.log(`📊 统计报告:`);
-  console.log(`   - 覆盖国家: ${nextMetadata.totalCountries}/21`);
+  console.log(`   - 覆盖国家: ${nextMetadata.totalCountries}/${nextMetadata.totalCountries}`);
   console.log(`   - 真实地标/方案C样本: ${s.totalPhysicalLandmarks} (其中 OSM ${s.totalOsmBuildings} 处)`);
   console.log(`   - 方案A街道走廊: ${s.totalSchemeACorridors} 条 (可衍生 ${s.totalSchemeACapacity.toLocaleString()} 独立门牌)`);
   console.log(`   - 方案B居民住宅: ${s.totalSchemeBResidential} 处`);

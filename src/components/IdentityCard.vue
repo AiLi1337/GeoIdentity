@@ -40,8 +40,8 @@
               </span>
 
               <!-- Country Flag Tag -->
-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                <span>{{ countryFlag }}</span>
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                <CountryFlag :code="identity.countryCode" :label="displayCountryName" decorative size="xs" />
                 <span>{{ displayCountryName }}</span>
               </span>
 
@@ -627,6 +627,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import CountryFlag from './CountryFlag.vue';
 import {
   MapPin,
   Phone,
@@ -647,7 +648,6 @@ import {
   Info
 } from 'lucide-vue-next';
 import type { GeneratedIdentity, CardLanguage } from '../types/identity';
-import { COUNTRIES } from '../data/countries';
 import { COUNTRY_LOCAL_META } from '../data/names';
 import { getCardLabels, formatForwarderShippingText } from '../data/cardLabels';
 import GoogleMapEmbed from './GoogleMapEmbed.vue';
@@ -818,11 +818,6 @@ const localizedRuleSummary = computed(() => {
     if (mode === 'derivation') return 'Interpolated street number · not individually verified';
     return 'Bundled address sample · delivery and AVS unverified';
   }
-});
-
-const countryFlag = computed(() => {
-  const c = COUNTRIES.find(item => item.code === props.identity.countryCode);
-  return c ? c.flag : '🌐';
 });
 
 const fullAddressString = computed(() => {

@@ -105,7 +105,7 @@
               <div>
                 <div class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                   <span>{{ item.basic.localFullName || item.basic.fullName }}</span>
-                  <span class="text-xs">{{ getFlag(item.countryCode) }}</span>
+                  <CountryFlag :code="item.countryCode" :label="countryDisplayName(item.countryCode)" size="xs" />
                 </div>
                 <div class="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
                   {{ item.address.street }}, {{ item.address.city }}
@@ -144,7 +144,7 @@
               <div>
                 <div class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                   <span>{{ item.basic.localFullName || item.basic.fullName }}</span>
-                  <span class="text-xs">{{ getFlag(item.countryCode) }}</span>
+                  <CountryFlag :code="item.countryCode" :label="countryDisplayName(item.countryCode)" size="xs" />
                 </div>
                 <div class="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
                   {{ item.address.street }}, {{ item.address.city }}
@@ -165,6 +165,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Clock, X, Star, FolderOpen } from 'lucide-vue-next';
+import CountryFlag from './CountryFlag.vue';
 import type { CountryCode, GeneratedIdentity } from '../types/identity';
 import { COUNTRIES } from '../data/countries';
 import { useI18n } from '../i18n';
@@ -181,13 +182,14 @@ const emit = defineEmits<{
   (e: 'clear-history'): void;
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const activeTab = ref<'history' | 'favorites'>('history');
 
-function getFlag(code: CountryCode): string {
+function countryDisplayName(code: CountryCode): string {
   const found = COUNTRIES.find(c => c.code === code);
-  return found ? found.flag : '🌐';
+  if (!found) return code;
+  return locale.value === 'zh' ? found.nameZh : found.nameEn;
 }
 
 function selectItem(item: GeneratedIdentity) {
