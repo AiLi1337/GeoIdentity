@@ -1,7 +1,8 @@
 export type CountryCode = 
   | 'US' | 'GB' | 'JP' | 'CA' | 'AU' | 'DE' | 'FR' | 'HK' | 'TW' | 'SG'
   | 'KR' | 'CH' | 'IE' | 'LU' | 'IT' | 'ES' | 'NL' | 'MY' | 'TH' | 'VN' | 'PH'
-  | 'NZ' | 'PT' | 'BE' | 'AT' | 'SE' | 'FI' | 'PL' | 'HU';
+  | 'NZ' | 'PT' | 'BE' | 'AT' | 'SE' | 'FI' | 'PL' | 'HU'
+  | 'CZ' | 'SK' | 'SI' | 'EE' | 'LV' | 'LT' | 'HR' | 'RO' | 'TR';
 
 export type Continent = 'all' | 'tax_free' | 'north_america' | 'europe' | 'asia_pacific' | 'southeast_asia';
 

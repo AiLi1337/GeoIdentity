@@ -62,7 +62,8 @@ function matchCountryCode(rawCode?: string, rawName?: string): string {
     const lower = trimmedName.toLowerCase();
     const found = COUNTRIES.find(c =>
       c.nameEn.toLowerCase() === lower ||
-      c.nameZh === trimmedName
+      c.nameZh === trimmedName ||
+      (c.code === 'TR' && (lower === 'turkey' || lower === 'turkiye' || lower === 'türkiye'))
     );
     if (found) return found.code;
   }

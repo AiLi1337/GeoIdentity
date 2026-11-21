@@ -11,6 +11,8 @@ function getRandomItem<T>(arr: T[]): T {
 
 function normalizeCityToken(value: string): string {
   return value
+    .replace(/ı/g, 'i')
+    .replace(/İ/g, 'I')
     .replace(/ł/g, 'l')
     .replace(/Ł/g, 'L')
     .normalize('NFD')
@@ -73,6 +75,11 @@ function cityMatches(itemCity: string, targetCity: string): boolean {
   if ((c2.includes('helsinki') || c2.includes('uusimaa')) && (c1.includes('helsinki') || c1.includes('uusimaa'))) return true;
   if ((c2.includes('graz') || c2.includes('styria') || c2.includes('steiermark')) &&
       (c1.includes('graz') || c1.includes('styria') || c1.includes('steiermark'))) return true;
+  if ((c2.includes('prague') || c2.includes('praha')) && (c1.includes('praha') || c1.includes('prague'))) return true;
+  if ((c2.includes('bucharest') || c2.includes('bucuresti')) && (c1.includes('bucuresti') || c1.includes('bucharest'))) return true;
+  if (c2.includes('istanbul') && c1.includes('istanbul')) return true;
+  if (c2.includes('izmir') && c1.includes('izmir')) return true;
+  if (c2.includes('ankara') && c1.includes('ankara')) return true;
 
   return false;
 }

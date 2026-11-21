@@ -854,7 +854,7 @@ console.log('   Stress-tested 150 identities across all 3 modes and 21 countries
 // -----------------------------------------------------------------------------
 console.log('\n--- 15. Testing 21-Country A/B/C + 8 New-Country C/OSM & Strict Filter Isolation ---');
 
-const NEW_OSM_COUNTRIES = new Set<CountryCode>(['NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU']);
+const NEW_OSM_COUNTRIES = new Set<CountryCode>(['NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU', 'CZ', 'SK', 'SI', 'EE', 'LV', 'LT', 'HR', 'RO', 'TR']);
 const BASE_21_COUNTRIES = COUNTRIES.filter(c => !NEW_OSM_COUNTRIES.has(c.code));
 const NEW_8_COUNTRIES = COUNTRIES.filter(c => NEW_OSM_COUNTRIES.has(c.code));
 
@@ -872,9 +872,9 @@ for (const country of BASE_21_COUNTRIES) {
   }
 }
 
-// 15.1b All 8 new countries (NZ, PT, BE, AT, SE, FI, PL, HU) produce >= 2 distinct geographies in landmark & sourced,
+// 15.1b All 17 C/OSM-only countries produce >= 2 distinct geographies in landmark & sourced,
 // retain local IANA timezones, valid contact/doc/finance/occupation fields, and strictly reject derivation & residential.
-assert(NEW_8_COUNTRIES.length === 8, 'Exactly 8 new OSM/C countries registered');
+assert(NEW_8_COUNTRIES.length === 17, 'Exactly 17 OSM/C-only countries registered');
 for (const country of NEW_8_COUNTRIES) {
   for (const mode of ['landmark', 'sourced'] as AddressMode[]) {
     const geographies = new Set<string>();
@@ -945,6 +945,50 @@ const plScopedResolved = resolveAddressFromIp(newCountryUnknownCityRegionCase);
 assert(plScopedResolved.countryCode === 'PL' && newCountryUnknownCityRegionCase.matchedStrategy === 'state_fallback_landmark',
   'IP resolution for new country unknown city/region stays in PL instead of falling back to US');
 
+const czCityCase: IpConsensusResult = {
+  ...newCountryCityCase,
+  winnerCountry: 'Czechia',
+  winnerCountryCode: 'CZ',
+  winnerRegion: 'Prague',
+  winnerCity: 'Prague'
+};
+const czResolved = resolveAddressFromIp(czCityCase);
+assert(czResolved.countryCode === 'CZ' && czResolved.city === 'Praha' && czCityCase.matchedStrategy === 'exact_city_landmark',
+  'IP resolution maps CZ Prague -> Praha via exact_city_landmark');
+
+const trIstanbulCase: IpConsensusResult = {
+  ...newCountryCityCase,
+  winnerCountry: 'Turkey',
+  winnerCountryCode: 'TR',
+  winnerRegion: 'Istanbul',
+  winnerCity: 'Istanbul'
+};
+const trIstanbulResolved = resolveAddressFromIp(trIstanbulCase);
+assert(trIstanbulResolved.countryCode === 'TR' && trIstanbulResolved.city === 'İstanbul' && trIstanbulResolved.state === '34' && trIstanbulCase.matchedStrategy === 'exact_city_landmark',
+  'IP resolution maps TR Istanbul -> İstanbul (34) via exact_city_landmark');
+
+const trIzmirCase: IpConsensusResult = {
+  ...newCountryCityCase,
+  winnerCountry: 'Türkiye',
+  winnerCountryCode: 'TR',
+  winnerRegion: 'Izmir',
+  winnerCity: 'Izmir'
+};
+const trIzmirResolved = resolveAddressFromIp(trIzmirCase);
+assert(trIzmirResolved.countryCode === 'TR' && trIzmirResolved.city === 'İzmir' && trIzmirResolved.state === '35' && trIzmirCase.matchedStrategy === 'exact_city_landmark',
+  'IP resolution maps TR Izmir -> İzmir (35) via exact_city_landmark');
+
+const trUnknownCityCase: IpConsensusResult = {
+  ...newCountryCityCase,
+  winnerCountry: 'Turkey',
+  winnerCountryCode: 'TR',
+  winnerRegion: 'Antalya',
+  winnerCity: 'Antalya'
+};
+const trScopedResolved = resolveAddressFromIp(trUnknownCityCase);
+assert(trScopedResolved.countryCode === 'TR' && trUnknownCityCase.matchedStrategy === 'state_fallback_landmark',
+  'IP resolution for TR unknown city stays in TR via state_fallback_landmark');
+
 // 15.2 HK & TW derivation diversity regressions (formerly pinned to CW/Mid-Levels and TPE/Da'an)
 const hkStates = new Set<string>();
 const twCities = new Set<string>();
@@ -995,7 +1039,7 @@ for (const country of NEW_8_COUNTRIES) {
 }
 
 // 15.4 Tax-free filter strict isolation: never cross to US or ignore tax-free constraint
-for (const nonTaxCountry of ['GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'JP', 'KR', 'TW', 'SG', 'AU', 'MY', 'TH', 'VN', 'PH', 'NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU'] as CountryCode[]) {
+for (const nonTaxCountry of ['GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'JP', 'KR', 'TW', 'SG', 'AU', 'MY', 'TH', 'VN', 'PH', 'NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU', 'CZ', 'SK', 'SI', 'EE', 'LV', 'LT', 'HR', 'RO', 'TR'] as CountryCode[]) {
   for (const mode of ['derivation', 'residential', 'landmark', 'sourced'] as AddressMode[]) {
     let threw = false;
     try {

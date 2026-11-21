@@ -12,7 +12,16 @@ export const COUNTRY_POSTCODE_PATTERNS: Partial<Record<CountryCode, RegExp>> = {
   SE: /^\d{3}\s?\d{2}$/,
   FI: /^\d{5}$/,
   PL: /^\d{2}-\d{3}$/,
-  HU: /^\d{4}$/
+  HU: /^\d{4}$/,
+  CZ: /^\d{3}\s?\d{2}$/,
+  SK: /^\d{3}\s?\d{2}$/,
+  SI: /^\d{4}$/,
+  EE: /^\d{5}$/,
+  LV: /^LV-\d{4}$/,
+  LT: /^(?:LT-)?\d{5}$/,
+  HR: /^\d{5}$/,
+  RO: /^\d{6}$/,
+  TR: /^\d{5}$/
 };
 
 export const COUNTRIES_WITH_OPTIONAL_MISSING_OSM_POSTCODE = new Set<CountryCode>(['NZ', 'PT', 'BE', 'SE']);

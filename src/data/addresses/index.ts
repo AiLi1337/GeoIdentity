@@ -113,7 +113,16 @@ const NEW_COUNTRY_OSM_META: Partial<Record<CountryCode, { taxRate: string; timez
   SE: { taxRate: '25.00% (Moms)', timezone: 'Europe/Stockholm (CET/CEST)', timezoneCode: 'CET' },
   FI: { taxRate: '25.50% (ALV)', timezone: 'Europe/Helsinki (EET/EEST)', timezoneCode: 'EET' },
   PL: { taxRate: '23.00% (VAT)', timezone: 'Europe/Warsaw (CET/CEST)', timezoneCode: 'CET' },
-  HU: { taxRate: '27.00% (ÁFA)', timezone: 'Europe/Budapest (CET/CEST)', timezoneCode: 'CET' }
+  HU: { taxRate: '27.00% (ÁFA)', timezone: 'Europe/Budapest (CET/CEST)', timezoneCode: 'CET' },
+  CZ: { taxRate: '21.00% (DPH)', timezone: 'Europe/Prague (CET/CEST)', timezoneCode: 'CET' },
+  SK: { taxRate: '23.00% (DPH)', timezone: 'Europe/Bratislava (CET/CEST)', timezoneCode: 'CET' },
+  SI: { taxRate: '22.00% (DDV)', timezone: 'Europe/Ljubljana (CET/CEST)', timezoneCode: 'CET' },
+  EE: { taxRate: '24.00% (KM)', timezone: 'Europe/Tallinn (EET/EEST)', timezoneCode: 'EET' },
+  LV: { taxRate: '21.00% (PVN)', timezone: 'Europe/Riga (EET/EEST)', timezoneCode: 'EET' },
+  LT: { taxRate: '21.00% (PVM)', timezone: 'Europe/Vilnius (EET/EEST)', timezoneCode: 'EET' },
+  HR: { taxRate: '25.00% (PDV)', timezone: 'Europe/Zagreb (CET/CEST)', timezoneCode: 'CET' },
+  RO: { taxRate: '21.00% (TVA)', timezone: 'Europe/Bucharest (EET/EEST)', timezoneCode: 'EET' },
+  TR: { taxRate: '20.00% (KDV)', timezone: 'Europe/Istanbul (TRT, UTC+3)', timezoneCode: 'TRT' }
 };
 
   const stInfo = countryInfo?.popularStates.find(s => s.code === a.state);
@@ -193,7 +202,16 @@ export const ADDRESS_MAP: Record<CountryCode, RealAddress[]> = {
   SE: initResidentialSeedList(osmForCountry('SE')),
   FI: initResidentialSeedList(osmForCountry('FI')),
   PL: initResidentialSeedList(osmForCountry('PL')),
-  HU: initResidentialSeedList(osmForCountry('HU'))
+  HU: initResidentialSeedList(osmForCountry('HU')),
+  CZ: initResidentialSeedList(osmForCountry('CZ')),
+  SK: initResidentialSeedList(osmForCountry('SK')),
+  SI: initResidentialSeedList(osmForCountry('SI')),
+  EE: initResidentialSeedList(osmForCountry('EE')),
+  LV: initResidentialSeedList(osmForCountry('LV')),
+  LT: initResidentialSeedList(osmForCountry('LT')),
+  HR: initResidentialSeedList(osmForCountry('HR')),
+  RO: initResidentialSeedList(osmForCountry('RO')),
+  TR: initResidentialSeedList(osmForCountry('TR'))
 };
 
 export function getAddressCoverageStats() {

@@ -451,5 +451,123 @@ export const COUNTRIES: CountryInfo[] = [
       { code: 'BU', nameZh: '布达佩斯 (Budapest)', nameEn: 'Budapest' },
       { code: 'CS', nameZh: '琼格拉德州 / 塞格德 (Szeged)', nameEn: 'Csongrád-Csanád (Szeged)' }
     ]
+  },
+  {
+    code: 'CZ',
+    nameZh: '捷克',
+    nameEn: 'Czechia',
+    flag: '🇨🇿',
+    dialCode: '+420',
+    currency: 'CZK (Kč)',
+    continent: 'europe',
+    popularStates: [
+      { code: '10', nameZh: '布拉格 (Praha)', nameEn: 'Prague (Praha)' },
+      { code: '64', nameZh: '南摩拉维亚州 / 布尔诺 (Brno)', nameEn: 'South Moravia (Brno)' }
+    ]
+  },
+  {
+    code: 'SK',
+    nameZh: '斯洛伐克',
+    nameEn: 'Slovakia',
+    flag: '🇸🇰',
+    dialCode: '+421',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: 'BL', nameZh: '布拉迪斯拉发州 (Bratislava)', nameEn: 'Bratislava' },
+      { code: 'KI', nameZh: '科希策州 (Košice)', nameEn: 'Košice' }
+    ]
+  },
+  {
+    code: 'SI',
+    nameZh: '斯洛文尼亚',
+    nameEn: 'Slovenia',
+    flag: '🇸🇮',
+    dialCode: '+386',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: '061', nameZh: '卢布尔雅那 (Ljubljana)', nameEn: 'Ljubljana' },
+      { code: '070', nameZh: '马里博尔 (Maribor)', nameEn: 'Maribor' }
+    ]
+  },
+  {
+    code: 'EE',
+    nameZh: '爱沙尼亚',
+    nameEn: 'Estonia',
+    flag: '🇪🇪',
+    dialCode: '+372',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: '37', nameZh: '哈尔尤县 / 塔林 (Tallinn)', nameEn: 'Harju (Tallinn)' },
+      { code: '79', nameZh: '塔尔图县 / 塔尔图 (Tartu)', nameEn: 'Tartu' }
+    ]
+  },
+  {
+    code: 'LV',
+    nameZh: '拉脱维亚',
+    nameEn: 'Latvia',
+    flag: '🇱🇻',
+    dialCode: '+371',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: 'RIX', nameZh: '里加 (Rīga)', nameEn: 'Rīga' },
+      { code: 'DGV', nameZh: '陶格夫匹尔斯 (Daugavpils)', nameEn: 'Daugavpils' }
+    ]
+  },
+  {
+    code: 'LT',
+    nameZh: '立陶宛',
+    nameEn: 'Lithuania',
+    flag: '🇱🇹',
+    dialCode: '+370',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: 'VL', nameZh: '维尔纽斯县 (Vilnius)', nameEn: 'Vilnius' },
+      { code: 'KU', nameZh: '考纳斯县 (Kaunas)', nameEn: 'Kaunas' }
+    ]
+  },
+  {
+    code: 'HR',
+    nameZh: '克罗地亚',
+    nameEn: 'Croatia',
+    flag: '🇭🇷',
+    dialCode: '+385',
+    currency: 'EUR (€)',
+    continent: 'europe',
+    popularStates: [
+      { code: '21', nameZh: '萨格勒布市 (Zagreb)', nameEn: 'City of Zagreb' },
+      { code: '17', nameZh: '斯普利特-达尔马提亚县 (Split)', nameEn: 'Split-Dalmatia (Split)' }
+    ]
+  },
+  {
+    code: 'RO',
+    nameZh: '罗马尼亚',
+    nameEn: 'Romania',
+    flag: '🇷🇴',
+    dialCode: '+40',
+    currency: 'RON (lei)',
+    continent: 'europe',
+    popularStates: [
+      { code: 'B', nameZh: '布加勒斯特 (București)', nameEn: 'Bucharest (București)' },
+      { code: 'CJ', nameZh: '克卢日县 / 克卢日-纳波卡 (Cluj-Napoca)', nameEn: 'Cluj (Cluj-Napoca)' }
+    ]
+  },
+  {
+    code: 'TR',
+    nameZh: '土耳其',
+    nameEn: 'Türkiye',
+    flag: '🇹🇷',
+    dialCode: '+90',
+    currency: 'TRY (₺)',
+    continent: 'europe',
+    popularStates: [
+      { code: '34', nameZh: '伊斯坦布尔省 (İstanbul)', nameEn: 'İstanbul' },
+      { code: '06', nameZh: '安卡拉省 (Ankara)', nameEn: 'Ankara' },
+      { code: '35', nameZh: '伊兹密尔省 (İzmir)', nameEn: 'İzmir' }
+    ]
   }
 ];

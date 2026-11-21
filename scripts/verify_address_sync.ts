@@ -339,4 +339,38 @@ const unverifiedEmptySnapshot = [
 assert.equal(computeAddressMetadataStats(unverifiedEmptySnapshot as any).coordinateErrors, 1,
   'empty non-HK postcode without missing-original-tag evidence fails metadata validation');
 
+// Dual house-number and new 8 European country validation
+const expansionSyncAreas: OsmSyncArea[] = [
+  { countryCode: 'CZ', city: 'Praha', state: '10', bbox: '50.046,14.523,50.049,14.528', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'SK', city: 'Košice', state: 'KI', bbox: '48.726,21.246,48.731,21.254', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'LV', city: 'Rīga', state: 'RIX', bbox: '56.957,24.122,56.962,24.130', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'TR', city: 'Ankara', state: '06', bbox: '39.8505,32.6395,39.8630,32.6480', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false }
+];
+const expansionSynced = await syncOsmApartments(async (url: string) => ({
+  ok: true,
+  json: async () => ({
+    elements: url.includes('50.046')
+      ? [valid(61, { building: 'residential', 'addr:housenumber': '1247/26', 'addr:street': 'Dobropolská', 'addr:city': '', 'addr:postcode': '10200' }, 50.047, 14.526)]
+      : url.includes('48.726')
+        ? [valid(62, { building: 'apartments', 'addr:housenumber': '61/4A', 'addr:street': 'Hviezdoslavova', 'addr:city': 'Košice', 'addr:postcode': '04001' }, 48.728, 21.250)]
+        : url.includes('39.8505')
+          ? [
+              valid(65, { building: 'apartments', 'addr:housenumber': '1/B', 'addr:street': 'Mehmet Rifat Börekçi Cd.', 'addr:city': 'Ankara', 'addr:postcode': '06810' }, 39.855, 32.643),
+              valid(66, { building: 'apartments', 'addr:housenumber': '3-5', 'addr:street': 'Zincirli Köşk Sokağı', 'addr:city': 'İstanbul', 'addr:postcode': '34728' }, 40.967, 29.073),
+              valid(67, { building: 'apartments', 'addr:housenumber': '9', 'addr:street': 'Bad TR Post', 'addr:city': 'Ankara', 'addr:postcode': '068' }, 39.855, 32.643)
+            ]
+        : [
+            valid(63, { building: 'apartments', 'addr:housenumber': '9', 'addr:street': 'Miera iela', 'addr:city': 'Rīga', 'addr:postcode': 'LV-1001' }, 56.959, 24.125),
+            valid(64, { building: 'apartments', 'addr:housenumber': '10', 'addr:street': 'Bad LV Post', 'addr:city': 'Rīga', 'addr:postcode': '1001' }, 56.959, 24.125)
+          ]
+  })
+}), expansionSyncAreas);
+assert.equal(expansionSynced.length, 5);
+assert.equal(expansionSynced.find(a => a.id === 'way/61')?.street, 'Dobropolská 1247/26');
+assert.equal(expansionSynced.find(a => a.id === 'way/61')?.city, 'Praha');
+assert.equal(expansionSynced.find(a => a.id === 'way/62')?.street, 'Hviezdoslavova 61/4A');
+assert.equal(expansionSynced.find(a => a.id === 'way/63')?.postcode, 'LV-1001');
+assert.equal(expansionSynced.find(a => a.id === 'way/65')?.postcode, '06810');
+assert.equal(expansionSynced.find(a => a.id === 'way/66')?.street, 'Zincirli Köşk Sokağı 3-5');
+
 console.log('Address sync validation, multi-country continuity, offline metadata refresh, and failure handling passed');

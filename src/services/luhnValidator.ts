@@ -74,7 +74,16 @@ const BANKS_BY_COUNTRY: Record<CountryCode, string[]> = {
   SE: ['Swedbank', 'SEB (Skandinaviska Enskilda Banken)', 'Handelsbanken', 'Nordea Sweden'],
   FI: ['OP Financial Group', 'Nordea Finland', 'Danske Bank Finland', 'Aktia Bank'],
   PL: ['PKO Bank Polski', 'Bank Pekao S.A.', 'mBank', 'Santander Bank Polska'],
-  HU: ['OTP Bank', 'K&H Bank', 'MBH Bank', 'Erste Bank Hungary']
+  HU: ['OTP Bank', 'K&H Bank', 'MBH Bank', 'Erste Bank Hungary'],
+  CZ: ['Česká spořitelna', 'ČSOB', 'Komerční banka', 'Raiffeisenbank CZ'],
+  SK: ['Slovenská sporiteľňa', 'VÚB banka', 'Tatra banka', 'ČSOB Slovensko'],
+  SI: ['NLB d.d.', 'OTP banka Slovenija', 'UniCredit Banka Slovenija', 'Addiko Bank'],
+  EE: ['Swedbank Estonia', 'SEB Pank', 'LHV Pank', 'Luminor Estonia'],
+  LV: ['Swedbank Latvia', 'SEB banka', 'Citadele banka', 'Luminor Latvia'],
+  LT: ['Swedbank Lithuania', 'SEB bankas', 'Šiaulių bankas', 'Luminor Lithuania'],
+  HR: ['Zagrebačka banka (ZABA)', 'Privredna banka Zagreb (PBZ)', 'Erste Bank Croatia', 'OTP banka Hrvatska'],
+  RO: ['Banca Transilvania', 'BCR (Banca Comercială Română)', 'BRD Groupe Société Générale', 'ING Bank Romania'],
+  TR: ['Türkiye İş Bankası', 'Garanti BBVA', 'Akbank', 'Yapı Kredi', 'Ziraat Bankası']
 };
 
 /**

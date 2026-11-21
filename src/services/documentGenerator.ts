@@ -505,5 +505,130 @@ export function generateDocument(countryCode: CountryCode, gender: Gender, birth
         description: '仅用于匈牙利分段排版测试的合成编号，非真实官方身份证件'
       };
     }
+
+    case 'CZ': {
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const rawMm = Math.floor(1 + Math.random() * 12) + (gender === 'female' ? 50 : 0);
+      const mm = rawMm.toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const seq = Math.floor(1000 + Math.random() * 9000);
+      return {
+        typeName: 'Synthetic CZ Format (Non-Official)',
+        typeNameZh: '捷克合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Syntetický testovací formát (CZ)',
+        docNumber: `${yy}${mm}${dd}/${seq}`,
+        description: '仅用于捷克斜杠格式与界面排版测试的合成编号，非真实 Rodné číslo'
+      };
+    }
+
+    case 'SK': {
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const rawMm = Math.floor(1 + Math.random() * 12) + (gender === 'female' ? 50 : 0);
+      const mm = rawMm.toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const seq = Math.floor(1000 + Math.random() * 9000);
+      return {
+        typeName: 'Synthetic SK Format (Non-Official)',
+        typeNameZh: '斯洛伐克合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Syntetický testovací formát (SK)',
+        docNumber: `${yy}${mm}${dd}/${seq}`,
+        description: '仅用于斯洛伐克斜杠格式与界面测试的合成编号，非真实 Rodné číslo'
+      };
+    }
+
+    case 'SI': {
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const yyy = (birthYear % 1000).toString().padStart(3, '0');
+      const tail = Math.floor(500000 + Math.random() * 499999);
+      return {
+        typeName: 'Synthetic SI Format (Non-Official)',
+        typeNameZh: '斯洛文尼亚合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Sintetična testna številka (SI)',
+        docNumber: `${dd}${mm}${yyy}${tail}`,
+        description: '仅用于斯洛文尼亚 13 位格式与界面测试的合成编号，非真实 EMŠO'
+      };
+    }
+
+    case 'EE': {
+      const centuryCode = birthYear >= 2000 ? (gender === 'male' ? 5 : 6) : (gender === 'male' ? 3 : 4);
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const seq = Math.floor(1000 + Math.random() * 9000);
+      return {
+        typeName: 'Synthetic EE Format (Non-Official)',
+        typeNameZh: '爱沙尼亚合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Sünteetiline testkood (EE)',
+        docNumber: `${centuryCode}${yy}${mm}${dd}${seq}`,
+        description: '仅用于爱沙尼亚 11 位数字格式与界面测试的合成编号，非真实 Isikukood'
+      };
+    }
+
+    case 'LV': {
+      const part1 = Math.floor(320000 + Math.random() * 9999);
+      const part2 = Math.floor(10000 + Math.random() * 90000);
+      return {
+        typeName: 'Synthetic LV Format (Non-Official)',
+        typeNameZh: '拉脱维亚合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Sintētisks testa kods (LV)',
+        docNumber: `${part1}-${part2}`,
+        description: '仅用于拉脱维亚 32xxxx-xxxxx 测试排版格式的合成编号，非真实 Personas kods'
+      };
+    }
+
+    case 'LT': {
+      const centuryCode = birthYear >= 2000 ? (gender === 'male' ? 5 : 6) : (gender === 'male' ? 3 : 4);
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const seq = Math.floor(1000 + Math.random() * 9000);
+      return {
+        typeName: 'Synthetic LT Format (Non-Official)',
+        typeNameZh: '立陶宛合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Sintetinis testo kodas (LT)',
+        docNumber: `${centuryCode}${yy}${mm}${dd}${seq}`,
+        description: '仅用于立陶宛 11 位数字格式与界面测试的合成编号，非真实 Asmens kodas'
+      };
+    }
+
+    case 'HR': {
+      const p1 = Math.floor(1000000000 + Math.random() * 8999999999);
+      const p2 = Math.floor(Math.random() * 10);
+      return {
+        typeName: 'Synthetic HR Format (Non-Official)',
+        typeNameZh: '克罗地亚合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Sintetički testni broj (HR)',
+        docNumber: `${p1}${p2}`,
+        description: '仅用于克罗地亚 11 位数字排版与界面测试的合成编号，非真实 OIB'
+      };
+    }
+
+    case 'RO': {
+      const sexDigit = birthYear >= 2000 ? (gender === 'male' ? 5 : 6) : (gender === 'male' ? 1 : 2);
+      const yy = (birthYear % 100).toString().padStart(2, '0');
+      const mm = Math.floor(1 + Math.random() * 12).toString().padStart(2, '0');
+      const dd = Math.floor(1 + Math.random() * 28).toString().padStart(2, '0');
+      const seq = Math.floor(100000 + Math.random() * 899999);
+      return {
+        typeName: 'Synthetic RO Format (Non-Official)',
+        typeNameZh: '罗马尼亚合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Format sintetic de test (RO)',
+        docNumber: `${sexDigit}${yy}${mm}${dd}${seq}`,
+        description: '仅用于罗马尼亚 13 位数字格式与界面测试的合成编号，非真实 CNP'
+      };
+    }
+
+    case 'TR': {
+      const firstDigit = Math.floor(1 + Math.random() * 8);
+      const body = Math.floor(1000000000 + Math.random() * 8999999999).toString().slice(0, 10);
+      return {
+        typeName: 'Synthetic TR Format (Non-Official)',
+        typeNameZh: '土耳其合成测试编号格式 (非官方证件)',
+        typeNameLocal: 'Sentetik Test Numarası (TR)',
+        docNumber: `${firstDigit}${body}`,
+        description: '仅用于土耳其 11 位数字格式与界面测试的合成编号，非真实 T.C. Kimlik No'
+      };
+    }
   }
 }

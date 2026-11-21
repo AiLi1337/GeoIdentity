@@ -1,7 +1,7 @@
 export const en = {
   app: {
     title: 'GeoIdentity',
-    subtitle: '29-Country Address Samples & Synthetic Profiles',
+    subtitle: '38-Country Address Samples & Synthetic Profiles',
     description: 'Built with real Google Maps coordinates and localized cultural data. Supports US tax-free states, EU tax havens, and eCommerce forwarder formatting.',
     github: 'GitHub Repo',
     cloudflareNotice: 'Pure Static Architecture · Zero Server Dependency · Cloudflare Pages Ready'
@@ -57,7 +57,7 @@ export const en = {
     sourced: 'OSM Mode: Sourced Building Addresses',
     sourcedShort: 'OSM-sourced building',
     viewSource: 'View OSM source ↗',
-    sourcedDesc: 'Public OSM residential building addresses with traceable object links (selected areas across US, HK, TW, NZ, PT, BE, AT, SE, FI, PL, HU). Unit, delivery and AVS unverified.',
+    sourcedDesc: 'Public OSM residential building addresses with traceable object links (selected areas across US, HK, TW, NZ, PT, BE, AT, SE, FI, PL, HU, CZ, SK, SI, EE, LV, LT, HR, RO, TR). Unit, delivery and AVS unverified.',
     noSourcedAddress: 'No sourced building address matches this country, region, or tax-free filter. No address was generated. Try a covered region or disable the tax-free filter.',
     noMatchingAddress: 'No address sample matches this country, region, mode, and tax-free filter. No address was generated. Newly added countries only provide Scheme C and OSM Sourced addresses.',
     title: 'Address Mode',
@@ -357,7 +357,7 @@ export const en = {
   monitor: {
     sourcedCount: '{count} sourced building addresses',
     navTitle: 'Address Dataset',
-    navBadge: '29 Countries · Snapshot',
+    navBadge: '38 Countries · Snapshot',
     pageTitle: 'Global Address Sample Overview',
     pageSubtitle: 'Bundled samples and interpolated capacity; only OSM entries have object links. Delivery and AVS unverified.',
     backToGenerator: 'Back to Generator',
@@ -385,10 +385,10 @@ export const en = {
     mapTitle: 'Global Address Sample Distribution',
     mapSnapshot: 'Bundled dataset',
     mapHint: 'Click any highlighted country to inspect its addresses and scheme breakdown below',
-    mapLegendActive: 'Bundled Address Samples (29 Countries)',
+    mapLegendActive: 'Bundled Address Samples (38 Countries)',
     mapLegendInactive: 'Not Available Yet',
     selectedCountry: 'Selected Country',
-    clearSelection: 'Clear Selection (Show All 29 Countries)',
+    clearSelection: 'Clear Selection (Show All 38 Countries)',
     tableTitle: 'Country & Scheme Address Statistics',
     searchPlaceholder: 'Search country or code (e.g. US)...',
     filterAll: 'All Continents',

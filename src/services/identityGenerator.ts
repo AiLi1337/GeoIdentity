@@ -244,15 +244,99 @@ function generateRandomPhone(countryCode: CountryCode): { phone: string; formatt
         formatted: `+36 30 ${p1} ${p2}`
       };
     }
+    case 'CZ': {
+      const p1 = Math.floor(601 + Math.random() * 90);
+      const p2 = Math.floor(100 + Math.random() * 900);
+      const p3 = Math.floor(100 + Math.random() * 900);
+      return {
+        phone: `+420${p1}${p2}${p3}`,
+        formatted: `+420 ${p1} ${p2} ${p3}`
+      };
+    }
+    case 'SK': {
+      const p1 = Math.floor(901 + Math.random() * 49);
+      const p2 = Math.floor(100 + Math.random() * 900);
+      const p3 = Math.floor(100 + Math.random() * 900);
+      return {
+        phone: `+421${p1}${p2}${p3}`,
+        formatted: `+421 ${p1} ${p2} ${p3}`
+      };
+    }
+    case 'SI': {
+      const p1 = Math.floor(31 + Math.random() * 20);
+      const p2 = Math.floor(100 + Math.random() * 900);
+      const p3 = Math.floor(100 + Math.random() * 900);
+      return {
+        phone: `+386${p1}${p2}${p3}`,
+        formatted: `+386 ${p1} ${p2} ${p3}`
+      };
+    }
+    case 'EE': {
+      const p1 = Math.floor(5000 + Math.random() * 900);
+      const p2 = Math.floor(1000 + Math.random() * 9000);
+      return {
+        phone: `+372${p1}${p2}`,
+        formatted: `+372 ${p1} ${p2}`
+      };
+    }
+    case 'LV': {
+      const p1 = Math.floor(2000 + Math.random() * 900);
+      const p2 = Math.floor(1000 + Math.random() * 9000);
+      return {
+        phone: `+371${p1}${p2}`,
+        formatted: `+371 ${p1} ${p2}`
+      };
+    }
+    case 'LT': {
+      const p1 = Math.floor(600 + Math.random() * 99);
+      const p2 = Math.floor(10000 + Math.random() * 90000);
+      return {
+        phone: `+370${p1}${p2}`,
+        formatted: `+370 ${p1} ${p2}`
+      };
+    }
+    case 'HR': {
+      const p1 = Math.floor(100 + Math.random() * 900);
+      const p2 = Math.floor(1000 + Math.random() * 9000);
+      return {
+        phone: `+38591${p1}${p2}`,
+        formatted: `+385 91 ${p1} ${p2}`
+      };
+    }
+    case 'RO': {
+      const p1 = Math.floor(20 + Math.random() * 59);
+      const p2 = Math.floor(100 + Math.random() * 900);
+      const p3 = Math.floor(100 + Math.random() * 900);
+      return {
+        phone: `+407${p1}${p2}${p3}`,
+        formatted: `+40 7${p1} ${p2} ${p3}`
+      };
+    }
+    case 'TR': {
+      const prefix = ['532', '533', '535', '542', '544', '553', '555', '505', '507'][Math.floor(Math.random() * 9)];
+      const p1 = Math.floor(100 + Math.random() * 900);
+      const p2 = Math.floor(10 + Math.random() * 90);
+      const p3 = Math.floor(10 + Math.random() * 90);
+      return {
+        phone: `+90${prefix}${p1}${p2}${p3}`,
+        formatted: `+90 ${prefix} ${p1} ${p2} ${p3}`
+      };
+    }
   }
 }
 
 function toEmailToken(value: string, fallback: string): string {
   const ascii = value
+    .replace(/ı/g, 'i')
+    .replace(/İ/g, 'I')
     .replace(/ł/g, 'l')
     .replace(/Ł/g, 'L')
     .replace(/ø/g, 'o')
     .replace(/Ø/g, 'O')
+    .replace(/æ/g, 'ae')
+    .replace(/Æ/g, 'AE')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
     .replace(/ß/g, 'ss')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')

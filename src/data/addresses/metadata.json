@@ -1,22 +1,22 @@
 {
-  "version": "v2026.11.20.095929604",
+  "version": "v2026.11.21.143648711",
   "lastUpdated": "2026-09-26T02:44:08.191Z",
   "lastUpdatedFormattedZh": "2026-09-26 02:44:08 (UTC)",
   "lastUpdatedFormattedEn": "2026-09-26 02:44:08 UTC",
-  "metadataUpdatedAt": "2026-11-20T09:59:29.604Z",
-  "metadataUpdatedFormattedZh": "2026-11-20 09:59:29 (UTC)",
-  "metadataUpdatedFormattedEn": "2026-11-20 09:59:29 UTC",
+  "metadataUpdatedAt": "2026-11-21T14:36:48.711Z",
+  "metadataUpdatedFormattedZh": "2026-11-21 14:36:48 (UTC)",
+  "metadataUpdatedFormattedEn": "2026-11-21 14:36:48 UTC",
   "healthStatus": "HEALTHY",
   "syncSchedule": "Scheduled daily at 00:00 UTC; GitHub Actions may start later",
-  "totalCountries": 29,
+  "totalCountries": 38,
   "stats": {
-    "totalPhysicalLandmarks": 380,
-    "totalOsmBuildings": 242,
+    "totalPhysicalLandmarks": 475,
+    "totalOsmBuildings": 337,
     "totalSchemeACorridors": 126,
     "totalSchemeACapacity": 100182,
     "totalSchemeBResidential": 386,
-    "totalPhysicalVerifiedAddresses": 766,
-    "totalReachableAddresses": 100948
+    "totalPhysicalVerifiedAddresses": 861,
+    "totalReachableAddresses": 101043
   },
   "countryBreakdown": {
     "US": {
@@ -453,6 +453,141 @@
       "schemeBResidentialCount": 0,
       "totalPhysicalPoints": 8,
       "totalDerivableCapacity": 8
+    },
+    "CZ": {
+      "code": "CZ",
+      "nameZh": "捷克",
+      "nameEn": "Czechia",
+      "flag": "🇨🇿",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 10,
+      "osmCount": 10,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 10,
+      "totalDerivableCapacity": 10
+    },
+    "SK": {
+      "code": "SK",
+      "nameZh": "斯洛伐克",
+      "nameEn": "Slovakia",
+      "flag": "🇸🇰",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 10,
+      "osmCount": 10,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 10,
+      "totalDerivableCapacity": 10
+    },
+    "SI": {
+      "code": "SI",
+      "nameZh": "斯洛文尼亚",
+      "nameEn": "Slovenia",
+      "flag": "🇸🇮",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 10,
+      "osmCount": 10,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 10,
+      "totalDerivableCapacity": 10
+    },
+    "EE": {
+      "code": "EE",
+      "nameZh": "爱沙尼亚",
+      "nameEn": "Estonia",
+      "flag": "🇪🇪",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 10,
+      "osmCount": 10,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 10,
+      "totalDerivableCapacity": 10
+    },
+    "LV": {
+      "code": "LV",
+      "nameZh": "拉脱维亚",
+      "nameEn": "Latvia",
+      "flag": "🇱🇻",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 10,
+      "osmCount": 10,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 10,
+      "totalDerivableCapacity": 10
+    },
+    "LT": {
+      "code": "LT",
+      "nameZh": "立陶宛",
+      "nameEn": "Lithuania",
+      "flag": "🇱🇹",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 10,
+      "osmCount": 10,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 10,
+      "totalDerivableCapacity": 10
+    },
+    "HR": {
+      "code": "HR",
+      "nameZh": "克罗地亚",
+      "nameEn": "Croatia",
+      "flag": "🇭🇷",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 10,
+      "osmCount": 10,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 10,
+      "totalDerivableCapacity": 10
+    },
+    "RO": {
+      "code": "RO",
+      "nameZh": "罗马尼亚",
+      "nameEn": "Romania",
+      "flag": "🇷🇴",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 10,
+      "osmCount": 10,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 10,
+      "totalDerivableCapacity": 10
+    },
+    "TR": {
+      "code": "TR",
+      "nameZh": "土耳其",
+      "nameEn": "Türkiye",
+      "flag": "🇹🇷",
+      "continent": "europe",
+      "isTaxFreeZone": false,
+      "landmarkCount": 15,
+      "osmCount": 15,
+      "schemeACorridorCount": 0,
+      "schemeACapacity": 0,
+      "schemeBResidentialCount": 0,
+      "totalPhysicalPoints": 15,
+      "totalDerivableCapacity": 15
     }
   },
   "syncLogs": [
@@ -479,6 +614,18 @@
       "action": "SNAPSHOT_STATISTICS_RECONCILED",
       "status": "SUCCESS",
       "message": "已核对当前 OpenStreetMap 快照：公开住宅建筑门牌 242 处。本次未替换 OSM 快照；已检查 766 处地址坐标与字段格式，未核验 AVS 或邮政投递。"
+    },
+    {
+      "timestamp": "2026-11-21T09:38:06.129Z",
+      "action": "SNAPSHOT_STATISTICS_RECONCILED",
+      "status": "SUCCESS",
+      "message": "已核对当前 OpenStreetMap 快照：公开住宅建筑门牌 322 处。本次未替换 OSM 快照；已检查 846 处地址坐标与字段格式，未核验 AVS 或邮政投递。"
+    },
+    {
+      "timestamp": "2026-11-21T14:36:48.711Z",
+      "action": "SNAPSHOT_STATISTICS_RECONCILED",
+      "status": "SUCCESS",
+      "message": "已核对当前 OpenStreetMap 快照：公开住宅建筑门牌 337 处。本次未替换 OSM 快照；已检查 861 处地址坐标与字段格式，未核验 AVS 或邮政投递。"
     }
   ]
 }

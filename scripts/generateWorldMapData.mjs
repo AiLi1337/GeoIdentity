@@ -17,7 +17,9 @@ const graticule30 = pathGen(d3.geoGraticule().step([30, 30])());
 const isoNumericMap = {
   US: '840', CA: '124', GB: '826', DE: '276', FR: '250', IT: '380', ES: '724', NL: '528', CH: '756', LU: '442', IE: '372',
   JP: '392', KR: '410', TW: '158', AU: '036', MY: '458', TH: '764', VN: '704', PH: '608',
-  NZ: '554', PT: '620', BE: '056', AT: '040', SE: '752', FI: '246', PL: '616', HU: '348'
+  NZ: '554', PT: '620', BE: '056', AT: '040', SE: '752', FI: '246', PL: '616', HU: '348',
+  CZ: '203', SK: '703', SI: '705', EE: '233', LV: '428', LT: '440', HR: '191', RO: '642',
+  TR: '792'
 };
 
 const countryPaths = {};
@@ -58,7 +60,16 @@ const countryCoords = {
   SE: [15.5, 62.0],      // Sweden
   FI: [25.7, 62.9],      // Finland
   PL: [19.1, 52.0],      // Poland
-  HU: [19.5, 47.2]       // Hungary
+  HU: [19.5, 47.2],      // Hungary
+  CZ: [15.5, 49.8],      // Czechia
+  SK: [19.7, 48.7],      // Slovakia
+  SI: [14.8, 46.1],      // Slovenia
+  EE: [25.0, 58.6],      // Estonia
+  LV: [24.6, 56.9],      // Latvia
+  LT: [23.9, 55.2],      // Lithuania
+  HR: [16.0, 45.2],      // Croatia
+  RO: [25.0, 45.9],      // Romania
+  TR: [35.2, 39.0]       // Türkiye
 };
 
 const pins = {};

@@ -54,7 +54,16 @@ export const UNIVERSITIES_BY_COUNTRY: Record<CountryCode, string[]> = {
   SE: ['Karolinska Institutet', 'KTH Royal Institute of Technology', 'Lund University', 'Uppsala University', 'University of Gothenburg'],
   FI: ['University of Helsinki', 'Aalto University', 'Tampere University', 'University of Turku'],
   PL: ['University of Warsaw', 'Jagiellonian University in Kraków', 'Warsaw University of Technology', 'AGH University of Kraków'],
-  HU: ['Eötvös Loránd University (ELTE)', 'Budapest University of Technology and Economics (BME)', 'University of Szeged', 'University of Debrecen']
+  HU: ['Eötvös Loránd University (ELTE)', 'Budapest University of Technology and Economics (BME)', 'University of Szeged', 'University of Debrecen'],
+  CZ: ['Charles University (Prague)', 'Czech Technical University in Prague (CTU)', 'Masaryk University (Brno)', 'Brno University of Technology'],
+  SK: ['Comenius University Bratislava', 'Slovak University of Technology in Bratislava', 'Technical University of Košice', 'Pavol Jozef Šafárik University in Košice'],
+  SI: ['University of Ljubljana', 'University of Maribor', 'University of Primorska', 'Jožef Stefan International Postgraduate School'],
+  EE: ['University of Tartu', 'Tallinn University of Technology (TalTech)', 'Tallinn University', 'Estonian University of Life Sciences'],
+  LV: ['University of Latvia', 'Riga Technical University', 'Rīga Stradiņš University', 'Daugavpils University'],
+  LT: ['Vilnius University', 'Kaunas University of Technology (KTU)', 'Vilnius Gediminas Technical University', 'Vytautas Magnus University'],
+  HR: ['University of Zagreb', 'University of Split', 'University of Rijeka', 'Josip Juraj Strossmayer University of Osijek'],
+  RO: ['University of Bucharest', 'Babeș-Bolyai University (Cluj-Napoca)', 'Politehnica University of Bucharest', 'Technical University of Cluj-Napoca'],
+  TR: ['Istanbul Technical University (İTÜ)', 'Middle East Technical University (ODTÜ)', 'Boğaziçi University', 'Ege University (İzmir)', 'Ankara University']
 };
 
 export const COMPANIES_BY_COUNTRY: Record<CountryCode, string[]> = {
@@ -86,5 +95,14 @@ export const COMPANIES_BY_COUNTRY: Record<CountryCode, string[]> = {
   SE: ['Ericsson AB', 'Spotify AB', 'Volvo Group', 'H&M Group', 'Atlas Copco AB'],
   FI: ['Nokia Corporation', 'KONE Corporation', 'Neste Corporation', 'Wärtsilä Corporation', 'Supercell Oy'],
   PL: ['PKN Orlen S.A.', 'CD PROJEKT S.A.', 'Allegro.eu', 'Asseco Poland S.A.', 'InPost S.A.'],
-  HU: ['MOL Group', 'Richter Gedeon Nyrt.', 'OTP Bank Nyrt.', 'Magyar Telekom', 'Graphisoft SE']
+  HU: ['MOL Group', 'Richter Gedeon Nyrt.', 'OTP Bank Nyrt.', 'Magyar Telekom', 'Graphisoft SE'],
+  CZ: ['Škoda Auto a.s.', 'ČEZ Group', 'JetBrains Prague', 'Avast Software (Gen)', 'Komerční banka'],
+  SK: ['ESET s.r.o.', 'Slovnaft a.s.', 'Tatra banka', 'U. S. Steel Košice', 'Orange Slovensko'],
+  SI: ['Krka d.d.', 'Petrol d.d.', 'NLB Group', 'Gorenje (Hisense Europe)', 'Telekom Slovenije'],
+  EE: ['Bolt Technology OÜ', 'Wise (Estonia)', 'Pipedrive OÜ', 'Playtech Estonia', 'Eesti Energia'],
+  LV: ['AirBaltic Corporation', 'MikroTik (Mikrotīkls)', 'Printful Latvia', 'Latvenergo AS', 'Tet Latvia'],
+  LT: ['Vinted UAB', 'Nord Security', 'Thermo Fisher Scientific Baltics', 'Telia Lietuva', 'Maxima Grupė'],
+  HR: ['INA d.d.', 'Rimac Technology d.o.o.', 'Infobip d.o.o.', 'Podravka d.d.', 'Hrvatski Telekom d.d.'],
+  RO: ['UiPath Romania', 'Bitdefender S.R.L.', 'Banca Transilvania', 'OMV Petrom S.A.', 'eMAG (Dante International)'],
+  TR: ['Turkish Airlines (THY)', 'Aselsan A.Ş.', 'Koç Holding', 'Arçelik A.Ş.', 'Getir Perakende']
 };

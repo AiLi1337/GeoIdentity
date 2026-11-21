@@ -3,7 +3,7 @@ import { formatFullIdentityText } from '../src/services/exportService';
 import { COUNTRY_LOCAL_META } from '../src/data/names';
 import type { CountryCode } from '../src/types/identity';
 
-const testCountries: CountryCode[] = ['US', 'JP', 'KR', 'DE', 'FR', 'HK', 'TW', 'GB', 'NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU'];
+const testCountries: CountryCode[] = ['US', 'JP', 'KR', 'DE', 'FR', 'HK', 'TW', 'GB', 'NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU', 'CZ', 'SK', 'SI', 'EE', 'LV', 'LT', 'HR', 'RO', 'TR'];
 
 console.log('=== 1. Validating COUNTRY_LOCAL_META ===');
 for (const code of testCountries) {
@@ -12,7 +12,7 @@ for (const code of testCountries) {
   console.log(`[${code}] Native Label: ${meta.langLabel}, Country: ${meta.countryLocalName}`);
 }
 
-const NEW_OSM_ONLY = new Set<CountryCode>(['NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU']);
+const NEW_OSM_ONLY = new Set<CountryCode>(['NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU', 'CZ', 'SK', 'SI', 'EE', 'LV', 'LT', 'HR', 'RO', 'TR']);
 
 console.log('\n=== 2. Validating Generated Identity Multi-language Names ===');
 for (const code of testCountries) {
@@ -61,7 +61,7 @@ if (!usEnText.includes('=== Basic Information ===')) {
 }
 console.log('✓ US en format verified successfully.');
 
-console.log('\n=== 4. Validating Separate City and State Labels for All 29 Countries ===');
+console.log('\n=== 4. Validating Separate City and State Labels for All 38 Countries ===');
 import { COUNTRIES } from '../src/data/countries';
 import { getCardLabels } from '../src/data/cardLabels';
 import type { CardLanguage } from '../src/types/identity';

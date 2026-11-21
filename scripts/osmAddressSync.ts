@@ -89,13 +89,32 @@ export const AREAS: readonly OsmSyncArea[] = [
   { countryCode: 'PL', city: 'Warszawa', state: '14', bbox: '52.220,21.011,52.228,21.019', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
   { countryCode: 'PL', city: 'Krakow', state: '12', bbox: '50.048,19.941,50.056,19.949', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
   { countryCode: 'HU', city: 'Budapest', state: 'BU', bbox: '47.513,19.049,47.521,19.057', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
-  { countryCode: 'HU', city: 'Szeged', state: 'CS', bbox: '46.248,20.145,46.256,20.153', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false }
+  { countryCode: 'HU', city: 'Szeged', state: 'CS', bbox: '46.248,20.145,46.256,20.153', buildings: 'apartments|residential|house', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'CZ', city: 'Praha', state: '10', bbox: '50.0460,14.5235,50.0490,14.5285', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'CZ', city: 'Brno', state: '64', bbox: '49.2080,16.4780,49.2130,16.4840', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'SK', city: 'Bratislava', state: 'BL', bbox: '48.1510,17.1200,48.1560,17.1280', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'SK', city: 'Košice', state: 'KI', bbox: '48.7260,21.2460,48.7310,21.2540', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'SI', city: 'Ljubljana', state: '061', bbox: '46.0620,14.4880,46.0670,14.4960', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'SI', city: 'Maribor', state: '070', bbox: '46.5600,15.6300,46.5650,15.6380', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'EE', city: 'Tallinn', state: '37', bbox: '59.4400,24.7280,59.4450,24.7360', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'EE', city: 'Tartu', state: '79', bbox: '58.3830,26.7120,58.3880,26.7200', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'LV', city: 'Rīga', state: 'RIX', bbox: '56.9570,24.1220,56.9620,24.1300', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'LV', city: 'Daugavpils', state: 'DGV', bbox: '55.8720,26.5220,55.8770,26.5300', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'LT', city: 'Vilnius', state: 'VL', bbox: '54.6910,25.2490,54.6960,25.2570', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'LT', city: 'Kaunas', state: 'KU', bbox: '54.9020,23.9160,54.9070,23.9240', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'HR', city: 'Zagreb', state: '21', bbox: '45.8610,16.0240,45.8680,16.0340', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'HR', city: 'Split', state: '17', bbox: '43.5110,16.4430,43.5155,16.4495', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'RO', city: 'București', state: 'B', bbox: '44.4340,26.0965,44.4385,26.1015', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'RO', city: 'Cluj-Napoca', state: 'CJ', bbox: '46.7480,23.5450,46.7545,23.5550', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'TR', city: 'İstanbul', state: '34', bbox: '40.9640,29.0700,40.9710,29.0770', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'TR', city: 'Ankara', state: '06', bbox: '39.8505,32.6395,39.8630,32.6480', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false },
+  { countryCode: 'TR', city: 'İzmir', state: '35', bbox: '38.5045,26.6285,38.5095,26.6325', buildings: 'apartments|residential|house|detached|semidetached_house|terrace', requireCityTag: false, postcodeFormat: 'country', allowMissingPostcode: false }
 ];
 
 const key = (countryCode: string, street: string, city: string, state: string) =>
   `${countryCode}|${street}|${city}|${state}`.toLowerCase().replace(/\s+/g, '');
 
-const STREET_BEFORE_HN_COUNTRIES = new Set<CountryCode>(['PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU']);
+const STREET_BEFORE_HN_COUNTRIES = new Set<CountryCode>(['PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU', 'CZ', 'SK', 'SI', 'EE', 'LV', 'LT', 'HR', 'RO', 'TR']);
 
 function validSyncPostcode(postcode: string, area: OsmSyncArea): { valid: boolean; postcodeStatus?: OsmPostcodeStatus } {
   if (area.postcodeFormat === 'none') return { valid: true };
@@ -171,7 +190,7 @@ export async function syncOsmApartments(
           (tags?.['addr:country'] && tags['addr:country'].trim().toUpperCase() !== area.countryCode) ||
           (area.requireCityTag !== false && rawCity.toLowerCase() !== area.city.toLowerCase()) ||
           (area.countryCode === 'US' && tags?.['addr:state'] && tags['addr:state'].trim().toUpperCase() !== area.state) ||
-          !/^\d+[A-Za-z]?$/.test(tags?.['addr:housenumber']?.trim() || '') ||
+          !/^\d+(?:[\/-][A-Za-z0-9]+)?[A-Za-z]?$/.test(tags?.['addr:housenumber']?.trim() || '') ||
           !tags?.['addr:street']?.trim() ||
           !postcodeCheck.valid ||
           !Number.isFinite(lat) || !Number.isFinite(lng) ||

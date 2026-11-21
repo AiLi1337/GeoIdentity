@@ -32,25 +32,65 @@ for (let i = 0; i < 100; i++) {
   assert.match(identity.address.sourceId || '', /^(node|way|relation)\/\d+$/);
   assert.equal(identity.address.addressLine2, undefined, 'a building address has no proven unit');
 }
-assert(OSM_APARTMENTS.length >= 242, `expected >= 242 sourced records across 11 countries, got ${OSM_APARTMENTS.length}`);
+assert(OSM_APARTMENTS.length >= 337, `expected >= 337 sourced records across 20 countries, got ${OSM_APARTMENTS.length}`);
 assert.equal(OSM_APARTMENTS.length, metadata.stats.totalOsmBuildings, 'published source count matches the actual pool');
 const coverageStats = getAddressCoverageStats();
-assert.equal(coverageStats.totalCountries, 29, 'global country catalog covers 29 countries');
+assert.equal(coverageStats.totalCountries, 38, 'global country catalog covers 38 countries');
 assert.equal(coverageStats.derivationCountriesCount, 21, 'Scheme A derivation remains accurately reported as 21 countries');
 assert.equal(coverageStats.residentialCountriesCount, 21, 'Scheme B residential remains accurately reported as 21 countries');
-assert.equal(coverageStats.landmarkCountriesCount, 29, 'Scheme C landmarks cover all 29 countries');
-assert.equal(coverageStats.sourcedCountriesCount, 11, 'OSM sourced pool covers 11 countries');
+assert.equal(coverageStats.landmarkCountriesCount, 38, 'Scheme C landmarks cover all 38 countries');
+assert.equal(coverageStats.sourcedCountriesCount, 20, 'OSM sourced pool covers 20 countries');
 
-for (const newCountry of ['NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU'] as CountryCode[]) {
-  const list = OSM_APARTMENTS.filter(a => a.countryCode === newCountry);
-  assert.equal(list.length, 8, `${newCountry} has 8 sourced OSM entries`);
-  assert.equal(new Set(list.map(a => a.state)).size, 2, `${newCountry} sourced entries cover 2 regions`);
+for (const prevNewCountry of ['NZ', 'PT', 'BE', 'AT', 'SE', 'FI', 'PL', 'HU'] as CountryCode[]) {
+  const list = OSM_APARTMENTS.filter(a => a.countryCode === prevNewCountry);
+  assert.equal(list.length, 8, `${prevNewCountry} retains 8 sourced OSM entries`);
+  assert.equal(new Set(list.map(a => a.state)).size, 2, `${prevNewCountry} sourced entries cover 2 regions`);
   for (const addr of list) {
-    assert(isValidCountryPostcode(newCountry, addr.postcode, { source: 'OpenStreetMap', postcodeStatus: addr.postcodeStatus }),
-      `${newCountry} ${addr.sourceId} postcode "${addr.postcode}" satisfies country validation`);
-    assert(addr.timezone && addr.timezone !== 'UTC+0', `${newCountry} ${addr.sourceId} has local IANA timezone`);
+    assert(isValidCountryPostcode(prevNewCountry, addr.postcode, { source: 'OpenStreetMap', postcodeStatus: addr.postcodeStatus }),
+      `${prevNewCountry} ${addr.sourceId} postcode "${addr.postcode}" satisfies country validation`);
+    assert(addr.timezone && addr.timezone !== 'UTC+0', `${prevNewCountry} ${addr.sourceId} has local IANA timezone`);
   }
 }
+for (const expansionCountry of ['CZ', 'SK', 'SI', 'EE', 'LV', 'LT', 'HR', 'RO'] as CountryCode[]) {
+  const list = OSM_APARTMENTS.filter(a => a.countryCode === expansionCountry);
+  assert.equal(list.length, 10, `${expansionCountry} has 10 sourced OSM entries across 2 regions`);
+  assert.equal(new Set(list.map(a => a.state)).size, 2, `${expansionCountry} sourced entries cover 2 regions`);
+  for (const addr of list) {
+    assert(addr.postcode.length > 0, `${expansionCountry} ${addr.sourceId} preserves non-empty original postcode`);
+    assert(isValidCountryPostcode(expansionCountry, addr.postcode, { source: 'OpenStreetMap' }),
+      `${expansionCountry} ${addr.sourceId} postcode "${addr.postcode}" satisfies country validation`);
+    assert(addr.timezone && addr.timezone !== 'UTC+0', `${expansionCountry} ${addr.sourceId} has local IANA timezone`);
+  }
+}
+assert.equal(
+  OSM_APARTMENTS.find(a => a.sourceId === 'way/101164947')?.street,
+  'Dobropolská 1247/26',
+  'Czech dual house number preserves slash and street-before-number order'
+);
+assert.equal(
+  OSM_APARTMENTS.find(a => a.sourceId === 'way/47702262')?.street,
+  'Hviezdoslavova 61/4A',
+  'Slovak dual house number with suffix letter stays intact'
+);
+assert.equal(
+  OSM_APARTMENTS.find(a => a.sourceId === 'way/107667224')?.postcode,
+  'LV-1001',
+  'Latvian LV-prefix postcode is preserved'
+);
+assert.equal(OSM_APARTMENTS.find(a => a.countryCode === 'EE')?.taxRate, '24.00% (KM)', 'EE VAT 24% remains intact');
+assert.equal(OSM_APARTMENTS.find(a => a.countryCode === 'RO')?.taxRate, '21.00% (TVA)', 'RO VAT 21% remains intact');
+
+const trList = OSM_APARTMENTS.filter(a => a.countryCode === 'TR');
+assert.equal(trList.length, 15, 'TR has 15 sourced OSM entries across 3 provinces');
+assert.deepEqual([...new Set(trList.map(a => a.state))].sort(), ['06', '34', '35'], 'TR covers 06 Ankara, 34 İstanbul, 35 İzmir with leading zero kept');
+for (const addr of trList) {
+  assert(isValidCountryPostcode('TR', addr.postcode, { source: 'OpenStreetMap' }), `TR ${addr.sourceId} 5-digit postcode "${addr.postcode}"`);
+  assert.equal(addr.timezone, 'Europe/Istanbul (TRT, UTC+3)');
+  assert.equal(addr.taxRate, '20.00% (KDV)');
+  assert.equal(addr.addressLine2, undefined);
+}
+assert.equal(OSM_APARTMENTS.find(a => a.sourceId === 'way/808018842')?.street, 'Zincirli Köşk Sokağı 3-5', 'TR hyphenated house number stays intact');
+assert.equal(OSM_APARTMENTS.find(a => a.sourceId === 'way/222605994')?.street, 'Mehmet Rifat Börekçi Cd. 1/B', 'TR Ankara house number with slash letter stays intact');
 assert.equal(
   OSM_APARTMENTS.filter(a => a.postcodeStatus === 'missing-original-tag').length,
   22,

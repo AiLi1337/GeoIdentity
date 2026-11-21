@@ -1,7 +1,7 @@
 export const zh = {
   app: {
     title: 'GeoIdentity',
-    subtitle: '29 国地址样本与合成测试身份',
+    subtitle: '38 国地址样本与合成测试身份',
     description: '内置多地区地址样本与街道插值供格式测试；OSM 门牌可核对来源。不验证收件或 AVS。',
     github: '代码仓库',
     cloudflareNotice: '纯静态安全架构 · 零服务器依赖 · 支持 Cloudflare Pages'
@@ -57,7 +57,7 @@ export const zh = {
     sourced: 'OSM 方案：可核对住宅建筑门牌',
     sourcedShort: 'OSM 住宅建筑门牌',
     viewSource: '核对 OSM 原始对象 ↗',
-    sourcedDesc: '可打开 OSM 原始对象核对的公开住宅建筑门牌（覆盖美国、香港、台湾、新西兰及 7 个欧洲国家指定区域）；房号、收件与 AVS 未核验。',
+    sourcedDesc: '可打开 OSM 原始对象核对的公开住宅建筑门牌（覆盖美国、香港、台湾、新西兰、土耳其及 15 个欧洲国家指定区域）；房号、收件与 AVS 未核验。',
     noSourcedAddress: '当前国家、地区或免税筛选下暂无可核对来源的 OSM 建筑门牌，未生成地址。请更换支持地区或取消免税限制。',
     noMatchingAddress: '当前国家、地区或免税筛选下暂无符合该模式的地址样本，未生成地址。新增国家仅支持 OSM 来源或方案C，请切换模式、更换地区或取消免税限制。',
     title: '地址生成模式',
@@ -357,7 +357,7 @@ export const zh = {
   monitor: {
     sourcedCount: '可核对建筑门牌 {count} 条',
     navTitle: '地址库监控',
-    navBadge: '29 国·静态快照',
+    navBadge: '38 国·静态快照',
     pageTitle: '全球地址样本概览',
     pageSubtitle: '内置地址样本与插值容量；仅 OSM 条目附可核对对象链接，均不保证投递或 AVS。',
     backToGenerator: '返回身份/地址生成器',
@@ -385,10 +385,10 @@ export const zh = {
     mapTitle: '全球地址样本分布 (平面交互地图)',
     mapSnapshot: '静态数据快照',
     mapHint: '点击地图上高亮的国家，可直接聚焦下方该国的地址方案与明细',
-    mapLegendActive: '已收录地址样本 (29国)',
+    mapLegendActive: '已收录地址样本 (38国)',
     mapLegendInactive: '暂未开放',
     selectedCountry: '当前选中国家',
-    clearSelection: '清除聚焦 (显示全部 29 国)',
+    clearSelection: '清除聚焦 (显示全部 38 国)',
     tableTitle: '各国家/地区方案地址统计与明细',
     searchPlaceholder: '搜索国家或代码 (如 US, 日本)...',
     filterAll: '全部大洲',
