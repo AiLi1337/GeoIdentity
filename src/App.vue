@@ -64,10 +64,42 @@
           <FilterControls
             :filters="filters"
             :is-generating="isGenerating"
+            :mode-availability="modeAvailability"
             @update:filters="filters = $event"
             @generate="handleGenerate"
           />
-          <p v-if="addressError" role="alert" class="text-sm text-amber-700 dark:text-amber-300">{{ addressError }}</p>
+          <div
+            v-if="modeSwitchNotice && !addressError"
+            role="status"
+            class="px-4 py-2.5 rounded-2xl bg-sky-50/90 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/80 text-xs sm:text-sm text-sky-800 dark:text-sky-200 flex items-center gap-2"
+          >
+            <span>{{ t('addressMode.modeSwitchedNotice', { from: modeDisplayLabel(modeSwitchNotice.from), to: modeDisplayLabel(modeSwitchNotice.to) }) }}</span>
+          </div>
+          <div
+            v-if="addressError"
+            role="alert"
+            class="p-3.5 sm:p-4 rounded-2xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/80 text-xs sm:text-sm text-amber-800 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+          >
+            <span>{{ addressError }}</span>
+            <div v-if="filters.isTaxFreeOnly || selectedState" class="flex flex-wrap items-center gap-2 shrink-0">
+              <button
+                v-if="filters.isTaxFreeOnly"
+                type="button"
+                @click="handleClearTaxFree"
+                class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-600 hover:bg-amber-500 text-white transition-colors cursor-pointer"
+              >
+                {{ t('addressMode.clearTaxFreeAction') }}
+              </button>
+              <button
+                v-if="selectedState"
+                type="button"
+                @click="handleClearState"
+                class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-800 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700 hover:bg-amber-100/80 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+              >
+                {{ t('addressMode.clearStateAction') }}
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Tab 2: IP Address Based Generator -->
@@ -277,6 +309,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import type { CountryCode, GeneratedIdentity, FilterOptions, AddressMode } from './types/identity';
 import { COUNTRIES } from './data/countries';
+import { getAvailableAddressModes, resolveCompatibleAddressMode } from './data/addresses';
 import { generateIdentity } from './services/identityGenerator';
 import {
   getHistory,
@@ -334,7 +367,19 @@ const isDisclaimerModalOpen = ref(false);
 const disclaimerActiveTab = ref('all');
 const isGenerating = ref(false);
 const addressError = ref('');
+const modeSwitchNotice = ref<{ from: AddressMode; to: AddressMode } | null>(null);
 const toastRef = ref<InstanceType<typeof Toast> | null>(null);
+
+const modeAvailability = computed(() =>
+  getAvailableAddressModes(selectedCountryCode.value, selectedState.value || undefined, filters.value.isTaxFreeOnly)
+);
+
+function modeDisplayLabel(mode: AddressMode): string {
+  if (mode === 'landmark') return t('addressMode.landmarkShort');
+  if (mode === 'derivation') return t('addressMode.derivationShort');
+  if (mode === 'residential') return t('addressMode.residentialShort');
+  return t('addressMode.sourcedShort');
+}
 
 const currentCountryName = computed(() => {
   const c = COUNTRIES.find(item => item.code === selectedCountryCode.value);
@@ -388,16 +433,35 @@ function handleGenerate() {
   isGenerating.value = true;
   currentIdentity.value = null;
   addressError.value = '';
-  if (filters.value.addressMode) {
-    try {
-      localStorage.setItem('geo_address_mode', filters.value.addressMode);
-    } catch (error) {
-      console.warn('Could not save address mode preference', error);
-    }
+  const requestedMode = filters.value.addressMode || 'residential';
+  const compat = resolveCompatibleAddressMode(
+    requestedMode,
+    selectedCountryCode.value,
+    selectedState.value || undefined,
+    filters.value.isTaxFreeOnly
+  );
+  if (compat.effectiveMode === null) {
+    modeSwitchNotice.value = null;
+    addressError.value = t('addressMode.noAvailableForFilter');
+    isGenerating.value = false;
+    return;
+  }
+  const activeMode = compat.effectiveMode;
+  if (compat.switched) {
+    filters.value = { ...filters.value, addressMode: activeMode };
+    modeSwitchNotice.value = { from: requestedMode, to: activeMode };
+  } else {
+    modeSwitchNotice.value = null;
+  }
+  try {
+    localStorage.setItem('geo_address_mode', activeMode);
+  } catch (error) {
+    console.warn('Could not save address mode preference', error);
   }
   try {
     const newId = generateIdentity(selectedCountryCode.value, {
       ...filters.value,
+      addressMode: activeMode,
       state: selectedState.value || undefined
     });
     currentIdentity.value = newId;
@@ -411,6 +475,17 @@ function handleGenerate() {
   } finally {
     isGenerating.value = false;
   }
+}
+
+function handleClearTaxFree() {
+  filters.value = { ...filters.value, isTaxFreeOnly: false };
+  handleGenerate();
+}
+
+function handleClearState() {
+  selectedState.value = '';
+  filters.value = { ...filters.value, state: undefined };
+  handleGenerate();
 }
 
 function handleCountryChange(code: CountryCode) {
@@ -446,6 +521,7 @@ function handleIpNoAddress() {
 watch(activeGeneratorTab, tab => {
   currentIdentity.value = null;
   addressError.value = '';
+  modeSwitchNotice.value = null;
   if (tab === 'standard') {
     filters.value.state = selectedState.value || undefined;
     handleGenerate();
@@ -457,7 +533,11 @@ function handleJumpToCountry(code: CountryCode) {
   selectedState.value = '';
   filters.value.state = undefined;
   currentView.value = 'generator';
-  handleGenerate();
+  if (activeGeneratorTab.value !== 'standard') {
+    activeGeneratorTab.value = 'standard';
+  } else {
+    handleGenerate();
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
   const countryName = COUNTRIES.find(c => c.code === code)?.nameZh || code;
   if (toastRef.value) {
@@ -477,7 +557,30 @@ function handleSelectIdentity(identity: GeneratedIdentity) {
   currentIdentity.value = identity;
   selectedCountryCode.value = identity.countryCode;
   selectedState.value = '';
-  filters.value.state = undefined;
+  addressError.value = '';
+  modeSwitchNotice.value = null;
+
+  const restoredMode = identity.address.addressMode;
+  const targetMode = restoredMode ?? filters.value.addressMode ?? 'residential';
+  filters.value = {
+    ...filters.value,
+    addressMode: targetMode,
+    state: undefined
+  };
+
+  const compat = resolveCompatibleAddressMode(targetMode, identity.countryCode, undefined, filters.value.isTaxFreeOnly);
+  const recordConflictsWithTaxFree = Boolean(filters.value.isTaxFreeOnly && identity.address.isTaxFree !== true);
+
+  if (compat.effectiveMode === null) {
+    addressError.value = restoredMode
+      ? t('addressMode.historyNoAvailableForFilter', { mode: modeDisplayLabel(restoredMode) })
+      : t('addressMode.noAvailableForFilter');
+  } else if (compat.switched || recordConflictsWithTaxFree) {
+    addressError.value = restoredMode
+      ? t('addressMode.historyFilterConflict', { mode: modeDisplayLabel(restoredMode) })
+      : t('addressMode.noMatchingAddress');
+  }
+
   if (toastRef.value) {
     toastRef.value.show(t('history.apply'));
   }
@@ -506,11 +609,18 @@ onMounted(() => {
   handleHashChange();
 
   // Load first identity without implicitly locking selectedState
-  if (historyList.value.length > 0 && historyList.value[0].address.addressMode === filters.value.addressMode) {
-    currentIdentity.value = historyList.value[0];
-    selectedCountryCode.value = currentIdentity.value.countryCode;
+  const initialMode = filters.value.addressMode || 'residential';
+  if (historyList.value.length > 0 && historyList.value[0].address.addressMode === initialMode) {
+    const candidateCountry = historyList.value[0].countryCode;
+    const compat = resolveCompatibleAddressMode(initialMode, candidateCountry, undefined, filters.value.isTaxFreeOnly);
+    selectedCountryCode.value = candidateCountry;
     selectedState.value = '';
     filters.value.state = undefined;
+    if (compat.effectiveMode === initialMode) {
+      currentIdentity.value = historyList.value[0];
+    } else {
+      handleGenerate();
+    }
   } else {
     handleGenerate();
   }

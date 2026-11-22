@@ -11,8 +11,8 @@ import { HK_ADDRESSES } from './hk';
 import { TW_ADDRESSES } from './tw';
 import { SG_ADDRESSES } from './sg';
 import { EXTENDED_ADDRESSES } from './extended';
-import { STREET_DERIVATION_RULES, getDerivationRule, deriveStreetAddress, matchesState } from './schemes/derivationRules';
-import { getResidentialAddress, RESIDENTIAL_ADDRESSES } from './schemes/residentialAddresses';
+import { STREET_DERIVATION_RULES, getDerivationRule, getDerivationCandidates, deriveStreetAddress, matchesState } from './schemes/derivationRules';
+import { getResidentialAddress, getResidentialCandidates, RESIDENTIAL_ADDRESSES } from './schemes/residentialAddresses';
 import osmApartments from './osmApartments.json';
 
 type OsmApartment = Pick<RealAddress, 'street' | 'city' | 'state' | 'postcode' | 'lat' | 'lng' | 'postcodeStatus'> & {
@@ -262,18 +262,83 @@ function enrichLandmarkAddress(raw: RealAddress): RealAddress {
   };
 }
 
-export function getSourcedAddress(
+export const ADDRESS_MODE_PRIORITY: readonly AddressMode[] = ['landmark', 'sourced', 'residential', 'derivation'];
+
+export function getSourcedCandidates(
   countryCode: CountryCode,
   stateCode?: string,
   city?: string,
   isTaxFreeOnly?: boolean
-): RealAddress {
+): RealAddress[] {
   let candidates = OSM_APARTMENTS.filter(a => a.countryCode === countryCode &&
     (!stateCode || matchesState(a.state, a.stateFull, stateCode)) &&
     (!city || a.city.toLowerCase() === city.trim().toLowerCase()));
   if (isTaxFreeOnly) {
     candidates = candidates.filter(a => a.isTaxFree);
   }
+  return candidates;
+}
+
+export function getLandmarkCandidates(
+  countryCode: CountryCode,
+  stateCode?: string,
+  isTaxFreeOnly?: boolean
+): RealAddress[] {
+  let candidates = ADDRESS_MAP[countryCode] || [];
+  if (stateCode) {
+    candidates = candidates.filter(a => matchesState(a.state, a.stateFull, stateCode));
+  }
+  if (isTaxFreeOnly) {
+    candidates = candidates.filter(a => a.isTaxFree);
+  }
+  return candidates;
+}
+
+export function getAvailableAddressModes(
+  countryCode: CountryCode,
+  stateCode?: string,
+  isTaxFreeOnly?: boolean
+): Record<AddressMode, boolean> {
+  return {
+    landmark: getLandmarkCandidates(countryCode, stateCode, isTaxFreeOnly).length > 0,
+    sourced: getSourcedCandidates(countryCode, stateCode, undefined, isTaxFreeOnly).length > 0,
+    derivation: getDerivationCandidates(countryCode, stateCode, isTaxFreeOnly).length > 0,
+    residential: getResidentialCandidates(countryCode, stateCode, isTaxFreeOnly).length > 0
+  };
+}
+
+export function resolveCompatibleAddressMode(
+  requestedMode: AddressMode,
+  countryCode: CountryCode,
+  stateCode?: string,
+  isTaxFreeOnly?: boolean
+): {
+  availability: Record<AddressMode, boolean>;
+  availableModes: AddressMode[];
+  effectiveMode: AddressMode | null;
+  switched: boolean;
+} {
+  const availability = getAvailableAddressModes(countryCode, stateCode, isTaxFreeOnly);
+  const availableModes = ADDRESS_MODE_PRIORITY.filter(mode => availability[mode]);
+  if (availability[requestedMode]) {
+    return { availability, availableModes, effectiveMode: requestedMode, switched: false };
+  }
+  const effectiveMode = availableModes[0] ?? null;
+  return {
+    availability,
+    availableModes,
+    effectiveMode,
+    switched: effectiveMode !== null
+  };
+}
+
+export function getSourcedAddress(
+  countryCode: CountryCode,
+  stateCode?: string,
+  city?: string,
+  isTaxFreeOnly?: boolean
+): RealAddress {
+  const candidates = getSourcedCandidates(countryCode, stateCode, city, isTaxFreeOnly);
   if (candidates.length === 0) {
     throw new Error(`No sourced address for ${countryCode}${stateCode ? `/${stateCode}` : ''}${city ? `/${city}` : ''}${isTaxFreeOnly ? ' in a tax-free region' : ''}`);
   }
@@ -324,15 +389,7 @@ export function getRandomAddress(
   }
 
   // Mode 1: 方案C (建筑地址样本)
-  let candidates = ADDRESS_MAP[countryCode] || [];
-
-  if (stateCode) {
-    candidates = candidates.filter(a => matchesState(a.state, a.stateFull, stateCode));
-  }
-
-  if (isTaxFreeOnly) {
-    candidates = candidates.filter(a => a.isTaxFree);
-  }
+  const candidates = getLandmarkCandidates(countryCode, stateCode, isTaxFreeOnly);
 
   if (candidates.length === 0) {
     throw new Error(`No matching address for ${countryCode}${stateCode ? `/${stateCode}` : ''} in ${mode} mode`);

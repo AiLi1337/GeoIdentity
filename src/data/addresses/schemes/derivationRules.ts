@@ -2456,25 +2456,25 @@ export const STREET_DERIVATION_RULES: StreetDerivationRule[] = [
   }
 ];
 
-export function getDerivationRule(countryCode: CountryCode, stateCode?: string, isTaxFreeOnly?: boolean): StreetDerivationRule | null {
+export function getDerivationCandidates(countryCode: CountryCode, stateCode?: string, isTaxFreeOnly?: boolean): StreetDerivationRule[] {
   let candidates = STREET_DERIVATION_RULES.filter(r => r.countryCode === countryCode);
-  if (candidates.length === 0) return null;
+  if (candidates.length === 0) return [];
 
   if (stateCode) {
-    const matchedState = candidates.filter(r => matchesState(r.state, r.stateFull, stateCode));
-    if (matchedState.length === 0) {
-      return null;
-    }
-    candidates = matchedState;
+    candidates = candidates.filter(r => matchesState(r.state, r.stateFull, stateCode));
+    if (candidates.length === 0) return [];
   }
 
   if (isTaxFreeOnly) {
-    const taxFree = candidates.filter(r => r.isTaxFree);
-    if (taxFree.length === 0) {
-      return null;
-    }
-    candidates = taxFree;
+    candidates = candidates.filter(r => r.isTaxFree);
   }
+
+  return candidates;
+}
+
+export function getDerivationRule(countryCode: CountryCode, stateCode?: string, isTaxFreeOnly?: boolean): StreetDerivationRule | null {
+  const candidates = getDerivationCandidates(countryCode, stateCode, isTaxFreeOnly);
+  if (candidates.length === 0) return null;
 
   const idx = Math.floor(Math.random() * candidates.length);
   return candidates[idx] || null;

@@ -438,25 +438,25 @@ export const RESIDENTIAL_ADDRESSES: RealAddress[] = [
   res('28 J.P. Laurel Ave, Bajada', 'Davao City', 'DVO', 'Davao', '8000', 'Philippines', 'PH', 7.0885, 125.6145, false, '12.00% (VAT)', 'Asia/Manila (PHT)', 'PHT', '达沃市巴哈达成熟商业与居住过渡区独立住宅'),
 ];
 
-export function getResidentialAddress(countryCode: CountryCode, stateCode?: string, isTaxFreeOnly?: boolean): RealAddress | null {
+export function getResidentialCandidates(countryCode: CountryCode, stateCode?: string, isTaxFreeOnly?: boolean): RealAddress[] {
   let candidates = RESIDENTIAL_ADDRESSES.filter(a => a.countryCode === countryCode);
-  if (candidates.length === 0) return null;
+  if (candidates.length === 0) return [];
 
   if (stateCode) {
-    const matchedState = candidates.filter(a => matchesState(a.state, a.stateFull, stateCode));
-    if (matchedState.length === 0) {
-      return null;
-    }
-    candidates = matchedState;
+    candidates = candidates.filter(a => matchesState(a.state, a.stateFull, stateCode));
+    if (candidates.length === 0) return [];
   }
 
   if (isTaxFreeOnly) {
-    const taxFree = candidates.filter(a => a.isTaxFree);
-    if (taxFree.length === 0) {
-      return null;
-    }
-    candidates = taxFree;
+    candidates = candidates.filter(a => a.isTaxFree);
   }
+
+  return candidates;
+}
+
+export function getResidentialAddress(countryCode: CountryCode, stateCode?: string, isTaxFreeOnly?: boolean): RealAddress | null {
+  const candidates = getResidentialCandidates(countryCode, stateCode, isTaxFreeOnly);
+  if (candidates.length === 0) return null;
 
   const idx = Math.floor(Math.random() * candidates.length);
   return candidates[idx] || null;

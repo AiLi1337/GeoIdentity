@@ -1,5 +1,5 @@
 import { generateIdentity, generateIdentityFromAddress } from '../src/services/identityGenerator';
-import { getRandomAddress, ADDRESS_MAP } from '../src/data/addresses';
+import { getRandomAddress, ADDRESS_MAP, getAvailableAddressModes, resolveCompatibleAddressMode } from '../src/data/addresses';
 import { OSM_APARTMENTS } from '../src/data/addresses';
 import { STREET_DERIVATION_RULES, deriveStreetAddress, getDerivationRule, matchesState } from '../src/data/addresses/schemes/derivationRules';
 import { RESIDENTIAL_ADDRESSES, getResidentialAddress } from '../src/data/addresses/schemes/residentialAddresses';
@@ -1058,6 +1058,89 @@ try {
   caStateTaxFreeRejected = error instanceof Error && error.message.startsWith('No matching address');
 }
 assert(caStateTaxFreeRejected, 'US/CA with isTaxFreeOnly=true errors explicitly');
+
+// -----------------------------------------------------------------------------
+// 16. Mode Availability Query Consistency & Compatible Fallback Semantics
+// -----------------------------------------------------------------------------
+console.log('\n--- 16. Testing Pure Mode Availability Query & Compatibility Resolution ---');
+
+const ALL_MODES: AddressMode[] = ['landmark', 'derivation', 'residential', 'sourced'];
+for (const country of COUNTRIES) {
+  for (const taxFree of [false, true]) {
+    const avail = getAvailableAddressModes(country.code, undefined, taxFree);
+    for (const mode of ALL_MODES) {
+      let succeeded = false;
+      try {
+        const addr = getRandomAddress(country.code, undefined, taxFree, mode);
+        assert(addr.addressMode === mode, `[${country.code}/${mode}/tax=${taxFree}] returned address matches requested mode`);
+        succeeded = true;
+      } catch {
+        succeeded = false;
+      }
+      assert(succeeded === avail[mode], `[${country.code}/${mode}/tax=${taxFree}] getAvailableAddressModes (${avail[mode]}) matches actual sampling (${succeeded})`);
+    }
+  }
+}
+
+// Region aliases & TR leading-zero province ('06') checks
+for (const [cc, stateOpt] of [
+  ['GB', 'ENG-LDN'],
+  ['GB', 'London'],
+  ['HK', 'ST'],
+  ['HK', 'Sha Tin'],
+  ['TR', undefined],
+  ['TR', '34'],
+  ['TR', '06'],
+  ['TR', '35']
+] as Array<[CountryCode, string | undefined]>) {
+  const avail = getAvailableAddressModes(cc, stateOpt, false);
+  for (const mode of ALL_MODES) {
+    let ok = false;
+    try {
+      const id = generateIdentity(cc, { state: stateOpt, addressMode: mode });
+      assert(id.address.addressMode === mode, `[${cc}/${stateOpt || 'all'}/${mode}] keeps addressMode`);
+      ok = true;
+    } catch {
+      ok = false;
+    }
+    assert(ok === avail[mode], `[${cc}/${stateOpt || 'all'}/${mode}] availability query (${avail[mode]}) matches generation (${ok})`);
+  }
+}
+
+// US Scheme A ('derivation') -> switching to TR adjusts explicitly to 'landmark' FIRST, keeps valid OSM on 'sourced', and preserves US Scheme A
+const trFromDerivation = resolveCompatibleAddressMode('derivation', 'TR', undefined, false);
+assert(trFromDerivation.switched && trFromDerivation.effectiveMode === 'landmark', 'US derivation -> TR adjusts to landmark first');
+assert(trFromDerivation.availability.landmark && trFromDerivation.availability.sourced && !trFromDerivation.availability.derivation && !trFromDerivation.availability.residential,
+  'TR availability matches C/OSM-only support');
+const trId = generateIdentity('TR', { addressMode: trFromDerivation.effectiveMode! });
+assert(trId.address.countryCode === 'TR' && trId.address.addressMode === 'landmark' && trId.address.source === 'OpenStreetMap',
+  'Adjusted TR mode generates full TR identity with OSM source');
+
+// TR with state='06' preserves leading zero and generates valid '06810' postcode
+const trAnkaraFromResidential = resolveCompatibleAddressMode('residential', 'TR', '06', false);
+assert(trAnkaraFromResidential.switched && trAnkaraFromResidential.effectiveMode === 'landmark', 'TR/06 residential adjusts to landmark');
+const trAnkaraId = generateIdentity('TR', { state: '06', addressMode: trAnkaraFromResidential.effectiveMode! });
+assert(trAnkaraId.address.state === '06' && trAnkaraId.address.postcode.startsWith('06'), 'TR/06 preserves leading zeros on state and postcode');
+
+// Valid mode preserved on TR ('sourced') and on old countries ('US' derivation / 'DE' residential)
+const trKeepSourced = resolveCompatibleAddressMode('sourced', 'TR', '35', false);
+assert(!trKeepSourced.switched && trKeepSourced.effectiveMode === 'sourced', 'TR/35 keeps compatible sourced mode without overriding');
+const usKeepDeriv = resolveCompatibleAddressMode('derivation', 'US', undefined, false);
+assert(!usKeepDeriv.switched && usKeepDeriv.effectiveMode === 'derivation', 'US keeps compatible derivation mode');
+const deKeepRes = resolveCompatibleAddressMode('residential', 'DE', undefined, false);
+assert(!deKeepRes.switched && deKeepRes.effectiveMode === 'residential', 'DE keeps compatible residential mode');
+
+// All-unavailable filter combinations (TR + taxFree, TR/06 + taxFree, US/CA + taxFree, GB + bad state) return effectiveMode: null
+for (const [cc, st, tf] of [
+  ['TR', undefined, true],
+  ['TR', '06', true],
+  ['US', 'CA', true],
+  ['GB', 'NONEXISTENT', false]
+] as Array<[CountryCode, string | undefined, boolean]>) {
+  const none = resolveCompatibleAddressMode('landmark', cc, st, tf);
+  assert(none.effectiveMode === null && !none.switched && none.availableModes.length === 0,
+    `[${cc}/${st || 'all'}/tax=${tf}] reports no available modes instead of mutating filters`);
+}
 
 console.log('\n================================================================');
 console.log(`🎉 SUCCESS: All ${assertionCount} assertions passed cleanly!`);

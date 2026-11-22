@@ -32,12 +32,16 @@
       <!-- 1. 高精度真实地标种子库 (Curated Landmark Seeds) -->
       <button
         type="button"
-        @click="updateMode('landmark')"
+        :disabled="!availability.landmark"
+        :aria-disabled="!availability.landmark"
+        @click="availability.landmark && updateMode('landmark')"
         :class="[
-          'relative text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group',
-          currentMode === 'landmark'
-            ? 'bg-blue-50/70 dark:bg-blue-950/40 border-blue-500/80 shadow-xs ring-1 ring-blue-500/30'
-            : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700'
+          'relative text-left p-4 rounded-2xl border transition-all flex flex-col justify-between group',
+          !availability.landmark
+            ? 'opacity-60 cursor-not-allowed bg-slate-100/80 dark:bg-slate-900/40 border-slate-200/70 dark:border-slate-800/70'
+            : currentMode === 'landmark'
+              ? 'cursor-pointer bg-blue-50/70 dark:bg-blue-950/40 border-blue-500/80 shadow-xs ring-1 ring-blue-500/30'
+              : 'cursor-pointer bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700'
         ]"
       >
         <div class="flex items-start justify-between gap-1.5 sm:gap-2 mb-2">
@@ -45,43 +49,55 @@
             <div
               :class="[
                 'p-1.5 rounded-lg shrink-0',
-                currentMode === 'landmark' ? 'bg-blue-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                !availability.landmark
+                  ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                  : currentMode === 'landmark' ? 'bg-blue-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               ]"
             >
               <Building2 class="w-4 h-4" />
             </div>
             <span
               class="text-xs font-bold tracking-tight truncate"
-              :class="currentMode === 'landmark' ? 'text-blue-950 dark:text-blue-100' : 'text-slate-800 dark:text-slate-200'"
+              :class="currentMode === 'landmark' && availability.landmark ? 'text-blue-950 dark:text-blue-100' : 'text-slate-800 dark:text-slate-200'"
             >
               <span class="sm:hidden">{{ t('addressMode.landmarkShort') }}</span>
               <span class="hidden sm:inline">{{ t('addressMode.landmark') }}</span>
             </span>
           </div>
           <span
-            v-if="currentMode === 'landmark'"
+            v-if="currentMode === 'landmark' && availability.landmark"
             class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-500 text-white shadow-xs shrink-0 whitespace-nowrap mt-0.5"
           >
             {{ t('addressMode.active') }}
           </span>
+          <span
+            v-else-if="!availability.landmark"
+            class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0 whitespace-nowrap mt-0.5"
+          >
+            {{ t('addressMode.unavailableForFilter') }}
+          </span>
         </div>
         <p
           class="text-[11px] leading-relaxed"
-          :class="currentMode === 'landmark' ? 'text-blue-800/80 dark:text-blue-200/70' : 'text-slate-500 dark:text-slate-400'"
+          :class="currentMode === 'landmark' && availability.landmark ? 'text-blue-800/80 dark:text-blue-200/70' : 'text-slate-500 dark:text-slate-400'"
         >
-          {{ t('addressMode.landmarkDesc') }}
+          {{ availability.landmark ? t('addressMode.landmarkDesc') : t('addressMode.unavailableForFilter') }}
         </p>
       </button>
 
       <!-- 2. 方案A：真实街道门牌合法区间衍生 (Street Derivation) -->
       <button
         type="button"
-        @click="updateMode('derivation')"
+        :disabled="!availability.derivation"
+        :aria-disabled="!availability.derivation"
+        @click="availability.derivation && updateMode('derivation')"
         :class="[
-          'relative text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group',
-          currentMode === 'derivation'
-            ? 'bg-emerald-50/70 dark:bg-emerald-950/40 border-emerald-500/80 shadow-xs ring-1 ring-emerald-500/30'
-            : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-700'
+          'relative text-left p-4 rounded-2xl border transition-all flex flex-col justify-between group',
+          !availability.derivation
+            ? 'opacity-60 cursor-not-allowed bg-slate-100/80 dark:bg-slate-900/40 border-slate-200/70 dark:border-slate-800/70'
+            : currentMode === 'derivation'
+              ? 'cursor-pointer bg-emerald-50/70 dark:bg-emerald-950/40 border-emerald-500/80 shadow-xs ring-1 ring-emerald-500/30'
+              : 'cursor-pointer bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-700'
         ]"
       >
         <div class="flex items-start justify-between gap-1.5 sm:gap-2 mb-2">
@@ -89,43 +105,55 @@
             <div
               :class="[
                 'p-1.5 rounded-lg shrink-0',
-                currentMode === 'derivation' ? 'bg-emerald-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                !availability.derivation
+                  ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                  : currentMode === 'derivation' ? 'bg-emerald-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               ]"
             >
               <Route class="w-4 h-4" />
             </div>
             <span
               class="text-xs font-bold tracking-tight truncate"
-              :class="currentMode === 'derivation' ? 'text-emerald-950 dark:text-emerald-100' : 'text-slate-800 dark:text-slate-200'"
+              :class="currentMode === 'derivation' && availability.derivation ? 'text-emerald-950 dark:text-emerald-100' : 'text-slate-800 dark:text-slate-200'"
             >
               <span class="sm:hidden">{{ t('addressMode.derivationShort') }}</span>
               <span class="hidden sm:inline">{{ t('addressMode.derivation') }}</span>
             </span>
           </div>
           <span
-            v-if="currentMode === 'derivation'"
+            v-if="currentMode === 'derivation' && availability.derivation"
             class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500 text-white shadow-xs shrink-0 whitespace-nowrap mt-0.5"
           >
             {{ t('addressMode.active') }}
           </span>
+          <span
+            v-else-if="!availability.derivation"
+            class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0 whitespace-nowrap mt-0.5"
+          >
+            {{ t('addressMode.unavailableForFilter') }}
+          </span>
         </div>
         <p
           class="text-[11px] leading-relaxed"
-          :class="currentMode === 'derivation' ? 'text-emerald-800/80 dark:text-emerald-200/70' : 'text-slate-500 dark:text-slate-400'"
+          :class="currentMode === 'derivation' && availability.derivation ? 'text-emerald-800/80 dark:text-emerald-200/70' : 'text-slate-500 dark:text-slate-400'"
         >
-          {{ t('addressMode.derivationDesc') }}
+          {{ availability.derivation ? t('addressMode.derivationDesc') : t('addressMode.unavailableForFilter') }}
         </p>
       </button>
 
       <!-- 3. 方案B：全球真实住宅/居民独栋地址库 (Residential Pool) -->
       <button
         type="button"
-        @click="updateMode('residential')"
+        :disabled="!availability.residential"
+        :aria-disabled="!availability.residential"
+        @click="availability.residential && updateMode('residential')"
         :class="[
-          'relative text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group',
-          currentMode === 'residential'
-            ? 'bg-purple-50/70 dark:bg-purple-950/40 border-purple-500/80 shadow-xs ring-1 ring-purple-500/30'
-            : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-700'
+          'relative text-left p-4 rounded-2xl border transition-all flex flex-col justify-between group',
+          !availability.residential
+            ? 'opacity-60 cursor-not-allowed bg-slate-100/80 dark:bg-slate-900/40 border-slate-200/70 dark:border-slate-800/70'
+            : currentMode === 'residential'
+              ? 'cursor-pointer bg-purple-50/70 dark:bg-purple-950/40 border-purple-500/80 shadow-xs ring-1 ring-purple-500/30'
+              : 'cursor-pointer bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-700'
         ]"
       >
         <div class="flex items-start justify-between gap-1.5 sm:gap-2 mb-2">
@@ -133,42 +161,54 @@
             <div
               :class="[
                 'p-1.5 rounded-lg shrink-0',
-                currentMode === 'residential' ? 'bg-purple-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                !availability.residential
+                  ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                  : currentMode === 'residential' ? 'bg-purple-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               ]"
             >
               <Home class="w-4 h-4" />
             </div>
             <span
               class="text-xs font-bold tracking-tight truncate"
-              :class="currentMode === 'residential' ? 'text-purple-950 dark:text-purple-100' : 'text-slate-800 dark:text-slate-200'"
+              :class="currentMode === 'residential' && availability.residential ? 'text-purple-950 dark:text-purple-100' : 'text-slate-800 dark:text-slate-200'"
             >
               <span class="sm:hidden">{{ t('addressMode.residentialShort') }}</span>
               <span class="hidden sm:inline">{{ t('addressMode.residential') }}</span>
             </span>
           </div>
           <span
-            v-if="currentMode === 'residential'"
+            v-if="currentMode === 'residential' && availability.residential"
             class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-purple-500 text-white shadow-xs shrink-0 whitespace-nowrap mt-0.5"
           >
             {{ t('addressMode.active') }}
           </span>
+          <span
+            v-else-if="!availability.residential"
+            class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0 whitespace-nowrap mt-0.5"
+          >
+            {{ t('addressMode.unavailableForFilter') }}
+          </span>
         </div>
         <p
           class="text-[11px] leading-relaxed"
-          :class="currentMode === 'residential' ? 'text-purple-800/80 dark:text-purple-200/70' : 'text-slate-500 dark:text-slate-400'"
+          :class="currentMode === 'residential' && availability.residential ? 'text-purple-800/80 dark:text-purple-200/70' : 'text-slate-500 dark:text-slate-400'"
         >
-          {{ t('addressMode.residentialDesc') }}
+          {{ availability.residential ? t('addressMode.residentialDesc') : t('addressMode.unavailableForFilter') }}
         </p>
       </button>
       <!-- 4. OSM 住宅建筑门牌 (OSM Sourced Building) -->
       <button
         type="button"
-        @click="updateMode('sourced')"
+        :disabled="!availability.sourced"
+        :aria-disabled="!availability.sourced"
+        @click="availability.sourced && updateMode('sourced')"
         :class="[
-          'relative text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group',
-          currentMode === 'sourced'
-            ? 'bg-amber-50/70 dark:bg-amber-950/40 border-amber-500/80 shadow-xs ring-1 ring-amber-500/30'
-            : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-700'
+          'relative text-left p-4 rounded-2xl border transition-all flex flex-col justify-between group',
+          !availability.sourced
+            ? 'opacity-60 cursor-not-allowed bg-slate-100/80 dark:bg-slate-900/40 border-slate-200/70 dark:border-slate-800/70'
+            : currentMode === 'sourced'
+              ? 'cursor-pointer bg-amber-50/70 dark:bg-amber-950/40 border-amber-500/80 shadow-xs ring-1 ring-amber-500/30'
+              : 'cursor-pointer bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-700'
         ]"
       >
         <div class="flex items-start justify-between gap-1.5 sm:gap-2 mb-2">
@@ -176,30 +216,38 @@
             <div
               :class="[
                 'p-1.5 rounded-lg shrink-0',
-                currentMode === 'sourced' ? 'bg-amber-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                !availability.sourced
+                  ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                  : currentMode === 'sourced' ? 'bg-amber-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               ]"
             >
               <MapPin class="w-4 h-4" />
             </div>
             <span
               class="text-xs font-bold tracking-tight truncate"
-              :class="currentMode === 'sourced' ? 'text-amber-950 dark:text-amber-100' : 'text-slate-800 dark:text-slate-200'"
+              :class="currentMode === 'sourced' && availability.sourced ? 'text-amber-950 dark:text-amber-100' : 'text-slate-800 dark:text-slate-200'"
             >
               {{ t('addressMode.sourcedShort') }}
             </span>
           </div>
           <span
-            v-if="currentMode === 'sourced'"
+            v-if="currentMode === 'sourced' && availability.sourced"
             class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500 text-white shadow-xs shrink-0 whitespace-nowrap mt-0.5"
           >
             {{ t('addressMode.active') }}
           </span>
+          <span
+            v-else-if="!availability.sourced"
+            class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0 whitespace-nowrap mt-0.5"
+          >
+            {{ t('addressMode.unavailableForFilter') }}
+          </span>
         </div>
         <p
           class="text-[11px] leading-relaxed"
-          :class="currentMode === 'sourced' ? 'text-amber-900/80 dark:text-amber-200/75' : 'text-slate-500 dark:text-slate-400'"
+          :class="currentMode === 'sourced' && availability.sourced ? 'text-amber-900/80 dark:text-amber-200/75' : 'text-slate-500 dark:text-slate-400'"
         >
-          {{ sourcedSummaryDesc }}
+          {{ availability.sourced ? sourcedSummaryDesc : t('addressMode.unavailableForFilter') }}
         </p>
       </button>
     </div>
@@ -218,7 +266,7 @@
           v-for="item in modeComparisonItems"
           :key="item.mode"
           class="p-3 rounded-xl bg-white/90 dark:bg-slate-800/90 border space-y-1.5 transition-all"
-          :class="currentMode === item.mode ? item.activeBorder : 'border-slate-200/60 dark:border-slate-700/60'"
+          :class="currentMode === item.mode && availability[item.mode] ? item.activeBorder : 'border-slate-200/60 dark:border-slate-700/60'"
         >
           <div class="flex items-center justify-between gap-1.5">
             <span class="font-bold flex items-center gap-1 min-w-0 truncate" :class="item.titleColor">
@@ -226,7 +274,7 @@
               <span class="truncate">{{ item.title }}</span>
             </span>
             <span
-              v-if="currentMode === item.mode"
+              v-if="currentMode === item.mode && availability[item.mode]"
               class="px-1.5 py-0.5 text-[9px] font-bold rounded-full text-white shrink-0 whitespace-nowrap"
               :class="item.badgeBg"
             >
@@ -340,9 +388,9 @@
       <div class="w-full lg:w-auto flex items-center justify-end">
         <button
           type="button"
-          @click="$emit('generate')"
-          :disabled="isGenerating"
-          class="w-full lg:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-600 via-teal-500 to-emerald-500 hover:from-primary-700 hover:to-emerald-600 shadow-md shadow-primary-500/20 active:scale-95 transition-all duration-150 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+          @click="hasAnyMode && $emit('generate')"
+          :disabled="isGenerating || !hasAnyMode"
+          class="w-full lg:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-600 via-teal-500 to-emerald-500 hover:from-primary-700 hover:to-emerald-600 shadow-md shadow-primary-500/20 active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <Sparkles class="w-4 h-4" :class="{ 'animate-spin': isGenerating }" />
           <span>{{ isGenerating ? t('filter.generating') : t('filter.generateBtn') }}</span>
@@ -374,6 +422,7 @@ import { useI18n } from '../i18n';
 const props = defineProps<{
   filters: FilterOptions;
   isGenerating?: boolean;
+  modeAvailability?: Record<AddressMode, boolean>;
 }>();
 
 const emit = defineEmits<{
@@ -386,6 +435,13 @@ const { locale, t } = useI18n();
 const showModeGuide = ref(false);
 
 const currentMode = computed<AddressMode>(() => props.filters.addressMode || 'residential');
+const availability = computed<Record<AddressMode, boolean>>(() => props.modeAvailability ?? {
+  landmark: true,
+  derivation: true,
+  residential: true,
+  sourced: true
+});
+const hasAnyMode = computed(() => Object.values(availability.value).some(Boolean));
 
 const poolStats = getAddressCoverageStats();
 
@@ -472,6 +528,7 @@ const modeComparisonItems = computed(() => [
 ]);
 
 function updateMode(mode: AddressMode) {
+  if (!availability.value[mode]) return;
   emit('update:filters', { ...props.filters, addressMode: mode });
   emit('generate');
 }
